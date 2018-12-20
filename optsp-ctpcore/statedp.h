@@ -1,0 +1,9 @@
+#ifndef OPTSP_CTPCORE_STATEDP_H_
+#define OPTSP_CTPCORE_STATEDP_H_
+
+class StateDP
+{
+
+};
+
+#endif // !OPTSP_CTPCORE_STATEDP_H_
