@@ -6,11 +6,13 @@
 #include "ctpapi/ThostFtdcUserApiStruct.h"
 #pragma comment (lib, "ctpapi/thostmduserapi.lib")
 
+#include "platstruct.hpp"
+
 class QuoteSpi : public CThostFtdcMdSpi
 {
 private:
 	DMT * dmt = nullptr;
-	PltSyncField * pltSync = nullptr;
+	QuoteSyncField * quoteSync = nullptr;
 	int cntSubSucceed = 0;
 	int cntSubFailed = 0;
 
