@@ -69,7 +69,26 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ReferencePath>$(ReferencePath)</ReferencePath>
+    <LibraryPath>D:\boost_1_67_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\boost_1_67_0;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ReferencePath>$(ReferencePath)</ReferencePath>
+    <LibraryPath>D:\boost_1_67_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\boost_1_67_0;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ReferencePath>$(ReferencePath)</ReferencePath>
+    <LibraryPath>D:\boost_1_67_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\boost_1_67_0;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ReferencePath>$(ReferencePath)</ReferencePath>
+    <LibraryPath>D:\boost_1_67_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\boost_1_67_0;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -115,10 +134,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="arch.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="master.cpp" />
+    <ClCompile Include="platctp.cpp" />
+    <ClCompile Include="quotedp.cpp" />
+    <ClCompile Include="quotespi.cpp" />
+    <ClCompile Include="statedp.cpp" />
+    <ClCompile Include="stgroup.cpp" />
+    <ClCompile Include="tradedp.cpp" />
+    <ClCompile Include="tradespi.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="lib\arch.hpp" />
+    <ClInclude Include="arch.h" />
+    <ClInclude Include="config.hpp" />
+    <ClInclude Include="const.hpp" />
+    <ClInclude Include="datatype.hpp" />
+    <ClInclude Include="indexstruct.hpp" />
+    <ClInclude Include="log.hpp" />
+    <ClInclude Include="master.h" />
+    <ClInclude Include="platctp.h" />
+    <ClInclude Include="quotedp.h" />
+    <ClInclude Include="quotespi.h" />
+    <ClInclude Include="quotestruct.hpp" />
+    <ClInclude Include="statedp.h" />
+    <ClInclude Include="statestruct.hpp" />
+    <ClInclude Include="stgroup.h" />
+    <ClInclude Include="platstruct.hpp" />
+    <ClInclude Include="tradedp.h" />
+    <ClInclude Include="tradespi.h" />
+    <ClInclude Include="tradestruct.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
