@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include "datatype.hpp"
-#include "const.hpp"
 
 
 typedef struct TickField {
@@ -35,6 +34,7 @@ typedef struct HandicapField {
 	uint64_t	BidVolume[5];		///申买量1-5
 	double		AskPrice[5];		///申卖价1-5
 	uint64_t	AskVolume[5];		///申卖量1-5
+	TickField	Tick;				///最新的Tick数据
 } HandicapField;
 
 
