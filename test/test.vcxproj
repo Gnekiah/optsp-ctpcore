@@ -95,6 +95,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>gtestd.lib;gtest_maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\googletest\googletest\msvc\2010\gtest\x64-Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -107,6 +108,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>gtestd.lib;gtest_maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\googletest\googletest\msvc\2010\gtest\x64-Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -123,6 +125,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>gtest.lib;gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\googletest\googletest\msvc\2010\gtest\x64-Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -139,15 +142,25 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>gtest.lib;gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\googletest\googletest\msvc\2010\gtest\x64-Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\optsp-ctpcore\arch.cpp" />
+    <ClCompile Include="..\optsp-ctpcore\config.cpp" />
+    <ClCompile Include="..\optsp-ctpcore\log.cpp" />
+    <ClCompile Include="test_arch.cpp" />
+    <ClCompile Include="test_config.cpp" />
+    <ClCompile Include="test_log.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="arch.hpp" />
-    <ClInclude Include="const.hpp" />
-    <ClInclude Include="log.hpp" />
+    <ClInclude Include="..\optsp-ctpcore\arch.h" />
+    <ClInclude Include="..\optsp-ctpcore\config.h" />
+    <ClInclude Include="..\optsp-ctpcore\log.h" />
+    <ClInclude Include="test_arch.h" />
+    <ClInclude Include="test_config.h" />
+    <ClInclude Include="test_log.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

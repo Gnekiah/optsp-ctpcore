@@ -19,19 +19,49 @@
     <Filter Include="MASTER">
       <UniqueIdentifier>{8bd25307-bb05-40be-84f5-cc55206c2006}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BE_TESTED_CODE">
+      <UniqueIdentifier>{b9700fcf-89ff-48b1-a90b-d49a284a407e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="test_arch.cpp">
+      <Filter>LIB</Filter>
+    </ClCompile>
+    <ClCompile Include="test_log.cpp">
+      <Filter>MASTER</Filter>
+    </ClCompile>
+    <ClCompile Include="..\optsp-ctpcore\arch.cpp">
+      <Filter>BE_TESTED_CODE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\optsp-ctpcore\config.cpp">
+      <Filter>BE_TESTED_CODE</Filter>
+    </ClCompile>
+    <ClCompile Include="test_config.cpp">
+      <Filter>MASTER</Filter>
+    </ClCompile>
+    <ClCompile Include="..\optsp-ctpcore\log.cpp">
+      <Filter>BE_TESTED_CODE</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="const.hpp">
-      <Filter>MASTER</Filter>
-    </ClInclude>
-    <ClInclude Include="log.hpp">
-      <Filter>MASTER</Filter>
-    </ClInclude>
-    <ClInclude Include="arch.hpp">
+    <ClInclude Include="test_arch.h">
       <Filter>LIB</Filter>
+    </ClInclude>
+    <ClInclude Include="test_log.h">
+      <Filter>MASTER</Filter>
+    </ClInclude>
+    <ClInclude Include="..\optsp-ctpcore\arch.h">
+      <Filter>BE_TESTED_CODE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\optsp-ctpcore\config.h">
+      <Filter>BE_TESTED_CODE</Filter>
+    </ClInclude>
+    <ClInclude Include="test_config.h">
+      <Filter>MASTER</Filter>
+    </ClInclude>
+    <ClInclude Include="..\optsp-ctpcore\log.h">
+      <Filter>BE_TESTED_CODE</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
