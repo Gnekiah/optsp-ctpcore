@@ -48,6 +48,12 @@
     <ClCompile Include="arch.cpp">
       <Filter>LIB</Filter>
     </ClCompile>
+    <ClCompile Include="config.cpp">
+      <Filter>MASTER</Filter>
+    </ClCompile>
+    <ClCompile Include="log.cpp">
+      <Filter>MASTER</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="master.h">
@@ -95,14 +101,14 @@
     <ClInclude Include="const.hpp">
       <Filter>MASTER</Filter>
     </ClInclude>
-    <ClInclude Include="log.hpp">
-      <Filter>MASTER</Filter>
-    </ClInclude>
-    <ClInclude Include="config.hpp">
-      <Filter>MASTER</Filter>
-    </ClInclude>
     <ClInclude Include="arch.h">
       <Filter>LIB</Filter>
+    </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>MASTER</Filter>
+    </ClInclude>
+    <ClInclude Include="log.h">
+      <Filter>MASTER</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

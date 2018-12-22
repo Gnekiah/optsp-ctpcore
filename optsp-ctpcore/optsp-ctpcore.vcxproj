@@ -135,6 +135,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="arch.cpp" />
+    <ClCompile Include="config.cpp" />
+    <ClCompile Include="log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="master.cpp" />
     <ClCompile Include="platctp.cpp" />
@@ -147,11 +149,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="arch.h" />
-    <ClInclude Include="config.hpp" />
+    <ClInclude Include="config.h" />
     <ClInclude Include="const.hpp" />
     <ClInclude Include="datatype.hpp" />
     <ClInclude Include="indexstruct.hpp" />
-    <ClInclude Include="log.hpp" />
+    <ClInclude Include="log.h" />
     <ClInclude Include="master.h" />
     <ClInclude Include="platctp.h" />
     <ClInclude Include="quotedp.h" />

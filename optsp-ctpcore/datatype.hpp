@@ -12,6 +12,8 @@ typedef TThostFtdcInvestorIDType InvestorIDType;					///投资者代码类型
 typedef TThostFtdcInstrumentIDType InstrumentIDType;				///合约代码类型
 typedef TThostFtdcPasswordType PasswordType;						///口令类型
 typedef char FrontAddrType[64];										///前置地址类型
+typedef char DateTimeType[24];										///时间字符串类型, yyyy-MM-dd hh:mm:ss.zzz
+
 
 #endif // !OPTSP_CTPCORE_DATATYPE_HPP_
 
