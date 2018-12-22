@@ -8,7 +8,7 @@
 #include <boost/filesystem.hpp>
 #include "datatype.hpp"
 
-//typedef void(*parse_config_callback_fn) (bool);
+
 
 
 class Config
