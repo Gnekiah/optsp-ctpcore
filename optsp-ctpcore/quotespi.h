@@ -7,20 +7,20 @@
 #pragma comment (lib, "ctpapi/thostmduserapi.lib")
 
 #include "platstruct.hpp"
+#include "logger.h"
+#include "datatype.hpp"
 
 class QuoteSpi : public CThostFtdcMdSpi
 {
 private:
-	DMT * dmt = nullptr;
+	Logger * logger = nullptr;
 	QuoteSyncField * quoteSync = nullptr;
-	int cntSubSucceed = 0;
-	int cntSubFailed = 0;
-
-	void inline updatePltSync(int);
+	quote_callback_fn * quote_callback = nullptr;
+	HandicapField * handicap = nullptr;
 
 public:
 	///重载构造函数
-	QuoteSpi(DMT *dmt, PltSyncField * pltSync);
+	QuoteSpi(Logger * logger, QuoteSyncField * quoteSync, quote_callback_fn* fn);
 	///当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用。
 	void OnFrontConnected();
 	///当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
