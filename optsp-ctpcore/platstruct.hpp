@@ -3,12 +3,24 @@
 
 #include <atomic>
 
-#define		PLTSYNC_INITED					0x00
+#define		PLTSYNC_INIT					0x00
+
 #define		PLTSYNC_QUOTE_CONNECTED			0x11
 #define		PLTSYNC_QUOTE_LOGINED			0x12
+
 #define		PLTSYNC_TRADE_CONNECTED			0x21
 #define		PLTSYNC_TRADE_AUTHENTICATED		0x22
 #define		PLTSYNC_TRADE_LOGINED			0x23
+
+
+#define RSPINFO_ERROR(log, rsp, msg) do { \
+	log << msg; \
+	if (rsp) \
+		log << ", ErrorID=" << rsp->ErrorID << ", ErrorMsg=" << rsp->ErrorMsg; \
+	else \
+		log << ", pRspInfo == NULL"; \
+	LOGERR(logger, log); \
+} while(0)
 
 
 typedef struct QuoteSyncField {
