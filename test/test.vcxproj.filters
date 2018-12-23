@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="DP">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="SG">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
@@ -22,14 +18,14 @@
     <Filter Include="BE_TESTED_CODE">
       <UniqueIdentifier>{b9700fcf-89ff-48b1-a90b-d49a284a407e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DP">
+      <UniqueIdentifier>{9c216a01-a8ad-4a16-b70c-0332bdd27a91}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="test_arch.cpp">
       <Filter>LIB</Filter>
-    </ClCompile>
-    <ClCompile Include="test_log.cpp">
-      <Filter>MASTER</Filter>
     </ClCompile>
     <ClCompile Include="..\optsp-ctpcore\arch.cpp">
       <Filter>BE_TESTED_CODE</Filter>
@@ -40,16 +36,16 @@
     <ClCompile Include="test_config.cpp">
       <Filter>MASTER</Filter>
     </ClCompile>
-    <ClCompile Include="..\optsp-ctpcore\log.cpp">
+    <ClCompile Include="test_logger.cpp">
+      <Filter>MASTER</Filter>
+    </ClCompile>
+    <ClCompile Include="..\optsp-ctpcore\logger.cpp">
       <Filter>BE_TESTED_CODE</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test_arch.h">
       <Filter>LIB</Filter>
-    </ClInclude>
-    <ClInclude Include="test_log.h">
-      <Filter>MASTER</Filter>
     </ClInclude>
     <ClInclude Include="..\optsp-ctpcore\arch.h">
       <Filter>BE_TESTED_CODE</Filter>
@@ -60,8 +56,14 @@
     <ClInclude Include="test_config.h">
       <Filter>MASTER</Filter>
     </ClInclude>
-    <ClInclude Include="..\optsp-ctpcore\log.h">
+    <ClInclude Include="test_logger.h">
+      <Filter>MASTER</Filter>
+    </ClInclude>
+    <ClInclude Include="..\optsp-ctpcore\logger.h">
       <Filter>BE_TESTED_CODE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\optsp-ctpcore\datatype.hpp">
+      <Filter>DP</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
