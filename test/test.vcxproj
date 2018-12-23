@@ -150,6 +150,7 @@
     <ClCompile Include="..\optsp-ctpcore\config.cpp" />
     <ClCompile Include="..\optsp-ctpcore\logger.cpp" />
     <ClCompile Include="test_arch.cpp" />
+    <ClCompile Include="test_callback.cpp" />
     <ClCompile Include="test_config.cpp" />
     <ClCompile Include="test_logger.cpp" />
     <ClCompile Include="main.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="..\optsp-ctpcore\datatype.hpp" />
     <ClInclude Include="..\optsp-ctpcore\logger.h" />
     <ClInclude Include="test_arch.h" />
+    <ClInclude Include="test_callback.h" />
     <ClInclude Include="test_config.h" />
     <ClInclude Include="test_logger.h" />
   </ItemGroup>

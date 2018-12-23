@@ -21,6 +21,9 @@
     <Filter Include="DP">
       <UniqueIdentifier>{9c216a01-a8ad-4a16-b70c-0332bdd27a91}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TechVerify">
+      <UniqueIdentifier>{9c6f2733-2af1-4a09-910b-7c878bb53afe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -41,6 +44,9 @@
     </ClCompile>
     <ClCompile Include="..\optsp-ctpcore\logger.cpp">
       <Filter>BE_TESTED_CODE</Filter>
+    </ClCompile>
+    <ClCompile Include="test_callback.cpp">
+      <Filter>TechVerify</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +70,9 @@
     </ClInclude>
     <ClInclude Include="..\optsp-ctpcore\datatype.hpp">
       <Filter>DP</Filter>
+    </ClInclude>
+    <ClInclude Include="test_callback.h">
+      <Filter>TechVerify</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #include "test_logger.h"
 #include "test_arch.h"
 #include "test_config.h"
+#include "test_callback.h"
 #include <gtest/gtest.h>
 
 /// TEST ORDER
@@ -43,6 +44,12 @@ TEST(test_logger, test_logger_case_1) {
 ///accepted - 2018/12/23 21:18:00
 TEST(test_logger, test_logger_case_2) {
 	ASSERT_EQ(1000, test_Logger_stress_test(1000));
+}
+
+///tech. callback test
+///acepted - 2018/12/23 22:44:00
+TEST(test_callback, test_callback_case_1) {
+	ASSERT_EQ(1000, test_Callback(1000));
 }
 
 int main(int argc, char**argv) {
