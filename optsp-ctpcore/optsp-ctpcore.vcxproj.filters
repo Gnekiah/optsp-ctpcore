@@ -30,15 +30,6 @@
     <ClCompile Include="stgroup.cpp">
       <Filter>SG</Filter>
     </ClCompile>
-    <ClCompile Include="quotedp.cpp">
-      <Filter>DP</Filter>
-    </ClCompile>
-    <ClCompile Include="tradedp.cpp">
-      <Filter>DP</Filter>
-    </ClCompile>
-    <ClCompile Include="statedp.cpp">
-      <Filter>DP</Filter>
-    </ClCompile>
     <ClCompile Include="quotespi.cpp">
       <Filter>TP</Filter>
     </ClCompile>
@@ -51,7 +42,7 @@
     <ClCompile Include="config.cpp">
       <Filter>MASTER</Filter>
     </ClCompile>
-    <ClCompile Include="log.cpp">
+    <ClCompile Include="logger.cpp">
       <Filter>MASTER</Filter>
     </ClCompile>
   </ItemGroup>
@@ -64,15 +55,6 @@
     </ClInclude>
     <ClInclude Include="stgroup.h">
       <Filter>SG</Filter>
-    </ClInclude>
-    <ClInclude Include="quotedp.h">
-      <Filter>DP</Filter>
-    </ClInclude>
-    <ClInclude Include="tradedp.h">
-      <Filter>DP</Filter>
-    </ClInclude>
-    <ClInclude Include="statedp.h">
-      <Filter>DP</Filter>
     </ClInclude>
     <ClInclude Include="quotespi.h">
       <Filter>TP</Filter>
@@ -98,16 +80,13 @@
     <ClInclude Include="platstruct.hpp">
       <Filter>TP</Filter>
     </ClInclude>
-    <ClInclude Include="const.hpp">
-      <Filter>MASTER</Filter>
-    </ClInclude>
     <ClInclude Include="arch.h">
       <Filter>LIB</Filter>
     </ClInclude>
     <ClInclude Include="config.h">
       <Filter>MASTER</Filter>
     </ClInclude>
-    <ClInclude Include="log.h">
+    <ClInclude Include="logger.h">
       <Filter>MASTER</Filter>
     </ClInclude>
   </ItemGroup>
