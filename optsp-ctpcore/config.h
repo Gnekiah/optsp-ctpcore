@@ -9,12 +9,13 @@
 #include "datatype.hpp"
 
 
-
-
 class Config
 {
 private:
 	boost::property_tree::ptree pt;
+
+public:
+	///访问类的public属性时，要加锁
 	std::mutex lock;
 
 public:
@@ -34,9 +35,6 @@ public:
 	const char* INSTRUMENT_FILE = "instrument.csv";		///合约列表保存文件
 	const char* MD_CSV_FORMAT = "md-%s-tick.csv";		///数据保存的文件格式
 	
-
-
-
 public:
 	boost::filesystem::path homepath;				///主目录
 	boost::filesystem::path datapath;				///数据目录
@@ -50,11 +48,9 @@ public:
 	FrontAddrType quoteFrontAddr;					///行情API前置地址
 	FrontAddrType tradeFrontAddr;					///交易API前置地址
 
-
 public:
 	Config();
-
-
+	void SaveConfig();
 };
 
 #endif // !OPTSP_CTPCORE_CONFIG_H_

@@ -9,7 +9,7 @@ Config::Config()
 	arch_GetHomePath(_home);
 	homepath = boost::filesystem::path(_home)/HOME_FILE;
 	std::string _config_path = (homepath / CONFIG_FILE).string();
-
+	
 	if (!boost::filesystem::exists(homepath) || !boost::filesystem::is_directory(homepath))
 		boost::filesystem::create_directories(homepath);
 
@@ -38,4 +38,18 @@ Config::Config()
 		if (!boost::filesystem::exists(datapath) || !boost::filesystem::is_directory(datapath))
 			boost::filesystem::create_directories(datapath);
 	}
+}
+
+
+void Config::SaveConfig()
+{
+	std::string _config_path = (homepath / CONFIG_FILE).string();
+	pt.put<int>("Logger.LogLevel", loglevel);						///fixed - 2018/12/23 17:47:00
+	pt.put<std::string>("Logger.DataPath", datapath.string());
+	pt.put<std::string>("Trader.BrokerID", brokerID);
+	pt.put<std::string>("Trader.UserID", userID);
+	pt.put<std::string>("Trader.InvestorID", investorID);
+	pt.put<std::string>("Trader.QuoteFrontAddr", quoteFrontAddr);
+	pt.put<std::string>("Trader.TradeFrontAddr", tradeFrontAddr);
+	write_ini(_config_path, pt);
 }
