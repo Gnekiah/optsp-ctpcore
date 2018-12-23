@@ -66,6 +66,10 @@ int test_Logger(int level, int cnt, void *ptr, int *p) {
 	_Logger * _logger = new _Logger(logger, level, cnt);
 	boost::thread thrd2(boost::bind(&_Logger::run, _logger));
 	arch_Sleep(cnt);
+	thrd1.interrupt();
+	thrd2.interrupt();
+	thrd2.join();
+	thrd1.join();
 	return *p;
 }
 
@@ -107,5 +111,9 @@ int test_Logger_stress_test(int cnt) {
 	_Logger * _logger = new _Logger(logger, LOG_LEVEL_TRACE, cnt);
 	boost::thread thrd2(boost::bind(&_Logger::run_stress, _logger));
 	arch_Sleep(cnt);
+	thrd1.interrupt();
+	thrd2.interrupt();
+	thrd2.join();
+	thrd1.join();
 	return gcnt6;
 }
