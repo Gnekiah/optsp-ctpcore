@@ -1,9 +1,19 @@
-#include "test_log.h"
+#include "test_logger.h"
 #include "test_arch.h"
 #include "test_config.h"
 #include <gtest/gtest.h>
 
+/// TEST ORDER
+///		arch			accepted - 2018/12/23 17:22:00
+///		config			accepted - 2018/12/23 17:22:00
+///		logger			accepted - 2018/12/23 21:18:00
+///		platctp
+///		stgroup
+///		stdemo
+///		master
 
+///lib test
+///accepted - 2018/12/23 17:22:00
 TEST(test_arch, test_arch_case_1) {
 	ASSERT_TRUE(test_arch_GetHomePath());
 	ASSERT_TRUE(test_arch_Sleep());
@@ -12,12 +22,27 @@ TEST(test_arch, test_arch_case_1) {
 	ASSERT_TRUE(test_arch_TimeStamp2Str());
 }
 
-TEST(test_log, test_log_case_1) {
-	ASSERT_TRUE(test_Log());
-}
-
+///config test
+///accepted - 2018/12/23 17:22:00
 TEST(test_config, test_config_case_1) {
 	ASSERT_TRUE(test_Config());
+}
+
+///logger function test
+///accepted - 2018/12/23 21:18:00
+TEST(test_logger, test_logger_case_1) {
+	ASSERT_EQ(0, test_Logger_level_off());
+	ASSERT_EQ(100, test_Logger_level_error(100));
+	ASSERT_EQ(100, test_Logger_level_warning(100));
+	ASSERT_EQ(100, test_Logger_level_info(100));
+	ASSERT_EQ(100, test_Logger_level_debug(100));
+	ASSERT_EQ(100, test_Logger_level_trace(100));
+}
+
+///logger stress test
+///accepted - 2018/12/23 21:18:00
+TEST(test_logger, test_logger_case_2) {
+	ASSERT_EQ(1000, test_Logger_stress_test(1000));
 }
 
 int main(int argc, char**argv) {
