@@ -52,6 +52,7 @@ bool arch_TimeStamp2Str(char* buff, uint64_t ts) {
 		buff[20] = ms / 100 + '0';
 		buff[21] = (ms / 10) % 10 + '0';
 		buff[22] = ms % 10 + '0';
+		buff[23] = '\0';		///fixed - 2018/12/23 17:48:00
 	}
 	catch (std::exception&) {
 		return false;
@@ -68,8 +69,6 @@ bool arch_GetHomePath(char* homePath) {
 	int ret = GetEnvironmentVariableA("USERPROFILE", homePath, 1024);
 	return (ret == 0 || ret > 1024) ? false : true;
 }
-
-
 
 
 
