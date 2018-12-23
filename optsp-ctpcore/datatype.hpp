@@ -36,12 +36,34 @@
 
 
 
-#define	MAFIELD_MACNT_MAX		5
+#define	MAFIELD_MACNT_MAX					5		///MA指标的最大数量
+#define	LOGGER_FLUSH_INTERVAL				5000	///日志刷入间隔，单位毫秒
 
 
+///日志处理的回调函数指针
+///int loglevel - 日志记录等级
+///const char* ptr - 单条日志缓冲区的首地址指针
+typedef void(*log_callback_fn) (int, const char*);
+///策略组实时状态回调函数指针
+///int cbtype - CB_STGROUP的回调类型
+///void* ptr - 回调返回的数据区域的首地址指针
+typedef void(*stgroup_callback_fn) (int, void*);
+///行情接口的回调函数指针
+///int cbtype - CB_QUOTE的回调类型
+///bool flag - 标记回调数据是否有效
+///void* ptr - 指向回调的数据区域的首地址指针
 typedef void(*quote_callback_fn) (int, bool, void*);
+///交易接口的回调函数指针
+///int cbtype - CB_TRADE的回调类型
+///bool flag - 标记回调数据是否有效
+///void* ptr - 指向回调的数据区域的首地址指针
 typedef void(*trade_callback_fn) (int, bool, void*);
-typedef void(*stgroup_callback_fn) (int, bool, void*);
+///ST下发的交易命令的回调函数指针
+///int cbtype - CB_TRADE_CMD的回调类型
+///int cmdid - 用于ST_GROUP唯一确定一个下发命令的ID, 由下发命令时分配
+///bool flag - 标记回调数据是否有效
+///void* ptr - 指向回调的数据区域的首地址指针
+typedef void(*platcmd_callback_fn) (int, int, bool, void*);
 
 
 typedef char MdCsvFormatType[128];									///行情CSV保存格式类型
