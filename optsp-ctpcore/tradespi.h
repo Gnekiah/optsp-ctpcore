@@ -15,7 +15,7 @@ class TradeSpi : public CThostFtdcTraderSpi
 private:
 	Logger * logger = nullptr;
 	TradeSyncField * tradeSync = nullptr;
-	trade_callback_fn * trade_callback = nullptr;
+	trade_callback_fn trade_callback = nullptr;
 
 	uint64_t maxOrderRef;
 

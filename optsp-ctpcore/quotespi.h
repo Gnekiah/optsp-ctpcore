@@ -15,7 +15,7 @@ class QuoteSpi : public CThostFtdcMdSpi
 private:
 	Logger * logger = nullptr;
 	QuoteSyncField * quoteSync = nullptr;
-	quote_callback_fn * quote_callback = nullptr;
+	quote_callback_fn quote_callback = nullptr;
 	HandicapField * handicap = nullptr;
 
 public:

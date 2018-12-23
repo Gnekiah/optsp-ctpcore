@@ -25,8 +25,8 @@ private:
 	Logger * logger = nullptr;
 	QuoteSyncField * quoteSync = nullptr;
 	TradeSyncField * tradeSync = nullptr;
-	quote_callback_fn * quote_callback = nullptr;
-	trade_callback_fn * trade_callback = nullptr;
+	quote_callback_fn quote_callback = nullptr;
+	trade_callback_fn trade_callback = nullptr;
 	QuoteSpi * quoteSpi = nullptr;
 	TradeSpi * tradeSpi = nullptr;
 	CThostFtdcMdApi * quoteApi = nullptr;
