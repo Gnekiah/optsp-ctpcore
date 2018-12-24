@@ -3,8 +3,8 @@
 #include "quotestruct.hpp"
 #include "arch.h"
 
-QuoteSpi::QuoteSpi(Logger * logger, QuoteSyncField * quoteSync, quote_callback_fn qfn, platcmd_callback_fn pfn)
-	: logger(logger), quoteSync(quoteSync), quote_callback(qfn), platcmd_callback(pfn)
+QuoteSpi::QuoteSpi(Logger * logger, quote_callback_fn qfn, cmd_callback_fn pfn)
+	: logger(logger), quote_callback(qfn), cmd_callback(pfn)
 {
 	std::stringstream log;
 	handicap = new HandicapField;
@@ -16,9 +16,7 @@ QuoteSpi::QuoteSpi(Logger * logger, QuoteSyncField * quoteSync, quote_callback_f
 void QuoteSpi::OnFrontConnected()
 {
 	std::stringstream log;
-	//quoteSync->QuoteState = PLTSYNC_QUOTE_CONNECTED;
-	//quoteSync->QuoteActive = true;
-	//(*platcmd_callback)(, )
+	(*cmd_callback)(CMD_QUOTE_LOGIN, CMDID_QUOTE, false, nullptr);
 	(*quote_callback)(CB_QUOTE_CONNECTED, true, nullptr);
 	log << "Connected with Quote Front Server";
 	LOGINFO(logger, log);
@@ -29,8 +27,7 @@ void QuoteSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThost
 {
 	std::stringstream log;
 	if (pRspInfo && pRspInfo->ErrorID == 0 && pRspUserLogin) {
-		//quoteSync->QuoteState = PLTSYNC_QUOTE_LOGINED;
-		//quoteSync->QuoteActive = true;
+		(*cmd_callback)(CMD_QUOTE_SUBSCRIBE, CMDID_QUOTE, false, nullptr);
 		(*quote_callback)(CB_QUOTE_RSP_USER_LOGIN, true, nullptr);
 		log << "Login on Quote Front Server, " << pRspUserLogin->TradingDay << ", " << pRspUserLogin->LoginTime;
 		LOGINFO(logger, log);
