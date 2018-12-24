@@ -4,8 +4,8 @@
 #include "tradestruct.hpp"
 
 
-TradeSpi::TradeSpi(Logger * logger, TradeSyncField * tradeSync, trade_callback_fn* fn)
-	: logger(logger), tradeSync(tradeSync), trade_callback(fn)
+TradeSpi::TradeSpi(Logger * logger, TradeSyncField * tradeSync, trade_callback_fn tfn, platcmd_callback_fn pfn)
+	: logger(logger), tradeSync(tradeSync), trade_callback(tfn), platcmd_callback(pfn)
 {
 	std::stringstream log;
 	log << "TradeSpi Inited";

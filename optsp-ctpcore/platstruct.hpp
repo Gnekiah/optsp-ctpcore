@@ -2,6 +2,10 @@
 #define OPTSP_CTPCORE_PLATSTRUCT_HPP_
 
 #include <atomic>
+#include "datatype.hpp"
+#include "quotestruct.hpp"
+#include "tradestruct.hpp"
+
 
 #define		PLTSYNC_INIT					0x00
 
@@ -33,6 +37,15 @@ typedef struct TradeSyncField {
 	std::atomic_bool		TradeActive;
 	std::atomic_int			TradeState;
 } TradeSyncField;
+
+
+typedef union TradeCmdField {
+	InstrumentField			Instrument;
+	OrderField				Order;
+	CapitalField			Capital;
+	MatchField				Match;
+	PositionField			Position;
+} TradeCmdField;
 
 #endif // !OPTSP_CTPCORE_PLATSTRUCT_HPP_
 

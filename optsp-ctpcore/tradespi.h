@@ -16,11 +16,12 @@ private:
 	Logger * logger = nullptr;
 	TradeSyncField * tradeSync = nullptr;
 	trade_callback_fn trade_callback = nullptr;
+	platcmd_callback_fn platcmd_callback = nullptr;
 
 	uint64_t maxOrderRef;
 
 public:
-	TradeSpi(Logger * logger, TradeSyncField * tradeSync, trade_callback_fn* fn);
+	TradeSpi(Logger * logger, TradeSyncField * tradeSync, trade_callback_fn tfn, platcmd_callback_fn pfn);
 
 	/////////////////////////////////////////
 	/********** 通信连接与认证相关 **********/
