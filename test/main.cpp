@@ -2,6 +2,7 @@
 #include "test_arch.h"
 #include "test_config.h"
 #include "test_callback.h"
+#include "test_platctp.h"
 #include <gtest/gtest.h>
 
 /// TEST ORDER
@@ -50,6 +51,12 @@ TEST(test_logger, test_logger_case_2) {
 ///acepted - 2018/12/23 22:44:00
 TEST(test_callback, test_callback_case_1) {
 	ASSERT_EQ(1000, test_Callback(1000));
+}
+
+///quotespi & quoteapi test
+///
+TEST(test_quotespi, test_quotespi_case_1) {
+	ASSERT_TRUE(test_Quotespi());
 }
 
 int main(int argc, char**argv) {

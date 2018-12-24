@@ -35,6 +35,8 @@
 #define	CB_TRADE_ERR_RTN_ORDER_ACTION					0x10003006
 
 
+//#define PLATCMD_
+
 
 #define	MAFIELD_MACNT_MAX					5		///MA指标的最大数量
 #define	LOGGER_FLUSH_INTERVAL				5000	///日志刷入间隔，单位毫秒
@@ -59,7 +61,7 @@ typedef void(*quote_callback_fn) (int, bool, void*);
 ///void* ptr - 指向回调的数据区域的首地址指针
 typedef void(*trade_callback_fn) (int, bool, void*);
 ///ST下发的交易命令的回调函数指针
-///int cbtype - CB_TRADE_CMD的回调类型
+///int cbtype - PLATCMD的回调类型
 ///int cmdid - 用于ST_GROUP唯一确定一个下发命令的ID, 由下发命令时分配
 ///bool flag - 标记回调数据是否有效
 ///void* ptr - 指向回调的数据区域的首地址指针
