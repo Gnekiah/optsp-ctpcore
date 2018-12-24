@@ -4,8 +4,8 @@
 #include "tradestruct.hpp"
 
 
-TradeSpi::TradeSpi(Logger * logger, TradeSyncField * tradeSync, trade_callback_fn tfn, platcmd_callback_fn pfn)
-	: logger(logger), tradeSync(tradeSync), trade_callback(tfn), platcmd_callback(pfn)
+TradeSpi::TradeSpi(Logger * logger, trade_callback_fn tfn, cmd_callback_fn pfn)
+	: logger(logger), trade_callback(tfn), cmd_callback(pfn)
 {
 	std::stringstream log;
 	log << "TradeSpi Inited";
@@ -17,8 +17,7 @@ TradeSpi::TradeSpi(Logger * logger, TradeSyncField * tradeSync, trade_callback_f
 void TradeSpi::OnFrontConnected()
 {
 	std::stringstream log;
-	tradeSync->TradeState = PLTSYNC_TRADE_CONNECTED;
-	tradeSync->TradeActive = true;
+	(*cmd_callback)(CMD_TRADE_AUTHENTICATE, CMDID_TRADE, false, nullptr);
 	(*trade_callback)(CB_TRADE_CONNECTED, true, nullptr);
 	log << "Connected with Trade Front Server";
 	LOGINFO(logger, log);
@@ -40,8 +39,7 @@ void TradeSpi::OnRspAuthenticate(CThostFtdcRspAuthenticateField *pRspAuthenticat
 {
 	std::stringstream log;
 	if (pRspInfo && pRspInfo->ErrorID == 0 && pRspAuthenticateField) {
-		tradeSync->TradeState = PLTSYNC_TRADE_AUTHENTICATED;
-		tradeSync->TradeActive = true;
+		(*cmd_callback)(CMD_TRADE_LOGIN, CMDID_TRADE, false, nullptr);
 		(*trade_callback)(CB_TRADE_RSP_AUTHENTICATE, true, nullptr);
 		log << "Success to Authenticate, BrokerID=" << pRspAuthenticateField->BrokerID
 			<< ", UserID=" << pRspAuthenticateField->UserID
@@ -60,8 +58,6 @@ void TradeSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThost
 {
 	std::stringstream log;
 	if (pRspInfo && pRspInfo->ErrorID == 0 && pRspUserLogin) {
-		tradeSync->TradeState = PLTSYNC_TRADE_LOGINED;
-		tradeSync->TradeActive = true;
 		(*trade_callback)(CB_TRADE_RSP_USER_LOGIN, true, nullptr);
 		maxOrderRef = strtoull(pRspUserLogin->MaxOrderRef, 0, 10);
 		log << "Login on Trade Front Server, TradingDay=" << pRspUserLogin->TradingDay
