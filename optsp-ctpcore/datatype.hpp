@@ -35,7 +35,16 @@
 #define	CB_TRADE_ERR_RTN_ORDER_ACTION					0x10003006
 
 
-//#define PLATCMD_
+#define	CMDID_QUOTE		-1
+#define	CMDID_TRADE		-2
+
+#define CMD_QUOTE_LOGIN									0x20000001
+#define	CMD_QUOTE_SUBSCRIBE								0x20000002
+
+#define CMD_TRADE_AUTHENTICATE							0x30000001
+#define	CMD_TRADE_LOGIN									0x30000002
+#define	CMD_TRADE_SETTLEMENT_INFO_CONFIRM				0x30001001
+#define	CMD_TRADE_QRY_INSTRUMENT						0x30001002
 
 
 #define	MAFIELD_MACNT_MAX					5		///MA指标的最大数量
@@ -60,12 +69,12 @@ typedef void(*quote_callback_fn) (int, bool, void*);
 ///bool flag - 标记回调数据是否有效
 ///void* ptr - 指向回调的数据区域的首地址指针
 typedef void(*trade_callback_fn) (int, bool, void*);
-///ST下发的交易命令的回调函数指针
-///int cbtype - PLATCMD的回调类型
-///int cmdid - 用于ST_GROUP唯一确定一个下发命令的ID, 由下发命令时分配
+///命令的回调函数指针
+///int cbtype - CMD的回调类型
+///int cmdid - 命令的ID, 由下发命令时分配
 ///bool flag - 标记回调数据是否有效
 ///void* ptr - 指向回调的数据区域的首地址指针
-typedef void(*platcmd_callback_fn) (int, int, bool, void*);
+typedef void(*cmd_callback_fn) (int, int, bool, void*);
 
 
 typedef char MdCsvFormatType[128];									///行情CSV保存格式类型

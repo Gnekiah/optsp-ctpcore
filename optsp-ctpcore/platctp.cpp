@@ -3,14 +3,15 @@
 #include "arch.h"
 
 
-PlatCtp::PlatCtp(Config * config, Logger * logger, quote_callback_fn qfn, trade_callback_fn tfn, platcmd_callback_fn pfn)
-	: config(config), logger(logger), quote_callback(qfn), trade_callback(tfn), platcmd_callback(pfn)
+PlatCtp::PlatCtp(Config * config, Logger * logger, quote_callback_fn qfn, trade_callback_fn tfn, cmd_callback_fn pfn)
+	: config(config), logger(logger), quote_callback(qfn), trade_callback(tfn), cmd_callback(pfn)
 {
 	std::stringstream log;
-	quoteSync = new QuoteSyncField;
-	tradeSync = new TradeSyncField;
-	quoteSpi = new QuoteSpi(logger, quoteSync, quote_callback);
-	tradeSpi = new TradeSpi(logger, tradeSync, trade_callback);
+	cmdfn = this;
+	cmdQueue = new boost::lockfree::queue<PlatCmdField>(64);
+
+	quoteSpi = new QuoteSpi(logger, quote_callback, CmdCallBack);
+	tradeSpi = new TradeSpi(logger, trade_callback, CmdCallBack);
 	
 	quoteApi = CThostFtdcMdApi::CreateFtdcMdApi(config->homepath.string().c_str());
 	quoteApi->RegisterSpi(quoteSpi);
@@ -29,7 +30,39 @@ PlatCtp::PlatCtp(Config * config, Logger * logger, quote_callback_fn qfn, trade_
 
 void PlatCtp::InsertCommand(int rqtype, int rqid, void* ptr)
 {
+	PlatCmdField cmd = { 0 };
+	cmd.Type = rqtype;
+	cmd.Id = rqid;
+	cmd.Flag = true;
+	switch (rqtype) {
+	case CMD_TRADE_QRY_INSTRUMENT:
+		arch_Memcpy(&cmd.Instrument, ptr, sizeof(cmd.Instrument));
+		break;
+	}
 
+	lock.lock();
+	cmdQueue->push(cmd);
+	lock.unlock();
+}
+
+
+void PlatCtp::InsertCommand(int cmdtype, int cmdid, bool flag, void* ptr)
+{
+	PlatCmdField cmd = { 0 };
+	cmd.Type = cmdtype;
+	cmd.Id = cmdid;
+	cmd.Flag = flag;
+	if (flag) {
+		///Do copy from ptr to cmd.data
+		///ptr is always empty in current version
+		switch (cmdtype) {
+
+		}
+	}
+
+	lock.lock();
+	cmdQueue->push(cmd);
+	lock.unlock();
 }
 
 
@@ -57,4 +90,11 @@ void PlatCtp::run()
 	delete tradeSpi;
 	quoteApi->Release();
 	tradeApi->Release();
+}
+
+
+void CmdCallBack(int cmdtype, int cmdid, bool flag, void* ptr)
+{
+	PlatCtp *plat = (PlatCtp*)cmdfn;
+	plat->InsertCommand(cmdtype, cmdid, flag, ptr);
 }
