@@ -86,7 +86,7 @@ void platcmd_callback(int cbtype, int cmdid, bool flag, void* ptr) {
 
 }
 
-bool test_Quotespi() {
+bool test_PlatCtp() {
 	Config *config = new Config();
 	Logger *logger = new Logger((config->homepath / "logging-debug-quotespi.log").string(), LOG_LEVEL_TRACE, log_callback);
 	QuoteSyncField *quoteSync = new QuoteSyncField;

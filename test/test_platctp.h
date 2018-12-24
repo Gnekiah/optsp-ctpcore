@@ -4,7 +4,7 @@
 #include "../optsp-ctpcore/quotespi.h"
 
 
-bool test_Quotespi();
+bool test_PlatCtp();
 
 
 #endif // !OPTSP_CTPCORE_TEST_PLATCTP_H_

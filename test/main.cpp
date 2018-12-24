@@ -55,8 +55,8 @@ TEST(test_callback, test_callback_case_1) {
 
 ///quotespi & quoteapi test
 ///
-TEST(test_quotespi, test_quotespi_case_1) {
-	ASSERT_TRUE(test_Quotespi());
+TEST(test_platctp, test_platctp_case_1) {
+	ASSERT_TRUE(test_PlatCtp());
 }
 
 int main(int argc, char**argv) {

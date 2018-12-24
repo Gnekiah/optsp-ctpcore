@@ -149,21 +149,26 @@
     <ClCompile Include="..\optsp-ctpcore\arch.cpp" />
     <ClCompile Include="..\optsp-ctpcore\config.cpp" />
     <ClCompile Include="..\optsp-ctpcore\logger.cpp" />
+    <ClCompile Include="..\optsp-ctpcore\quotespi.cpp" />
     <ClCompile Include="test_arch.cpp" />
     <ClCompile Include="test_callback.cpp" />
     <ClCompile Include="test_config.cpp" />
     <ClCompile Include="test_logger.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="test_platctp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\optsp-ctpcore\arch.h" />
     <ClInclude Include="..\optsp-ctpcore\config.h" />
     <ClInclude Include="..\optsp-ctpcore\datatype.hpp" />
     <ClInclude Include="..\optsp-ctpcore\logger.h" />
+    <ClInclude Include="..\optsp-ctpcore\quotespi.h" />
+    <ClInclude Include="..\optsp-ctpcore\quotestruct.hpp" />
     <ClInclude Include="test_arch.h" />
     <ClInclude Include="test_callback.h" />
     <ClInclude Include="test_config.h" />
     <ClInclude Include="test_logger.h" />
+    <ClInclude Include="test_platctp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
