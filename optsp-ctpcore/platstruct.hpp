@@ -17,28 +17,16 @@
 } while(0)
 
 
-/*	shadowed
+#define QUOTE_STATE_NONE						0x00
+#define QUOTE_STATE_CONNECTED					0x01
+#define QUOTE_STATE_LOGINED						0x02
 
-#define		PLTSYNC_INIT					0x00
-
-#define		PLTSYNC_QUOTE_CONNECTED			0x11
-#define		PLTSYNC_QUOTE_LOGINED			0x12
-
-#define		PLTSYNC_TRADE_CONNECTED			0x21
-#define		PLTSYNC_TRADE_AUTHENTICATED		0x22
-#define		PLTSYNC_TRADE_LOGINED			0x23
-
-typedef struct QuoteSyncField {
-	std::atomic_bool		QuoteActive;
-	std::atomic_int			QuoteState;
-} QuoteSyncField;
-
-
-typedef struct TradeSyncField {
-	std::atomic_bool		TradeActive;
-	std::atomic_int			TradeState;
-} TradeSyncField;
-*/
+#define TRADE_STATE_NONE						0x10
+#define TRADE_STATE_AUTHENED					0x11
+#define TRADE_STATE_CONNECTED					0x12
+#define TRADE_STATE_LOGINED						0x13
+#define TRADE_STATE_SETTLEMENT_CONFIRMED		0x14
+#define TRADE_STATE_INSTRUMENT_QUERIED			0x15
 
 
 typedef struct PlatCmdField {
