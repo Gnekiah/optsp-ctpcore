@@ -18,9 +18,6 @@
     <Filter Include="BE_TESTED_CODE">
       <UniqueIdentifier>{b9700fcf-89ff-48b1-a90b-d49a284a407e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DP">
-      <UniqueIdentifier>{9c216a01-a8ad-4a16-b70c-0332bdd27a91}</UniqueIdentifier>
-    </Filter>
     <Filter Include="TechVerify">
       <UniqueIdentifier>{9c6f2733-2af1-4a09-910b-7c878bb53afe}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,12 @@
     <ClCompile Include="test_platctp.cpp">
       <Filter>TP</Filter>
     </ClCompile>
+    <ClCompile Include="..\optsp-ctpcore\platctp.cpp">
+      <Filter>BE_TESTED_CODE</Filter>
+    </ClCompile>
+    <ClCompile Include="..\optsp-ctpcore\tradespi.cpp">
+      <Filter>BE_TESTED_CODE</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test_arch.h">
@@ -74,9 +77,6 @@
     <ClInclude Include="..\optsp-ctpcore\logger.h">
       <Filter>BE_TESTED_CODE</Filter>
     </ClInclude>
-    <ClInclude Include="..\optsp-ctpcore\datatype.hpp">
-      <Filter>DP</Filter>
-    </ClInclude>
     <ClInclude Include="test_callback.h">
       <Filter>TechVerify</Filter>
     </ClInclude>
@@ -88,6 +88,21 @@
     </ClInclude>
     <ClInclude Include="test_platctp.h">
       <Filter>TP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\optsp-ctpcore\platctp.h">
+      <Filter>BE_TESTED_CODE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\optsp-ctpcore\platstruct.hpp">
+      <Filter>BE_TESTED_CODE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\optsp-ctpcore\tradestruct.hpp">
+      <Filter>BE_TESTED_CODE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\optsp-ctpcore\datatype.hpp">
+      <Filter>BE_TESTED_CODE</Filter>
+    </ClInclude>
+    <ClInclude Include="..\optsp-ctpcore\tradespi.h">
+      <Filter>BE_TESTED_CODE</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

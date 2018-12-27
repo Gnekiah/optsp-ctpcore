@@ -44,6 +44,6 @@ bool test_Config() {
 	show(config->quoteFrontAddr);
 	show(config->tradeFrontAddr);
 
-	config->SaveConfig();
+	//config->SaveConfig();
 	return true;
 }

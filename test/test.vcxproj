@@ -94,8 +94,8 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>gtestd.lib;gtest_maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\googletest\googletest\msvc\2010\gtest\x64-Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gtestd.lib;gtest_maind.lib;thostmduserapi.lib;thosttraderapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\googletest\googletest\msvc\2010\gtest\x64-Debug;D:\QtProject\optsp-ctpcore\optsp-ctpcore\ctpapi;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -107,8 +107,8 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>gtestd.lib;gtest_maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\googletest\googletest\msvc\2010\gtest\x64-Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gtestd.lib;gtest_maind.lib;thostmduserapi.lib;thosttraderapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\googletest\googletest\msvc\2010\gtest\x64-Debug;D:\QtProject\optsp-ctpcore\optsp-ctpcore\ctpapi;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -149,7 +149,9 @@
     <ClCompile Include="..\optsp-ctpcore\arch.cpp" />
     <ClCompile Include="..\optsp-ctpcore\config.cpp" />
     <ClCompile Include="..\optsp-ctpcore\logger.cpp" />
+    <ClCompile Include="..\optsp-ctpcore\platctp.cpp" />
     <ClCompile Include="..\optsp-ctpcore\quotespi.cpp" />
+    <ClCompile Include="..\optsp-ctpcore\tradespi.cpp" />
     <ClCompile Include="test_arch.cpp" />
     <ClCompile Include="test_callback.cpp" />
     <ClCompile Include="test_config.cpp" />
@@ -162,8 +164,12 @@
     <ClInclude Include="..\optsp-ctpcore\config.h" />
     <ClInclude Include="..\optsp-ctpcore\datatype.hpp" />
     <ClInclude Include="..\optsp-ctpcore\logger.h" />
+    <ClInclude Include="..\optsp-ctpcore\platctp.h" />
+    <ClInclude Include="..\optsp-ctpcore\platstruct.hpp" />
     <ClInclude Include="..\optsp-ctpcore\quotespi.h" />
     <ClInclude Include="..\optsp-ctpcore\quotestruct.hpp" />
+    <ClInclude Include="..\optsp-ctpcore\tradespi.h" />
+    <ClInclude Include="..\optsp-ctpcore\tradestruct.hpp" />
     <ClInclude Include="test_arch.h" />
     <ClInclude Include="test_callback.h" />
     <ClInclude Include="test_config.h" />
