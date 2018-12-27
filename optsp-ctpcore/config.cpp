@@ -5,6 +5,7 @@
 
 Config::Config()
 {
+	ready = false;
 	char _home[64];
 	arch_GetHomePath(_home);
 	homepath = boost::filesystem::path(_home)/HOME_FILE;
@@ -38,6 +39,8 @@ Config::Config()
 		if (!boost::filesystem::exists(datapath) || !boost::filesystem::is_directory(datapath))
 			boost::filesystem::create_directories(datapath);
 	}
+	if (brokerID[0] != '\0' && userID[0] != '\0' && investorID[0] != '\0' && password != '\0' && quoteFrontAddr[0] != '\0' && tradeFrontAddr[0] != '\0')
+		ready = true;
 }
 
 

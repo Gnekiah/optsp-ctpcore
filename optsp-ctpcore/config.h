@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <mutex>
+#include <atomic>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/filesystem.hpp>
@@ -17,6 +18,7 @@ private:
 public:
 	///访问类的public属性时，要加锁
 	std::mutex lock;
+	std::atomic_bool ready;
 
 public:
 	const int VERSION = 0;
@@ -41,12 +43,12 @@ public:
 	int loglevel;									///日志过滤等级
 
 public:
-	BrokerIDType brokerID;							///经纪公司代码
-	UserIDType userID;								///用户账号
-	InvestorIDType investorID;						///投资者账号
-	PasswordType password;							///口令
-	FrontAddrType quoteFrontAddr;					///行情API前置地址
-	FrontAddrType tradeFrontAddr;					///交易API前置地址
+	BrokerIDType brokerID = { 0 };					///经纪公司代码
+	UserIDType userID = { 0 };						///用户账号
+	InvestorIDType investorID = { 0 };				///投资者账号
+	PasswordType password = { 0 };					///口令
+	FrontAddrType quoteFrontAddr = { 0 };			///行情API前置地址
+	FrontAddrType tradeFrontAddr = { 0 };			///交易API前置地址
 
 public:
 	Config();
