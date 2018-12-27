@@ -3,7 +3,7 @@
 #include "quotestruct.hpp"
 #include "arch.h"
 
-QuoteSpi::QuoteSpi(Logger * logger, quote_callback_fn qfn, cmd_callback_fn pfn)
+QuoteSpi::QuoteSpi(Logger * logger, quote_callback_fn qfn, plat_callback_fn pfn)
 	: logger(logger), quote_callback(qfn), cmd_callback(pfn)
 {
 	std::stringstream log;
@@ -16,7 +16,7 @@ QuoteSpi::QuoteSpi(Logger * logger, quote_callback_fn qfn, cmd_callback_fn pfn)
 void QuoteSpi::OnFrontConnected()
 {
 	std::stringstream log;
-	(*cmd_callback)(CMD_QUOTE_LOGIN, CMDID_QUOTE, false, nullptr);
+	(*cmd_callback)(CB_CMD_QUOTE_LOGIN, CMDID_QUOTE, false, nullptr);
 	(*quote_callback)(CB_QUOTE_CONNECTED, true, nullptr);
 	log << "Connected with Quote Front Server";
 	LOGINFO(logger, log);
@@ -27,7 +27,7 @@ void QuoteSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThost
 {
 	std::stringstream log;
 	if (pRspInfo && pRspInfo->ErrorID == 0 && pRspUserLogin) {
-		(*cmd_callback)(CMD_QUOTE_SUBSCRIBE, CMDID_QUOTE, false, nullptr);
+		(*cmd_callback)(CB_CMD_QUOTE_SUBSCRIBE, CMDID_QUOTE, false, nullptr);
 		(*quote_callback)(CB_QUOTE_RSP_USER_LOGIN, true, nullptr);
 		log << "Login on Quote Front Server, " << pRspUserLogin->TradingDay << ", " << pRspUserLogin->LoginTime;
 		LOGINFO(logger, log);
@@ -61,7 +61,7 @@ void QuoteSpi::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarket
 	handicap->DateStamp = arch_Str2TimeStamp((char*)pDepthMarketData->TradingDay, (char*)pDepthMarketData->UpdateTime, pDepthMarketData->UpdateMillisec);
 	handicap->PreClose = pDepthMarketData->PreClosePrice;
 	handicap->PreSettlement = pDepthMarketData->PreSettlementPrice;
-	handicap->PrePosition = pDepthMarketData->PreOpenInterest;
+	handicap->PrePosition = (uint64_t)pDepthMarketData->PreOpenInterest;
 	handicap->CurrOpen = pDepthMarketData->OpenPrice;
 	handicap->CurrHighest = pDepthMarketData->HighestPrice;
 	handicap->CurrLowest = pDepthMarketData->LowestPrice;

@@ -4,7 +4,7 @@
 #include "ctpapi/ThostFtdcMdApi.h"
 #include "ctpapi/ThostFtdcUserApiDataType.h"
 #include "ctpapi/ThostFtdcUserApiStruct.h"
-#pragma comment (lib, "ctpapi/thostmduserapi.lib")
+//#pragma comment (lib, "ctpapi/thostmduserapi.lib")
 
 #include "platstruct.hpp"
 #include "logger.h"
@@ -15,12 +15,12 @@ class QuoteSpi : public CThostFtdcMdSpi
 private:
 	Logger * logger = nullptr;
 	quote_callback_fn quote_callback = nullptr;
-	cmd_callback_fn cmd_callback = nullptr;
+	plat_callback_fn cmd_callback = nullptr;
 	HandicapField * handicap = nullptr;
 
 public:
 	///重载构造函数
-	QuoteSpi(Logger * logger, quote_callback_fn qfn, cmd_callback_fn pfn);
+	QuoteSpi(Logger * logger, quote_callback_fn qfn, plat_callback_fn pfn);
 	///当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用。
 	void OnFrontConnected();
 	///当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
