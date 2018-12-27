@@ -4,7 +4,7 @@
 #include "tradestruct.hpp"
 
 
-TradeSpi::TradeSpi(Logger * logger, trade_callback_fn tfn, cmd_callback_fn pfn)
+TradeSpi::TradeSpi(Logger * logger, trade_callback_fn tfn, plat_callback_fn pfn)
 	: logger(logger), trade_callback(tfn), cmd_callback(pfn)
 {
 	std::stringstream log;
@@ -17,7 +17,7 @@ TradeSpi::TradeSpi(Logger * logger, trade_callback_fn tfn, cmd_callback_fn pfn)
 void TradeSpi::OnFrontConnected()
 {
 	std::stringstream log;
-	(*cmd_callback)(CMD_TRADE_AUTHENTICATE, CMDID_TRADE, false, nullptr);
+	(*cmd_callback)(CB_CMD_TRADE_AUTHENTICATE, CMDID_TRADE, false, nullptr);
 	(*trade_callback)(CB_TRADE_CONNECTED, true, nullptr);
 	log << "Connected with Trade Front Server";
 	LOGINFO(logger, log);
@@ -39,7 +39,7 @@ void TradeSpi::OnRspAuthenticate(CThostFtdcRspAuthenticateField *pRspAuthenticat
 {
 	std::stringstream log;
 	if (pRspInfo && pRspInfo->ErrorID == 0 && pRspAuthenticateField) {
-		(*cmd_callback)(CMD_TRADE_LOGIN, CMDID_TRADE, false, nullptr);
+		(*cmd_callback)(CB_CMD_TRADE_LOGIN, CMDID_TRADE, false, nullptr);
 		(*trade_callback)(CB_TRADE_RSP_AUTHENTICATE, true, nullptr);
 		log << "Success to Authenticate, BrokerID=" << pRspAuthenticateField->BrokerID
 			<< ", UserID=" << pRspAuthenticateField->UserID
@@ -59,7 +59,8 @@ void TradeSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThost
 	std::stringstream log;
 	if (pRspInfo && pRspInfo->ErrorID == 0 && pRspUserLogin) {
 		(*trade_callback)(CB_TRADE_RSP_USER_LOGIN, true, nullptr);
-		maxOrderRef = strtoull(pRspUserLogin->MaxOrderRef, 0, 10);
+		(*cmd_callback)(CB_CMD_TRADE_SETTLEMENT_CONFIRM, CMDID_TRADE, false, nullptr);
+		uint64_t maxOrderRef = strtoull(pRspUserLogin->MaxOrderRef, 0, 10);
 		log << "Login on Trade Front Server, TradingDay=" << pRspUserLogin->TradingDay
 			<< ", LoginTime=" << pRspUserLogin->LoginTime
 			<< ", BrokerID=" << pRspUserLogin->BrokerID
@@ -123,22 +124,6 @@ void TradeSpi::OnRspTradingAccountPasswordUpdate(CThostFtdcTradingAccountPasswor
 }
 
 
-///请求查询投资者结算结果响应
-void TradeSpi::OnRspQrySettlementInfo(CThostFtdcSettlementInfoField *pSettlementInfo, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
-{
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pSettlementInfo) {
-		(*trade_callback)(CB_TRADE_RSP_QRY_SETTLEMENT_INFO, true, nullptr);
-		log << "Success to Query Settlement Info";
-		LOGINFO(logger, log);
-	}
-	else {
-		(*trade_callback)(CB_TRADE_RSP_QRY_SETTLEMENT_INFO, false, nullptr);
-		RSPINFO_ERROR(log, pRspInfo, "Failed to Query Settlement Info");
-	}
-}
-
-
 ///请求查询结算信息确认响应
 void TradeSpi::OnRspQrySettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
@@ -155,6 +140,21 @@ void TradeSpi::OnRspQrySettlementInfoConfirm(CThostFtdcSettlementInfoConfirmFiel
 }
 
 
+///请求查询投资者结算结果响应
+void TradeSpi::OnRspQrySettlementInfo(CThostFtdcSettlementInfoField *pSettlementInfo, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+{
+	std::stringstream log;
+	if (pRspInfo && pRspInfo->ErrorID == 0 && pSettlementInfo) {
+		(*trade_callback)(CB_TRADE_RSP_QRY_SETTLEMENT_INFO, true, nullptr);
+		log << "Success to Query Settlement Info";
+		LOGINFO(logger, log);
+	}
+	else {
+		(*trade_callback)(CB_TRADE_RSP_QRY_SETTLEMENT_INFO, false, nullptr);
+		RSPINFO_ERROR(log, pRspInfo, "Failed to Query Settlement Info");
+	}
+}
+
 
 ///投资者结算结果确认响应
 void TradeSpi::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
@@ -162,6 +162,7 @@ void TradeSpi::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *
 	std::stringstream log;
 	if (pRspInfo && pRspInfo->ErrorID == 0 && pSettlementInfoConfirm) {
 		(*trade_callback)(CB_TRADE_RSP_SETTLEMENT_INFO_CONFIRM, true, nullptr);
+		(*cmd_callback)(CB_CMD_TRADE_QRY_INSTRUMENT, CMDID_TRADE, false, nullptr);
 		log << "Success to Response Settlement Info Confirm";
 		LOGDBG(logger, log);
 	}
@@ -219,12 +220,16 @@ void TradeSpi::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThost
 		instrument.UnderlyingMultiple = pInstrument->UnderlyingMultiple;
 		instrument.VolumeMultiple = pInstrument->VolumeMultiple;
 		(*trade_callback)(CB_TRADE_RSP_QRY_INSTRUMENT, true, &instrument);
+		(*cmd_callback)(CB_CMD_TRADE_RSP_QRY_INSTRUMENT, CMDID_TRADE, true, &instrument);
 		log << "Success to Query Instrument";
 		LOGDBG(logger, log);
 	}
 	else {
 		(*trade_callback)(CB_TRADE_RSP_QRY_INSTRUMENT, false, nullptr);
 		RSPINFO_ERROR(log, pRspInfo, "Failed to Query Instrument");
+	}
+	if (bIsLast) {
+		(*cmd_callback)(CB_CMD_TRADE_QRY_INSTRUMENT_COMPLETED, CMDID_TRADE, false, nullptr);
 	}
 }
 

@@ -4,7 +4,7 @@
 #include "ctpapi/ThostFtdcTraderApi.h"
 #include "ctpapi/ThostFtdcUserApiDataType.h"
 #include "ctpapi/ThostFtdcUserApiStruct.h"
-#pragma comment (lib, "ctpapi/thosttraderapi.lib")
+//#pragma comment (lib, "ctpapi/thosttraderapi.lib")
 
 #include "platstruct.hpp"
 #include "logger.h"
@@ -15,12 +15,10 @@ class TradeSpi : public CThostFtdcTraderSpi
 private:
 	Logger * logger = nullptr;
 	trade_callback_fn trade_callback = nullptr;
-	cmd_callback_fn cmd_callback = nullptr;
-
-	uint64_t maxOrderRef;
+	plat_callback_fn cmd_callback = nullptr;
 
 public:
-	TradeSpi(Logger * logger, trade_callback_fn tfn, cmd_callback_fn pfn);
+	TradeSpi(Logger * logger, trade_callback_fn tfn, plat_callback_fn pfn);
 
 	/////////////////////////////////////////
 	/********** 通信连接与认证相关 **********/
