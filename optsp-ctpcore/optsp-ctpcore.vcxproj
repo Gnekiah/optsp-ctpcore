@@ -150,6 +150,7 @@
     <ClInclude Include="datatype.hpp" />
     <ClInclude Include="indexstruct.hpp" />
     <ClInclude Include="logger.h" />
+    <ClInclude Include="magic.hpp" />
     <ClInclude Include="master.h" />
     <ClInclude Include="platctp.h" />
     <ClInclude Include="quotespi.h" />

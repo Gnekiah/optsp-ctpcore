@@ -163,7 +163,11 @@ void TradeSpi::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *
 	if (pRspInfo && pRspInfo->ErrorID == 0 && pSettlementInfoConfirm) {
 		(*trade_callback)(CB_TRADE_RSP_SETTLEMENT_INFO_CONFIRM, true, nullptr);
 		(*cmd_callback)(CB_CMD_TRADE_QRY_INSTRUMENT, CMDID_TRADE, false, nullptr);
-		log << "Success to Response Settlement Info Confirm";
+		log << "Success to Response Settlement Info Confirm, " 
+			<< pSettlementInfoConfirm->AccountID << ", " << pSettlementInfoConfirm->BrokerID << ", "
+			<< pSettlementInfoConfirm->ConfirmDate << ", " << pSettlementInfoConfirm->ConfirmTime << ", "
+			<< pSettlementInfoConfirm->CurrencyID << ", " << pSettlementInfoConfirm->InvestorID << ", "
+			<< pSettlementInfoConfirm->SettlementID;
 		LOGDBG(logger, log);
 	}
 	else {
@@ -199,6 +203,76 @@ void TradeSpi::OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvest
 	else {
 		(*trade_callback)(CB_TRADE_RSP_QRY_INVESTOR_POSITION, false, nullptr);
 		RSPINFO_ERROR(log, pRspInfo, "Failed to Query Investor Position");
+	}
+}
+
+
+///请求查询交易所响应
+void TradeSpi::OnRspQryExchange(CThostFtdcExchangeField *pExchange, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+{
+	std::stringstream log;
+	if (pRspInfo && pRspInfo->ErrorID == 0 && pExchange) {
+		/*TODO
+		InstrumentField instrument;
+		arch_Strcpy(instrument.InstrumentID, pInstrument->InstrumentID, sizeof(instrument.InstrumentID));
+		arch_Strcpy(instrument.ExchangeID, pInstrument->ExchangeID, sizeof(instrument.ExchangeID));
+		arch_Strcpy(instrument.InstrumentName, pInstrument->InstrumentName, sizeof(instrument.InstrumentName));
+		arch_Strcpy(instrument.ExchangeInstID, pInstrument->ExchangeInstID, sizeof(instrument.ExchangeInstID));
+		instrument.InstLifePhase = pInstrument->InstLifePhase;
+		instrument.IsTrading = pInstrument->IsTrading;
+		instrument.LongMarginRatio = pInstrument->LongMarginRatio;
+		instrument.ShortMarginRatio = pInstrument->ShortMarginRatio;
+		instrument.UnderlyingMultiple = pInstrument->UnderlyingMultiple;
+		instrument.VolumeMultiple = pInstrument->VolumeMultiple;
+		(*trade_callback)(CB_TRADE_RSP_QRY_INSTRUMENT, true, &instrument);
+		(*cmd_callback)(CB_CMD_TRADE_RSP_QRY_INSTRUMENT, CMDID_TRADE, true, &instrument);
+		*/
+		log << "Success to Query Exchange";
+		LOGDBG(logger, log);
+	}
+	else {
+		/*
+		(*trade_callback)(CB_TRADE_RSP_QRY_EXCHAN, false, nullptr);
+		*/
+		RSPINFO_ERROR(log, pRspInfo, "Failed to Query Exchange");
+	}
+	if (bIsLast) {
+		(*cmd_callback)(CB_CMD_TRADE_QRY_EXCHANGE_COMPLETED, CMDID_TRADE, false, nullptr);
+	}
+}
+
+
+///请求查询产品响应
+void TradeSpi::OnRspQryProduct(CThostFtdcProductField *pProduct, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+{
+	std::stringstream log;
+	if (pRspInfo && pRspInfo->ErrorID == 0 && pProduct) {
+		/*TODO
+		InstrumentField instrument;
+		arch_Strcpy(instrument.InstrumentID, pInstrument->InstrumentID, sizeof(instrument.InstrumentID));
+		arch_Strcpy(instrument.ExchangeID, pInstrument->ExchangeID, sizeof(instrument.ExchangeID));
+		arch_Strcpy(instrument.InstrumentName, pInstrument->InstrumentName, sizeof(instrument.InstrumentName));
+		arch_Strcpy(instrument.ExchangeInstID, pInstrument->ExchangeInstID, sizeof(instrument.ExchangeInstID));
+		instrument.InstLifePhase = pInstrument->InstLifePhase;
+		instrument.IsTrading = pInstrument->IsTrading;
+		instrument.LongMarginRatio = pInstrument->LongMarginRatio;
+		instrument.ShortMarginRatio = pInstrument->ShortMarginRatio;
+		instrument.UnderlyingMultiple = pInstrument->UnderlyingMultiple;
+		instrument.VolumeMultiple = pInstrument->VolumeMultiple;
+		(*trade_callback)(CB_TRADE_RSP_QRY_INSTRUMENT, true, &instrument);
+		(*cmd_callback)(CB_CMD_TRADE_RSP_QRY_INSTRUMENT, CMDID_TRADE, true, &instrument);
+		*/
+		log << "Success to Query Product";
+		LOGDBG(logger, log);
+	}
+	else {
+		/*
+		(*trade_callback)(CB_TRADE_RSP_QRY_INSTRUMENT, false, nullptr);
+		*/
+		RSPINFO_ERROR(log, pRspInfo, "Failed to Query Product");
+	}
+	if (bIsLast) {
+		(*cmd_callback)(CB_CMD_TRADE_QRY_PRODUCT_COMPLETED, CMDID_TRADE, false, nullptr);
 	}
 }
 

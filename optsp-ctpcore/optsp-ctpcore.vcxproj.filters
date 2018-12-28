@@ -89,5 +89,8 @@
     <ClInclude Include="logger.h">
       <Filter>MASTER</Filter>
     </ClInclude>
+    <ClInclude Include="magic.hpp">
+      <Filter>LIB</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
