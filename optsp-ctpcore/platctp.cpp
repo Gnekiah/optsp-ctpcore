@@ -1,6 +1,7 @@
 #include "platctp.h"
 #include <boost/filesystem.hpp>
 #include "arch.h"
+#include "magic.hpp"
 
 
 PlatCtp::PlatCtp(Config * config, Logger * logger, quote_callback_fn qfn, trade_callback_fn tfn, plat_callback_fn pfn)
@@ -60,6 +61,10 @@ void PlatCtp::InsertCommand(int cmdtype, int cmdid, bool flag, void* ptr)
 	case CB_CMD_TRADE_QRY_INSTRUMENT:				///TradeSpi发来的请求查询合约通知
 		tradeState = TRADE_STATE_SETTLEMENT_CONFIRMED;
 		break;
+	case CB_CMD_TRADE_QRY_EXCHANGE_COMPLETED:
+		tradeState = TRADE_STATE_EXCHANGE_QUERIED;
+		cmd.Type = CB_CMD_TRADE_QRY_PRODUCT;
+		break;
 	case CB_CMD_TRADE_RSP_QRY_INSTRUMENT:			///TradeSpi发来的合约编号数据，只用于控制quoteApi执行订阅
 		arch_Memcpy(instrumentIDs[nInstrumentID], ptr, sizeof(InstrumentField));
 		nInstrumentID++;
@@ -88,9 +93,6 @@ void PlatCtp::run()
 
 	quoteApi->Init();
 	tradeApi->Init();
-
-	log << config->brokerID << ";" << config->userID << ";" << config->investorID << ";" << config->password << ";" << config->quoteFrontAddr << ";" << config->tradeFrontAddr;
-	LOGINFO(logger, log);
 
 	log << "Looping...";
 	LOGINFO(logger, log);
@@ -155,7 +157,7 @@ int PlatCtp::DoQuoteLogin(PlatCmdField &cmd)
 	arch_Strcpy(req.Password, config->password, sizeof(req.Password));
 	ret = quoteApi->ReqUserLogin(&req, cmd.Id);
 	if (ret) {
-		log << "Failed to login quote front server, nRequest=" << cmd.Id;
+		log << "Failed to login quote front server, nRequest=" << cmd.Id << ", ret=" << ret;
 		LOGERR(logger, log);
 	}
 	return ret;
@@ -173,7 +175,7 @@ int PlatCtp::DoQuoteSubscribe(PlatCmdField &cmd)
 	}
 	ret = quoteApi->SubscribeMarketData(instrumentIDs, nInstrumentID);
 	if (ret) {
-		log << "Failed to subscribe market data, nRequest=" << cmd.Id;
+		log << "Failed to subscribe market data, nRequest=" << cmd.Id << ", ret=" << ret;
 		LOGERR(logger, log);
 	}
 	return ret;
@@ -184,15 +186,21 @@ int PlatCtp::DoTradeAuthenticate(PlatCmdField &cmd)
 {
 	int ret = 0;
 	std::stringstream log;
+
+#ifdef _OPTSP_CTPCORE_WITHOUT_AUTHENTICATE_
+	cmd.Type = CB_CMD_TRADE_LOGIN;
+	cmdQueue->push(cmd);
+	return -1;
+#endif // _OPTSP_CTPCORE_WITHOUT_AUTHENTICATE_
 	
 	CThostFtdcReqAuthenticateField req = { 0 };
-	arch_Strcpy(req.AuthCode, config->AUTH_CODE, sizeof(req.AuthCode));
-	arch_Strcpy(req.UserProductInfo, config->APP_NAME, sizeof(req.UserProductInfo));
+	arch_Strcpy(req.AuthCode, config->authCode, sizeof(req.AuthCode));
+	arch_Strcpy(req.UserProductInfo, config->productName, sizeof(req.UserProductInfo));
 	arch_Strcpy(req.BrokerID, config->brokerID, sizeof(req.BrokerID));
 	arch_Strcpy(req.UserID, config->userID, sizeof(req.UserID));
 	ret = tradeApi->ReqAuthenticate(&req, cmd.Id);
 	if (ret) {
-		log << "Failed to do trade authenticate, nRequestID=" << cmd.Id;
+		log << "Failed to do trade authenticate, nRequestID=" << cmd.Id << ", ret=" << ret;
 		LOGERR(logger, log);
 	}
 	return ret;
@@ -208,9 +216,10 @@ int PlatCtp::DoTradeLogin(PlatCmdField &cmd)
 	arch_Strcpy(req.UserID, config->userID, sizeof(req.UserID));
 	arch_Strcpy(req.BrokerID, config->brokerID, sizeof(req.BrokerID));
 	arch_Strcpy(req.Password, config->password, sizeof(req.Password));
+	arch_Strcpy(req.UserProductInfo, config->productName, sizeof(req.UserProductInfo));
 	ret = tradeApi->ReqUserLogin(&req, cmd.Id);
 	if (ret) {
-		log << "Failed to login trade front server, nRequestID=" << cmd.Id;
+		log << "Failed to login trade front server, nRequestID=" << cmd.Id << ", ret=" << ret;
 		LOGERR(logger, log);
 	}
 	return ret;
@@ -227,27 +236,41 @@ int PlatCtp::DoTradeSettlementConfirm(PlatCmdField &cmd)
 	arch_Strcpy(req1.InvestorID, config->investorID, sizeof(req1.InvestorID));
 	ret = tradeApi->ReqQrySettlementInfoConfirm(&req1, cmd.Id);
 	if (ret) {
-		log << "Failed to query settlement info confirm";
+		log << "Failed to query settlement info confirm, ret=" << ret;
 		LOGERR(logger, log);
 	}
-	arch_Sleep(500);
+	arch_Sleep(1000);
 	CThostFtdcQrySettlementInfoField req2 = { 0 };
 	arch_Strcpy(req2.BrokerID, config->brokerID, sizeof(req2.BrokerID));
 	arch_Strcpy(req2.InvestorID, config->investorID, sizeof(req2.InvestorID));
 	ret = tradeApi->ReqQrySettlementInfo(&req2, cmd.Id);
 	if (ret) {
-		log << "Failed to query settlement info";
+		log << "Failed to query settlement info, ret=" << ret;
 		LOGERR(logger, log);
 	}
-	arch_Sleep(500);
+	arch_Sleep(1000);
 	CThostFtdcSettlementInfoConfirmField req3 = { 0 };
 	arch_Strcpy(req3.BrokerID, config->brokerID, sizeof(req3.BrokerID));
 	arch_Strcpy(req3.InvestorID, config->investorID, sizeof(req3.InvestorID));
 	ret = tradeApi->ReqSettlementInfoConfirm(&req3, cmd.Id);
 	if (ret) {
-		log << "Failed to do settlement info confirm";
+		log << "Failed to do settlement info confirm, ret=" << ret;
 		LOGERR(logger, log);
 	}
+	return ret;
+}
+
+
+int PlatCtp::DoTradeQryExchange(PlatCmdField &cmd)
+{
+	int ret = 0;
+	return ret;
+}
+
+
+int PlatCtp::DoTradeQryProduct(PlatCmdField &cmd)
+{
+	int ret = 0;
 	return ret;
 }
 
@@ -257,10 +280,17 @@ int PlatCtp::DoTradeQryInstrument(PlatCmdField &cmd)
 	int ret = 0;
 	std::stringstream log;
 
+	CThostFtdcQryExchangeField reqQryExchange = { 0 };
+	ret = tradeApi->ReqQryExchange(&reqQryExchange, cmd.Id);
+	arch_Sleep(1000);
+	CThostFtdcQryProductField reqQryProduct = { 0 };
+	ret = tradeApi->ReqQryProduct(&reqQryProduct, cmd.Id);
+	arch_Sleep(1000);
+
 	CThostFtdcQryInstrumentField req = { 0 };
 	ret = tradeApi->ReqQryInstrument(&req, cmd.Id);
 	if (ret) {
-		log << "Failed to query instrument";
+		log << "Failed to query instrument, ret=" << ret;
 		LOGWARN(logger, log);
 	}
 	return ret;

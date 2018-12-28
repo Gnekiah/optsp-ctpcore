@@ -7,7 +7,7 @@
 
 #define	MAFIELD_MACNT_MAX					5		///MA指标的最大数量
 #define	LOGGER_FLUSH_INTERVAL				5000	///日志刷入间隔，单位毫秒
-#define PLATCTP_INSTRUMENT_MAX				1024	///用于保存合约的数组最大长度
+#define PLATCTP_INSTRUMENT_MAX				10240	///用于保存合约的数组最大长度
 
 
 ///callback label: QuoteSpi to StGroup
@@ -33,6 +33,8 @@
 #define CB_TRADE_RSP_SETTLEMENT_INFO_CONFIRM			0x10001003
 
 #define CB_TRADE_RSP_QRY_INVESTOR_POSITION				0x10002001
+#define CB_TRADE_RSP_QRY_EXCHANGE	0x20000000//TODO
+#define	CB_TRADE_RSP_QRY_PRODUCT	0x20000001//TODO
 #define CB_TRADE_RSP_QRY_INSTRUMENT						0x10002002
 #define CB_TRADE_RSP_QRY_TRADING_ACCOUNT				0x10002003
 #define CB_TRADE_RSP_QRY_INVESTOR						0x10002004
@@ -63,8 +65,13 @@
 #define CB_CMD_TRADE_AUTHENTICATE						0x30000001
 #define	CB_CMD_TRADE_LOGIN								0x30000002
 #define	CB_CMD_TRADE_SETTLEMENT_CONFIRM					0x30000003
-#define CB_CMD_TRADE_QRY_INSTRUMENT						0x30000004
-#define CB_CMD_TRADE_QRY_INSTRUMENT_COMPLETED			0x30000005
+
+#define CB_CMD_TRADE_QRY_EXCHANGE						0x30001001
+#define CB_CMD_TRADE_QRY_EXCHANGE_COMPLETED				0x30001002
+#define CB_CMD_TRADE_QRY_PRODUCT						0x30001003
+#define CB_CMD_TRADE_QRY_PRODUCT_COMPLETED				0x30001004
+#define CB_CMD_TRADE_QRY_INSTRUMENT						0x30001005
+#define CB_CMD_TRADE_QRY_INSTRUMENT_COMPLETED			0x30001006
 ///非通知类型的回调
 #define CB_CMD_TRADE_RSP_QRY_INSTRUMENT					0x30001001
 
@@ -119,6 +126,8 @@ typedef void(*plat_callback_fn) (int, int, bool, void*);
 typedef char MdCsvFormatType[128];									///行情CSV保存格式类型
 typedef char FrontAddrType[64];										///前置地址类型
 typedef char DateTimeType[24];										///时间字符串类型, yyyy-MM-dd hh:mm:ss.zzz
+typedef char ProductNameType[24];									///产品名称 - 用于TradeApi的验证
+typedef char AuthenticateCodeType[32];								///验证编码 - 用于TradeApi的验证
 typedef TThostFtdcBrokerIDType BrokerIDType;						///经纪公司代码类型
 typedef TThostFtdcUserIDType UserIDType;							///用户代码类型
 typedef TThostFtdcInvestorIDType InvestorIDType;					///投资者代码类型

@@ -65,6 +65,8 @@ private:
 	int DoTradeAuthenticate(PlatCmdField &);
 	int DoTradeLogin(PlatCmdField &);
 	int DoTradeSettlementConfirm(PlatCmdField &);
+	int DoTradeQryExchange(PlatCmdField &);
+	int DoTradeQryProduct(PlatCmdField &);
 	int DoTradeQryInstrument(PlatCmdField &);
 };
 
