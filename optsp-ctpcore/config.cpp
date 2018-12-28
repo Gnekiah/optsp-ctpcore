@@ -1,6 +1,7 @@
 #include "config.h"
 #include <iostream>
 #include "arch.h"
+#include "magic.hpp"
 
 
 Config::Config()
@@ -24,6 +25,9 @@ Config::Config()
 		pt.put<std::string>("Trader.InvestorID", "");
 		pt.put<std::string>("Trader.QuoteFrontAddr", "");
 		pt.put<std::string>("Trader.TradeFrontAddr", "");
+		pt.put<std::string>("Trader.ProductName", "");
+		pt.put<std::string>("Trader.AuthCode", "");
+
 		write_ini(_config_path, pt);
 	}
 	else {
@@ -35,12 +39,17 @@ Config::Config()
 		arch_Strcpy(this->investorID, pt.get<std::string>("Trader.InvestorID", "").c_str(), sizeof(this->investorID));
 		arch_Strcpy(this->quoteFrontAddr, pt.get<std::string>("Trader.QuoteFrontAddr", "").c_str(), sizeof(this->quoteFrontAddr));
 		arch_Strcpy(this->tradeFrontAddr, pt.get<std::string>("Trader.TradeFrontAddr", "").c_str(), sizeof(this->tradeFrontAddr));
+		arch_Strcpy(this->productName, pt.get<std::string>("Trader.ProductName", "").c_str(), sizeof(this->productName));
+		arch_Strcpy(this->authCode, pt.get<std::string>("Trader.AuthCode", "").c_str(), sizeof(this->authCode));
+
+#ifdef _OPTSP_CTPCORE_ON_DEBUG_
+		arch_Strcpy(this->password, pt.get<std::string>("Trader.passwd", "").c_str(), sizeof(this->password));
+#endif // _OPTSP_CTPCORE_ON_DEBUG_
 
 		if (!boost::filesystem::exists(datapath) || !boost::filesystem::is_directory(datapath))
 			boost::filesystem::create_directories(datapath);
 	}
-	if (brokerID[0] != '\0' && userID[0] != '\0' && investorID[0] != '\0' && password != '\0' && quoteFrontAddr[0] != '\0' && tradeFrontAddr[0] != '\0')
-		ready = true;
+	CheckConfig();
 }
 
 
@@ -55,4 +64,29 @@ void Config::SaveConfig()
 	pt.put<std::string>("Trader.QuoteFrontAddr", quoteFrontAddr);
 	pt.put<std::string>("Trader.TradeFrontAddr", tradeFrontAddr);
 	write_ini(_config_path, pt);
+}
+
+
+bool Config::CheckConfig()
+{
+	if (strlen(brokerID) < 3)
+		goto out_false;
+	if (strlen(userID) < 3)
+		goto out_false;
+	if (strlen(investorID) < 3)
+		goto out_false;
+	if (strlen(password) < 3)
+		goto out_false;
+	if (strlen(quoteFrontAddr) < 3)
+		goto out_false;
+	if (strlen(tradeFrontAddr) < 3)
+		goto out_false;
+
+	ready = true;
+	goto out;
+
+out_false:
+	ready = false;
+out:
+	return ready;
 }

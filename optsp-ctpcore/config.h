@@ -25,8 +25,6 @@ public:
 	const int SUBVERSION = 1;
 	const int EXTRAVERSION = 0;
 	const char* APP_TITLE = "OPTSP：程序化交易 CTP 仿真测试";
-	const char *APP_NAME = "optsp";
-	const char *AUTH_CODE = "optsp";
 
 	const char* HOME_FILE = ".optsp";					///程序主目录
 	const char* CONFIG_FILE = "config.ini";				///配置文件
@@ -43,6 +41,8 @@ public:
 	int loglevel;									///日志过滤等级
 
 public:
+	ProductNameType productName = { 0 };			///产品名称
+	AuthenticateCodeType authCode = { 0 };			///验证编码
 	BrokerIDType brokerID = { 0 };					///经纪公司代码
 	UserIDType userID = { 0 };						///用户账号
 	InvestorIDType investorID = { 0 };				///投资者账号
@@ -53,6 +53,7 @@ public:
 public:
 	Config();
 	void SaveConfig();
+	bool CheckConfig();
 };
 
 #endif // !OPTSP_CTPCORE_CONFIG_H_
