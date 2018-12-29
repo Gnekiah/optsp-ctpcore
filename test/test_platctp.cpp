@@ -1,17 +1,12 @@
 #include "test_platctp.h"
 #include <boost/thread.hpp>
-#include "../optsp-ctpcore/tradespi.h"
-#include "../optsp-ctpcore/quotespi.h"
-#include "../optsp-ctpcore/platctp.h"
-#include "../optsp-ctpcore/logger.h"
-#include "../optsp-ctpcore/config.h"
-#include "../optsp-ctpcore/datatype.hpp"
-#include "../optsp-ctpcore/ctpapi/ThostFtdcMdApi.h"
-#include "../optsp-ctpcore/ctpapi/ThostFtdcTraderApi.h"
-#include "../optsp-ctpcore/ctpapi/ThostFtdcUserApiDataType.h"
-#include "../optsp-ctpcore/ctpapi/ThostFtdcUserApiStruct.h"
-//#pragma comment (lib, "../optsp-ctpcore/ctpapi/thostmduserapi.lib")
-//#pragma comment (lib, "../optsp-ctpcore/ctpapi/thosttraderapi.lib")
+#include "../platctp/tradespi.h"
+#include "../platctp/quotespi.h"
+#include "../include/platctp.h"
+#include "../include/logger.h"
+#include "../include/config.h"
+#include "../include/datatype.hpp"
+#include "../include/ctpapi.hpp"
 
 
 void log_callback(int loglevel, const char* buff) { 

@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
@@ -25,19 +17,6 @@
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -56,12 +35,6 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -69,35 +42,14 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>D:\boost_1_67_0;D:\googletest\googletest\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\googletest\googletest\lib;D:\boost_1_67_0\stage\lib;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>D:\boost_1_67_0;D:\googletest\googletest\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\googletest\googletest\lib;D:\boost_1_67_0\stage\lib;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\boost_1_67_0;D:\googletest\googletest\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\googletest\googletest\lib;D:\boost_1_67_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>D:\boost_1_67_0;D:\googletest\googletest\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\googletest\googletest\lib;D:\boost_1_67_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>gtestd.lib;gtest_maind.lib;thostmduserapi.lib;thosttraderapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\googletest\googletest\msvc\2010\gtest\x64-Debug;D:\QtProject\optsp-ctpcore\optsp-ctpcore\ctpapi;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -108,24 +60,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>gtestd.lib;gtest_maind.lib;thostmduserapi.lib;thosttraderapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\googletest\googletest\msvc\2010\gtest\x64-Debug;D:\QtProject\optsp-ctpcore\optsp-ctpcore\ctpapi;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-    </ClCompile>
-    <Link>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>gtest.lib;gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\googletest\googletest\msvc\2010\gtest\x64-Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -141,17 +76,18 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>gtest.lib;gtest_main.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\googletest\googletest\msvc\2010\gtest\x64-Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gtest.lib;gtest_main.lib;thostmduserapi.lib;thosttraderapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\optsp-ctpcore\arch.cpp" />
-    <ClCompile Include="..\optsp-ctpcore\config.cpp" />
-    <ClCompile Include="..\optsp-ctpcore\logger.cpp" />
-    <ClCompile Include="..\optsp-ctpcore\platctp.cpp" />
-    <ClCompile Include="..\optsp-ctpcore\quotespi.cpp" />
-    <ClCompile Include="..\optsp-ctpcore\tradespi.cpp" />
+    <ClCompile Include="..\basemod\arch.cpp" />
+    <ClCompile Include="..\basemod\config.cpp" />
+    <ClCompile Include="..\basemod\logger.cpp" />
+    <ClCompile Include="..\platctp\platctp.cpp" />
+    <ClCompile Include="..\platctp\quotespi.cpp" />
+    <ClCompile Include="..\platctp\tradespi.cpp" />
+    <ClCompile Include="..\stgroup\stgroup.cpp" />
     <ClCompile Include="test_arch.cpp" />
     <ClCompile Include="test_callback.cpp" />
     <ClCompile Include="test_config.cpp" />
@@ -160,16 +96,21 @@
     <ClCompile Include="test_platctp.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\optsp-ctpcore\arch.h" />
-    <ClInclude Include="..\optsp-ctpcore\config.h" />
-    <ClInclude Include="..\optsp-ctpcore\datatype.hpp" />
-    <ClInclude Include="..\optsp-ctpcore\logger.h" />
-    <ClInclude Include="..\optsp-ctpcore\platctp.h" />
-    <ClInclude Include="..\optsp-ctpcore\platstruct.hpp" />
-    <ClInclude Include="..\optsp-ctpcore\quotespi.h" />
-    <ClInclude Include="..\optsp-ctpcore\quotestruct.hpp" />
-    <ClInclude Include="..\optsp-ctpcore\tradespi.h" />
-    <ClInclude Include="..\optsp-ctpcore\tradestruct.hpp" />
+    <ClInclude Include="..\include\arch.h" />
+    <ClInclude Include="..\include\config.h" />
+    <ClInclude Include="..\include\ctpapi.hpp" />
+    <ClInclude Include="..\include\datatype.hpp" />
+    <ClInclude Include="..\include\indexstruct.hpp" />
+    <ClInclude Include="..\include\logger.h" />
+    <ClInclude Include="..\include\magic.hpp" />
+    <ClInclude Include="..\include\platctp.h" />
+    <ClInclude Include="..\include\platstruct.hpp" />
+    <ClInclude Include="..\include\quotestruct.hpp" />
+    <ClInclude Include="..\include\statestruct.hpp" />
+    <ClInclude Include="..\include\stgroup.h" />
+    <ClInclude Include="..\include\tradestruct.hpp" />
+    <ClInclude Include="..\platctp\quotespi.h" />
+    <ClInclude Include="..\platctp\tradespi.h" />
     <ClInclude Include="test_arch.h" />
     <ClInclude Include="test_callback.h" />
     <ClInclude Include="test_config.h" />

@@ -1,9 +1,9 @@
 #include "test_logger.h"
 #include <boost/thread.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include "../optsp-ctpcore/datatype.hpp"
-#include "../optsp-ctpcore/arch.h"
-#include "../optsp-ctpcore/config.h"
+#include "../include/datatype.hpp"
+#include "../include/arch.h"
+#include "../include/config.h"
 #include<stdlib.h>
 #include<time.h>
 

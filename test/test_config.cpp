@@ -1,6 +1,6 @@
 #include "test_config.h"
 #include <iostream>
-#include "../optsp-ctpcore/arch.h"
+#include "../include/arch.h"
 
 //#define show(x)	do { std::cerr << x << std::endl; } while(0)
 #define show(x)	do { ; } while(0)
