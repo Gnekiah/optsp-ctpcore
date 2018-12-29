@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "optsp-ctpcore", "optsp-ctpcore\optsp-ctpcore.vcxproj", "{E4AC3C55-4FC2-4A34-8DDA-307EDEBF3324}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "optsp-ctpcore", "optsp-ctpcore.vcxproj", "{E4AC3C55-4FC2-4A34-8DDA-307EDEBF3324}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{2AD7E2E5-7AC4-4AEB-84B5-DD0E49CAAA08}"
 EndProject

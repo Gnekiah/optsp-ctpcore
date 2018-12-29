@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="basemod">
+      <UniqueIdentifier>{01c55cba-6d75-4d1f-a72e-8b02fd893fd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{9f48e84b-e2bd-41f5-bb60-3a87b142bdb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platctp">
+      <UniqueIdentifier>{e4bff687-0fbf-46f6-be49-81020fcdd2b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="stgroup">
+      <UniqueIdentifier>{1b505ac6-5c8d-4e28-a554-7a1ef38cd1e5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="basemod\arch.cpp">
+      <Filter>basemod</Filter>
+    </ClCompile>
+    <ClCompile Include="basemod\config.cpp">
+      <Filter>basemod</Filter>
+    </ClCompile>
+    <ClCompile Include="basemod\logger.cpp">
+      <Filter>basemod</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="master.cpp" />
+    <ClCompile Include="stgroup\stgroup.cpp">
+      <Filter>stgroup</Filter>
+    </ClCompile>
+    <ClCompile Include="platctp\platctp.cpp">
+      <Filter>platctp</Filter>
+    </ClCompile>
+    <ClCompile Include="platctp\quotespi.cpp">
+      <Filter>platctp</Filter>
+    </ClCompile>
+    <ClCompile Include="platctp\tradespi.cpp">
+      <Filter>platctp</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="master.h" />
+    <ClInclude Include="include\arch.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\datatype.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\indexstruct.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\logger.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\magic.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\platctp.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\platstruct.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\quotestruct.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\statestruct.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\stgroup.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tradestruct.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="platctp\quotespi.h">
+      <Filter>platctp</Filter>
+    </ClInclude>
+    <ClInclude Include="platctp\tradespi.h">
+      <Filter>platctp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ctpapi.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
