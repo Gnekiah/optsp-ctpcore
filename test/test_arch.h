@@ -3,7 +3,7 @@
 
 #include <string>
 #include <sstream>
-#include "../optsp-ctpcore/arch.h"
+#include "../include/arch.h"
 
 bool test_arch_GetHomePath();
 bool test_arch_Sleep();

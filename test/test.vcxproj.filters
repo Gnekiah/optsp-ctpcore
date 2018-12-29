@@ -1,108 +1,123 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="SG">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="TP">
+    <Filter Include="platctp">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="LIB">
+    <Filter Include="tech_verify">
+      <UniqueIdentifier>{9c6f2733-2af1-4a09-910b-7c878bb53afe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="stgroup">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="basemod">
       <UniqueIdentifier>{cc2b0120-86c0-48ee-aa6e-7d343b16ed3a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MASTER">
-      <UniqueIdentifier>{8bd25307-bb05-40be-84f5-cc55206c2006}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BE_TESTED_CODE">
-      <UniqueIdentifier>{b9700fcf-89ff-48b1-a90b-d49a284a407e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="TechVerify">
-      <UniqueIdentifier>{9c6f2733-2af1-4a09-910b-7c878bb53afe}</UniqueIdentifier>
+    <Filter Include="under_test">
+      <UniqueIdentifier>{e3779bd0-bf66-4211-840e-0a3635ac2157}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="test_arch.cpp">
-      <Filter>LIB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\optsp-ctpcore\arch.cpp">
-      <Filter>BE_TESTED_CODE</Filter>
-    </ClCompile>
-    <ClCompile Include="..\optsp-ctpcore\config.cpp">
-      <Filter>BE_TESTED_CODE</Filter>
-    </ClCompile>
-    <ClCompile Include="test_config.cpp">
-      <Filter>MASTER</Filter>
-    </ClCompile>
-    <ClCompile Include="test_logger.cpp">
-      <Filter>MASTER</Filter>
-    </ClCompile>
-    <ClCompile Include="..\optsp-ctpcore\logger.cpp">
-      <Filter>BE_TESTED_CODE</Filter>
+      <Filter>basemod</Filter>
     </ClCompile>
     <ClCompile Include="test_callback.cpp">
-      <Filter>TechVerify</Filter>
-    </ClCompile>
-    <ClCompile Include="..\optsp-ctpcore\quotespi.cpp">
-      <Filter>BE_TESTED_CODE</Filter>
+      <Filter>tech_verify</Filter>
     </ClCompile>
     <ClCompile Include="test_platctp.cpp">
-      <Filter>TP</Filter>
+      <Filter>platctp</Filter>
     </ClCompile>
-    <ClCompile Include="..\optsp-ctpcore\platctp.cpp">
-      <Filter>BE_TESTED_CODE</Filter>
+    <ClCompile Include="test_config.cpp">
+      <Filter>basemod</Filter>
     </ClCompile>
-    <ClCompile Include="..\optsp-ctpcore\tradespi.cpp">
-      <Filter>BE_TESTED_CODE</Filter>
+    <ClCompile Include="test_logger.cpp">
+      <Filter>basemod</Filter>
+    </ClCompile>
+    <ClCompile Include="..\basemod\arch.cpp">
+      <Filter>under_test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\basemod\config.cpp">
+      <Filter>under_test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\basemod\logger.cpp">
+      <Filter>under_test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\platctp\platctp.cpp">
+      <Filter>under_test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\platctp\quotespi.cpp">
+      <Filter>under_test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\platctp\tradespi.cpp">
+      <Filter>under_test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\stgroup\stgroup.cpp">
+      <Filter>under_test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test_arch.h">
-      <Filter>LIB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\optsp-ctpcore\arch.h">
-      <Filter>BE_TESTED_CODE</Filter>
-    </ClInclude>
-    <ClInclude Include="..\optsp-ctpcore\config.h">
-      <Filter>BE_TESTED_CODE</Filter>
-    </ClInclude>
-    <ClInclude Include="test_config.h">
-      <Filter>MASTER</Filter>
-    </ClInclude>
-    <ClInclude Include="test_logger.h">
-      <Filter>MASTER</Filter>
-    </ClInclude>
-    <ClInclude Include="..\optsp-ctpcore\logger.h">
-      <Filter>BE_TESTED_CODE</Filter>
+      <Filter>basemod</Filter>
     </ClInclude>
     <ClInclude Include="test_callback.h">
-      <Filter>TechVerify</Filter>
-    </ClInclude>
-    <ClInclude Include="..\optsp-ctpcore\quotespi.h">
-      <Filter>BE_TESTED_CODE</Filter>
-    </ClInclude>
-    <ClInclude Include="..\optsp-ctpcore\quotestruct.hpp">
-      <Filter>BE_TESTED_CODE</Filter>
+      <Filter>tech_verify</Filter>
     </ClInclude>
     <ClInclude Include="test_platctp.h">
-      <Filter>TP</Filter>
+      <Filter>platctp</Filter>
     </ClInclude>
-    <ClInclude Include="..\optsp-ctpcore\platctp.h">
-      <Filter>BE_TESTED_CODE</Filter>
+    <ClInclude Include="test_logger.h">
+      <Filter>basemod</Filter>
     </ClInclude>
-    <ClInclude Include="..\optsp-ctpcore\platstruct.hpp">
-      <Filter>BE_TESTED_CODE</Filter>
+    <ClInclude Include="test_config.h">
+      <Filter>basemod</Filter>
     </ClInclude>
-    <ClInclude Include="..\optsp-ctpcore\tradestruct.hpp">
-      <Filter>BE_TESTED_CODE</Filter>
+    <ClInclude Include="..\include\arch.h">
+      <Filter>under_test</Filter>
     </ClInclude>
-    <ClInclude Include="..\optsp-ctpcore\datatype.hpp">
-      <Filter>BE_TESTED_CODE</Filter>
+    <ClInclude Include="..\include\config.h">
+      <Filter>under_test</Filter>
     </ClInclude>
-    <ClInclude Include="..\optsp-ctpcore\tradespi.h">
-      <Filter>BE_TESTED_CODE</Filter>
+    <ClInclude Include="..\include\ctpapi.hpp">
+      <Filter>under_test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\datatype.hpp">
+      <Filter>under_test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\indexstruct.hpp">
+      <Filter>under_test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\logger.h">
+      <Filter>under_test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\magic.hpp">
+      <Filter>under_test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\platctp.h">
+      <Filter>under_test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\platstruct.hpp">
+      <Filter>under_test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\quotestruct.hpp">
+      <Filter>under_test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\statestruct.hpp">
+      <Filter>under_test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\stgroup.h">
+      <Filter>under_test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tradestruct.hpp">
+      <Filter>under_test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\platctp\quotespi.h">
+      <Filter>under_test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\platctp\tradespi.h">
+      <Filter>under_test</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

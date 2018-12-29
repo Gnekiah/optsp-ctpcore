@@ -1,7 +1,7 @@
 #ifndef OPTSP_CTPCORE_TEST_LOG_H_
 #define OPTSP_CTPCORE_TEST_LOG_H_
 
-#include "../optsp-ctpcore/logger.h"
+#include "../include/logger.h"
 
 class _Logger
 {

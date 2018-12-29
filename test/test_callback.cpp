@@ -1,6 +1,6 @@
 #include "test_callback.h"
-#include "../optsp-ctpcore/arch.h"
-#include "../optsp-ctpcore/config.h"
+#include "../include/arch.h"
+#include "../include/config.h"
 
 static int gcnt = 0;
 

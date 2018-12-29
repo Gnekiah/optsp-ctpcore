@@ -3,7 +3,7 @@
 
 #include <boost/thread/thread.hpp>
 #include <boost/lockfree/queue.hpp>
-#include "../optsp-ctpcore/logger.h"
+#include "../include/logger.h"
 
 static void* pfn = nullptr;
 
