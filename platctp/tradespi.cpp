@@ -4,471 +4,468 @@
 #include "../include/tradestruct.hpp"
 
 
-TradeSpi::TradeSpi(Logger * logger, trade_callback_fn tfn, plat_callback_fn pfn)
-	: logger(logger), trade_callback(tfn), cmd_callback(pfn)
+TradeSpi::TradeSpi(Logger * logger, ctpspi_callback_fn tfn)
+    : logger(logger), trade_callback(tfn)
 {
-	std::stringstream log;
-	log << "TradeSpi Inited";
-	LOGINFO(logger, log);
+    std::stringstream log;
+    log << "TradeSpi Inited";
+    LOGINFO(logger, log);
 }
 
 
-///µ±¿Í»§¶ËÓë½»Ò×ºóÌ¨½¨Á¢ÆðÍ¨ÐÅÁ¬½ÓÊ±£¨»¹Î´µÇÂ¼Ç°£©£¬¸Ã·½·¨±»µ÷ÓÃ¡£
+///å½“å®¢æˆ·ç«¯ä¸Žäº¤æ˜“åŽå°å»ºç«‹èµ·é€šä¿¡è¿žæŽ¥æ—¶ï¼ˆè¿˜æœªç™»å½•å‰ï¼‰ï¼Œè¯¥æ–¹æ³•è¢«è°ƒç”¨ã€‚
 void TradeSpi::OnFrontConnected()
 {
-	std::stringstream log;
-	(*cmd_callback)(CB_CMD_TRADE_AUTHENTICATE, CMDID_TRADE, false, nullptr);
-	(*trade_callback)(CB_TRADE_CONNECTED, true, nullptr);
-	log << "Connected with Trade Front Server";
-	LOGINFO(logger, log);
+    std::stringstream log;
+    (*trade_callback)(CB_TRADE_FRONT_CONNECTED, nullptr);
+    log << "Connected with Trade Front Server";
+    LOGINFO(logger, log);
 }
 
 
-///µ±¿Í»§¶ËÓë½»Ò×ºóÌ¨Í¨ÐÅÁ¬½Ó¶Ï¿ªÊ±£¬¸Ã·½·¨±»µ÷ÓÃ¡£µ±·¢ÉúÕâ¸öÇé¿öºó£¬API»á×Ô¶¯ÖØÐÂÁ¬½Ó£¬¿Í»§¶Ë¿É²»×ö´¦Àí¡£
+///å½“å®¢æˆ·ç«¯ä¸Žäº¤æ˜“åŽå°é€šä¿¡è¿žæŽ¥æ–­å¼€æ—¶ï¼Œè¯¥æ–¹æ³•è¢«è°ƒç”¨ã€‚å½“å‘ç”Ÿè¿™ä¸ªæƒ…å†µåŽï¼ŒAPIä¼šè‡ªåŠ¨é‡æ–°è¿žæŽ¥ï¼Œå®¢æˆ·ç«¯å¯ä¸åšå¤„ç†ã€‚
 void TradeSpi::OnFrontDisconnected(int nReason)
 {
-	std::stringstream log;
-	(*trade_callback)(CB_TRADE_DISCONNECTED, true, nullptr);
-	log << "nReason=" << nReason;
-	LOGERR(logger, log);
+    std::stringstream log;
+    (*trade_callback)(CB_TRADE_FRONT_DISCONNECTED, nullptr);
+    log << "nReason=" << nReason;
+    LOGERR(logger, log);
 }
 
 
-///¿Í»§¶ËÈÏÖ¤ÏìÓ¦
+///å®¢æˆ·ç«¯è®¤è¯å“åº”
 void TradeSpi::OnRspAuthenticate(CThostFtdcRspAuthenticateField *pRspAuthenticateField, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pRspAuthenticateField) {
-		(*cmd_callback)(CB_CMD_TRADE_LOGIN, CMDID_TRADE, false, nullptr);
-		(*trade_callback)(CB_TRADE_RSP_AUTHENTICATE, true, nullptr);
-		log << "Success to Authenticate, BrokerID=" << pRspAuthenticateField->BrokerID
-			<< ", UserID=" << pRspAuthenticateField->UserID
-			<< ", UserProductInfo=" << pRspAuthenticateField->UserProductInfo;
-		LOGINFO(logger, log);
-	}
-	else {
-		(*trade_callback)(CB_TRADE_RSP_AUTHENTICATE, false, nullptr);
-		RSPINFO_ERROR(log, pRspInfo, "Failed to Authenticate");
-	}
+    std::stringstream log;
+    if (pRspInfo && pRspInfo->ErrorID == 0 && pRspAuthenticateField) {
+        (*trade_callback)(CB_TRADE_RSP_AUTHENTICATE, nullptr);
+        log << "Success to Authenticate, BrokerID=" << pRspAuthenticateField->BrokerID
+            << ", UserID=" << pRspAuthenticateField->UserID
+            << ", UserProductInfo=" << pRspAuthenticateField->UserProductInfo;
+        LOGINFO(logger, log);
+    }
+    else {
+        (*trade_callback)(CB_TRADE_RSP_AUTHENTICATE, nullptr);
+        RSPINFO_ERROR(log, pRspInfo, "Failed to Authenticate");
+    }
 }
 
 
-///µÇÂ¼ÇëÇóÏìÓ¦
+///ç™»å½•è¯·æ±‚å“åº”
 void TradeSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pRspUserLogin) {
-		(*trade_callback)(CB_TRADE_RSP_USER_LOGIN, true, nullptr);
-		(*cmd_callback)(CB_CMD_TRADE_SETTLEMENT_CONFIRM, CMDID_TRADE, false, nullptr);
-		uint64_t maxOrderRef = strtoull(pRspUserLogin->MaxOrderRef, 0, 10);
-		log << "Login on Trade Front Server, TradingDay=" << pRspUserLogin->TradingDay
-			<< ", LoginTime=" << pRspUserLogin->LoginTime
-			<< ", BrokerID=" << pRspUserLogin->BrokerID
-			<< ", UserID=" << pRspUserLogin->UserID;
-		LOGINFO(logger, log);
-	}
-	else {
-		(*trade_callback)(CB_TRADE_RSP_USER_LOGIN, false, nullptr);
-		RSPINFO_ERROR(log, pRspInfo, "Failed to Login Trade Front Server");
-	}
+    std::stringstream log;
+    if (pRspInfo && pRspInfo->ErrorID == 0 && pRspUserLogin) {
+        (*trade_callback)(CB_TRADE_RSP_USER_LOGIN, nullptr);
+        uint64_t maxOrderRef = strtoull(pRspUserLogin->MaxOrderRef, 0, 10);
+        log << "Login on Trade Front Server, TradingDay=" << pRspUserLogin->TradingDay
+            << ", LoginTime=" << pRspUserLogin->LoginTime
+            << ", BrokerID=" << pRspUserLogin->BrokerID
+            << ", UserID=" << pRspUserLogin->UserID;
+        LOGINFO(logger, log);
+    }
+    else {
+        (*trade_callback)(CB_TRADE_RSP_USER_LOGIN, nullptr);
+        RSPINFO_ERROR(log, pRspInfo, "Failed to Login Trade Front Server");
+    }
 }
 
 
-///µÇ³öÇëÇóÏìÓ¦
+///ç™»å‡ºè¯·æ±‚å“åº”
 void TradeSpi::OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pUserLogout) {
-		(*trade_callback)(CB_TRADE_RSP_USER_LOGOUT, true, nullptr);
-		log << "Success to Logout";
-		LOGINFO(logger, log);
-	}
-	else {
-		(*trade_callback)(CB_TRADE_RSP_USER_LOGOUT, false, nullptr);
-		RSPINFO_ERROR(log, pRspInfo, "Failed to Logout");
-	}
+    std::stringstream log;
+    if (pRspInfo && pRspInfo->ErrorID == 0 && pUserLogout) {
+        (*trade_callback)(CB_TRADE_RSP_USER_LOGOUT, true, nullptr);
+        log << "Success to Logout";
+        LOGINFO(logger, log);
+    }
+    else {
+        (*trade_callback)(CB_TRADE_RSP_USER_LOGOUT, false, nullptr);
+        RSPINFO_ERROR(log, pRspInfo, "Failed to Logout");
+    }
 }
 
 
-///ÓÃ»§¿ÚÁî¸üÐÂÇëÇóÏìÓ¦
+///ç”¨æˆ·å£ä»¤æ›´æ–°è¯·æ±‚å“åº”
 void TradeSpi::OnRspUserPasswordUpdate(CThostFtdcUserPasswordUpdateField *pUserPasswordUpdate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pUserPasswordUpdate) {
-		(*trade_callback)(CB_TRADE_RSP_USER_PASSWD_UPDATE, true, nullptr);
-		log << "Success to Update User Password, BrokerID=" << pUserPasswordUpdate->BrokerID
-			<< ", UserID=" << pUserPasswordUpdate->UserID;
-		LOGINFO(logger, log);
-	}
-	else {
-		(*trade_callback)(CB_TRADE_RSP_USER_PASSWD_UPDATE, false, nullptr);
-		RSPINFO_ERROR(log, pRspInfo, "Failed to Update User Password");
-	}
+    std::stringstream log;
+    if (pRspInfo && pRspInfo->ErrorID == 0 && pUserPasswordUpdate) {
+        (*trade_callback)(CB_TRADE_RSP_USER_PASSWD_UPDATE, true, nullptr);
+        log << "Success to Update User Password, BrokerID=" << pUserPasswordUpdate->BrokerID
+            << ", UserID=" << pUserPasswordUpdate->UserID;
+        LOGINFO(logger, log);
+    }
+    else {
+        (*trade_callback)(CB_TRADE_RSP_USER_PASSWD_UPDATE, false, nullptr);
+        RSPINFO_ERROR(log, pRspInfo, "Failed to Update User Password");
+    }
 }
 
 
-///×Ê½ðÕË»§¿ÚÁî¸üÐÂÇëÇóÏìÓ¦
+///èµ„é‡‘è´¦æˆ·å£ä»¤æ›´æ–°è¯·æ±‚å“åº”
 void TradeSpi::OnRspTradingAccountPasswordUpdate(CThostFtdcTradingAccountPasswordUpdateField *pTradingAccountPasswordUpdate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pTradingAccountPasswordUpdate) {
-		(*trade_callback)(CB_TRADE_RSP_TRADING_ACCOUNT_PASSWD_UPDATE, true, nullptr);
-		log << "Success to Update Trading Account Password, BrokerID=" << pTradingAccountPasswordUpdate->BrokerID
-			<< ", UserID=" << pTradingAccountPasswordUpdate->AccountID;
-		LOGINFO(logger, log);
-	}
-	else {
-		(*trade_callback)(CB_TRADE_RSP_TRADING_ACCOUNT_PASSWD_UPDATE, false, nullptr);
-		RSPINFO_ERROR(log, pRspInfo, "Failed to Update Trading Account Password");
-	}
+    std::stringstream log;
+    if (pRspInfo && pRspInfo->ErrorID == 0 && pTradingAccountPasswordUpdate) {
+        (*trade_callback)(CB_TRADE_RSP_TRADING_ACCOUNT_PASSWD_UPDATE, true, nullptr);
+        log << "Success to Update Trading Account Password, BrokerID=" << pTradingAccountPasswordUpdate->BrokerID
+            << ", UserID=" << pTradingAccountPasswordUpdate->AccountID;
+        LOGINFO(logger, log);
+    }
+    else {
+        (*trade_callback)(CB_TRADE_RSP_TRADING_ACCOUNT_PASSWD_UPDATE, false, nullptr);
+        RSPINFO_ERROR(log, pRspInfo, "Failed to Update Trading Account Password");
+    }
 }
 
 
-///ÇëÇó²éÑ¯½áËãÐÅÏ¢È·ÈÏÏìÓ¦
+///è¯·æ±‚æŸ¥è¯¢ç»“ç®—ä¿¡æ¯ç¡®è®¤å“åº”
 void TradeSpi::OnRspQrySettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pSettlementInfoConfirm) {
-		(*trade_callback)(CB_TRADE_RSP_QRY_SETTLEMENT_INFO_CONFIRM, true, nullptr);
-		log << "Success to Query Settlement Info Confirm";
-		LOGINFO(logger, log);
-	}
-	else {
-		(*trade_callback)(CB_TRADE_RSP_QRY_SETTLEMENT_INFO_CONFIRM, false, nullptr);
-		RSPINFO_ERROR(log, pRspInfo, "Failed to Query Settlement Info Confirm");
-	}
+    std::stringstream log;
+    if (pRspInfo && pRspInfo->ErrorID == 0 && pSettlementInfoConfirm) {
+        (*trade_callback)(CB_TRADE_RSP_QRY_SETTLEMENT_INFO_CONFIRM, true, nullptr);
+        log << "Success to Query Settlement Info Confirm";
+        LOGINFO(logger, log);
+    }
+    else {
+        (*trade_callback)(CB_TRADE_RSP_QRY_SETTLEMENT_INFO_CONFIRM, false, nullptr);
+        RSPINFO_ERROR(log, pRspInfo, "Failed to Query Settlement Info Confirm");
+    }
 }
 
 
-///ÇëÇó²éÑ¯Í¶×ÊÕß½áËã½á¹ûÏìÓ¦
+///è¯·æ±‚æŸ¥è¯¢æŠ•èµ„è€…ç»“ç®—ç»“æžœå“åº”
 void TradeSpi::OnRspQrySettlementInfo(CThostFtdcSettlementInfoField *pSettlementInfo, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pSettlementInfo) {
-		(*trade_callback)(CB_TRADE_RSP_QRY_SETTLEMENT_INFO, true, nullptr);
-		log << "Success to Query Settlement Info";
-		LOGINFO(logger, log);
-	}
-	else {
-		(*trade_callback)(CB_TRADE_RSP_QRY_SETTLEMENT_INFO, false, nullptr);
-		RSPINFO_ERROR(log, pRspInfo, "Failed to Query Settlement Info");
-	}
+    std::stringstream log;
+    if (pRspInfo && pRspInfo->ErrorID == 0 && pSettlementInfo) {
+        (*trade_callback)(CB_TRADE_RSP_QRY_SETTLEMENT_INFO, true, nullptr);
+        log << "Success to Query Settlement Info";
+        LOGINFO(logger, log);
+    }
+    else {
+        (*trade_callback)(CB_TRADE_RSP_QRY_SETTLEMENT_INFO, false, nullptr);
+        RSPINFO_ERROR(log, pRspInfo, "Failed to Query Settlement Info");
+    }
 }
 
 
-///Í¶×ÊÕß½áËã½á¹ûÈ·ÈÏÏìÓ¦
+///æŠ•èµ„è€…ç»“ç®—ç»“æžœç¡®è®¤å“åº”
 void TradeSpi::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pSettlementInfoConfirm) {
-		(*trade_callback)(CB_TRADE_RSP_SETTLEMENT_INFO_CONFIRM, true, nullptr);
-		(*cmd_callback)(CB_CMD_TRADE_QRY_INSTRUMENT, CMDID_TRADE, false, nullptr);
-		log << "Success to Response Settlement Info Confirm, " 
-			<< pSettlementInfoConfirm->AccountID << ", " << pSettlementInfoConfirm->BrokerID << ", "
-			<< pSettlementInfoConfirm->ConfirmDate << ", " << pSettlementInfoConfirm->ConfirmTime << ", "
-			<< pSettlementInfoConfirm->CurrencyID << ", " << pSettlementInfoConfirm->InvestorID << ", "
-			<< pSettlementInfoConfirm->SettlementID;
-		LOGDBG(logger, log);
-	}
-	else {
-		(*trade_callback)(CB_TRADE_RSP_SETTLEMENT_INFO_CONFIRM, false, nullptr);
-		RSPINFO_ERROR(log, pRspInfo, "Failed to Response Settlement Info Confirm");
-	}
+    std::stringstream log;
+    if (pRspInfo && pRspInfo->ErrorID == 0 && pSettlementInfoConfirm) {
+        (*trade_callback)(CB_TRADE_RSP_SETTLEMENT_INFO_CONFIRM, true, nullptr);
+        (*cmd_callback)(CB_CMD_TRADE_QRY_INSTRUMENT, CMDID_TRADE, false, nullptr);
+        log << "Success to Response Settlement Info Confirm, " 
+            << pSettlementInfoConfirm->AccountID << ", " << pSettlementInfoConfirm->BrokerID << ", "
+            << pSettlementInfoConfirm->ConfirmDate << ", " << pSettlementInfoConfirm->ConfirmTime << ", "
+            << pSettlementInfoConfirm->CurrencyID << ", " << pSettlementInfoConfirm->InvestorID << ", "
+            << pSettlementInfoConfirm->SettlementID;
+        LOGDBG(logger, log);
+    }
+    else {
+        (*trade_callback)(CB_TRADE_RSP_SETTLEMENT_INFO_CONFIRM, false, nullptr);
+        RSPINFO_ERROR(log, pRspInfo, "Failed to Response Settlement Info Confirm");
+    }
 }
 
 
-///ÇëÇó²éÑ¯Í¶×ÊÕß³Ö²ÖÏìÓ¦
+///è¯·æ±‚æŸ¥è¯¢æŠ•èµ„è€…æŒä»“å“åº”
 void TradeSpi::OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pInvestorPosition) {
-		PositionField position;
-		arch_Strcpy(position.InvestorID, pInvestorPosition->InvestorID, sizeof(position.InvestorID));
-		arch_Strcpy(position.InstrumentID, pInvestorPosition->InstrumentID, sizeof(position.InstrumentID));
-		position.PositionSide = pInvestorPosition->PosiDirection;
-		position.SettlementID = pInvestorPosition->SettlementID;
-		position.OpenVolume = pInvestorPosition->OpenVolume;
-		position.CloseVolume = pInvestorPosition->CloseVolume;
-		position.PositionQty = pInvestorPosition->Position;
-		position.OpenCost = pInvestorPosition->OpenCost;
-		position.PositionCost = pInvestorPosition->PositionCost;
-		position.PositionProfit = pInvestorPosition->PositionProfit;
-		position.CloseProfit = pInvestorPosition->CloseProfit;
-		position.Fee = pInvestorPosition->Commission;
-		position.UseMargin = pInvestorPosition->UseMargin;
-		(*trade_callback)(CB_TRADE_RSP_QRY_INVESTOR_POSITION, true, &position);
-		log << "Success to Query Investor Position";
-		LOGDBG(logger , log);
-	}
-	else {
-		(*trade_callback)(CB_TRADE_RSP_QRY_INVESTOR_POSITION, false, nullptr);
-		RSPINFO_ERROR(log, pRspInfo, "Failed to Query Investor Position");
-	}
+    std::stringstream log;
+    if (pRspInfo && pRspInfo->ErrorID == 0 && pInvestorPosition) {
+        PositionField position;
+        arch_Strcpy(position.InvestorID, pInvestorPosition->InvestorID, sizeof(position.InvestorID));
+        arch_Strcpy(position.InstrumentID, pInvestorPosition->InstrumentID, sizeof(position.InstrumentID));
+        position.PositionSide = pInvestorPosition->PosiDirection;
+        position.SettlementID = pInvestorPosition->SettlementID;
+        position.OpenVolume = pInvestorPosition->OpenVolume;
+        position.CloseVolume = pInvestorPosition->CloseVolume;
+        position.PositionQty = pInvestorPosition->Position;
+        position.OpenCost = pInvestorPosition->OpenCost;
+        position.PositionCost = pInvestorPosition->PositionCost;
+        position.PositionProfit = pInvestorPosition->PositionProfit;
+        position.CloseProfit = pInvestorPosition->CloseProfit;
+        position.Fee = pInvestorPosition->Commission;
+        position.UseMargin = pInvestorPosition->UseMargin;
+        (*trade_callback)(CB_TRADE_RSP_QRY_INVESTOR_POSITION, true, &position);
+        log << "Success to Query Investor Position";
+        LOGDBG(logger , log);
+    }
+    else {
+        (*trade_callback)(CB_TRADE_RSP_QRY_INVESTOR_POSITION, false, nullptr);
+        RSPINFO_ERROR(log, pRspInfo, "Failed to Query Investor Position");
+    }
 }
 
 
-///ÇëÇó²éÑ¯½»Ò×ËùÏìÓ¦
+///è¯·æ±‚æŸ¥è¯¢äº¤æ˜“æ‰€å“åº”
 void TradeSpi::OnRspQryExchange(CThostFtdcExchangeField *pExchange, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pExchange) {
-		/*TODO
-		InstrumentField instrument;
-		arch_Strcpy(instrument.InstrumentID, pInstrument->InstrumentID, sizeof(instrument.InstrumentID));
-		arch_Strcpy(instrument.ExchangeID, pInstrument->ExchangeID, sizeof(instrument.ExchangeID));
-		arch_Strcpy(instrument.InstrumentName, pInstrument->InstrumentName, sizeof(instrument.InstrumentName));
-		arch_Strcpy(instrument.ExchangeInstID, pInstrument->ExchangeInstID, sizeof(instrument.ExchangeInstID));
-		instrument.InstLifePhase = pInstrument->InstLifePhase;
-		instrument.IsTrading = pInstrument->IsTrading;
-		instrument.LongMarginRatio = pInstrument->LongMarginRatio;
-		instrument.ShortMarginRatio = pInstrument->ShortMarginRatio;
-		instrument.UnderlyingMultiple = pInstrument->UnderlyingMultiple;
-		instrument.VolumeMultiple = pInstrument->VolumeMultiple;
-		(*trade_callback)(CB_TRADE_RSP_QRY_INSTRUMENT, true, &instrument);
-		(*cmd_callback)(CB_CMD_TRADE_RSP_QRY_INSTRUMENT, CMDID_TRADE, true, &instrument);
-		*/
-		log << "Success to Query Exchange";
-		LOGDBG(logger, log);
-	}
-	else {
-		/*
-		(*trade_callback)(CB_TRADE_RSP_QRY_EXCHAN, false, nullptr);
-		*/
-		RSPINFO_ERROR(log, pRspInfo, "Failed to Query Exchange");
-	}
-	if (bIsLast) {
-		(*cmd_callback)(CB_CMD_TRADE_QRY_EXCHANGE_COMPLETED, CMDID_TRADE, false, nullptr);
-	}
+    std::stringstream log;
+    if (pRspInfo && pRspInfo->ErrorID == 0 && pExchange) {
+        /*TODO
+        InstrumentField instrument;
+        arch_Strcpy(instrument.InstrumentID, pInstrument->InstrumentID, sizeof(instrument.InstrumentID));
+        arch_Strcpy(instrument.ExchangeID, pInstrument->ExchangeID, sizeof(instrument.ExchangeID));
+        arch_Strcpy(instrument.InstrumentName, pInstrument->InstrumentName, sizeof(instrument.InstrumentName));
+        arch_Strcpy(instrument.ExchangeInstID, pInstrument->ExchangeInstID, sizeof(instrument.ExchangeInstID));
+        instrument.InstLifePhase = pInstrument->InstLifePhase;
+        instrument.IsTrading = pInstrument->IsTrading;
+        instrument.LongMarginRatio = pInstrument->LongMarginRatio;
+        instrument.ShortMarginRatio = pInstrument->ShortMarginRatio;
+        instrument.UnderlyingMultiple = pInstrument->UnderlyingMultiple;
+        instrument.VolumeMultiple = pInstrument->VolumeMultiple;
+        (*trade_callback)(CB_TRADE_RSP_QRY_INSTRUMENT, true, &instrument);
+        (*cmd_callback)(CB_CMD_TRADE_RSP_QRY_INSTRUMENT, CMDID_TRADE, true, &instrument);
+        */
+        log << "Success to Query Exchange";
+        LOGDBG(logger, log);
+    }
+    else {
+        /*
+        (*trade_callback)(CB_TRADE_RSP_QRY_EXCHAN, false, nullptr);
+        */
+        RSPINFO_ERROR(log, pRspInfo, "Failed to Query Exchange");
+    }
+    if (bIsLast) {
+        (*cmd_callback)(CB_CMD_TRADE_QRY_EXCHANGE_COMPLETED, CMDID_TRADE, false, nullptr);
+    }
 }
 
 
-///ÇëÇó²éÑ¯²úÆ·ÏìÓ¦
+///è¯·æ±‚æŸ¥è¯¢äº§å“å“åº”
 void TradeSpi::OnRspQryProduct(CThostFtdcProductField *pProduct, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pProduct) {
-		/*TODO
-		InstrumentField instrument;
-		arch_Strcpy(instrument.InstrumentID, pInstrument->InstrumentID, sizeof(instrument.InstrumentID));
-		arch_Strcpy(instrument.ExchangeID, pInstrument->ExchangeID, sizeof(instrument.ExchangeID));
-		arch_Strcpy(instrument.InstrumentName, pInstrument->InstrumentName, sizeof(instrument.InstrumentName));
-		arch_Strcpy(instrument.ExchangeInstID, pInstrument->ExchangeInstID, sizeof(instrument.ExchangeInstID));
-		instrument.InstLifePhase = pInstrument->InstLifePhase;
-		instrument.IsTrading = pInstrument->IsTrading;
-		instrument.LongMarginRatio = pInstrument->LongMarginRatio;
-		instrument.ShortMarginRatio = pInstrument->ShortMarginRatio;
-		instrument.UnderlyingMultiple = pInstrument->UnderlyingMultiple;
-		instrument.VolumeMultiple = pInstrument->VolumeMultiple;
-		(*trade_callback)(CB_TRADE_RSP_QRY_INSTRUMENT, true, &instrument);
-		(*cmd_callback)(CB_CMD_TRADE_RSP_QRY_INSTRUMENT, CMDID_TRADE, true, &instrument);
-		*/
-		log << "Success to Query Product";
-		LOGDBG(logger, log);
-	}
-	else {
-		/*
-		(*trade_callback)(CB_TRADE_RSP_QRY_INSTRUMENT, false, nullptr);
-		*/
-		RSPINFO_ERROR(log, pRspInfo, "Failed to Query Product");
-	}
-	if (bIsLast) {
-		(*cmd_callback)(CB_CMD_TRADE_QRY_PRODUCT_COMPLETED, CMDID_TRADE, false, nullptr);
-	}
+    std::stringstream log;
+    if (pRspInfo && pRspInfo->ErrorID == 0 && pProduct) {
+        /*TODO
+        InstrumentField instrument;
+        arch_Strcpy(instrument.InstrumentID, pInstrument->InstrumentID, sizeof(instrument.InstrumentID));
+        arch_Strcpy(instrument.ExchangeID, pInstrument->ExchangeID, sizeof(instrument.ExchangeID));
+        arch_Strcpy(instrument.InstrumentName, pInstrument->InstrumentName, sizeof(instrument.InstrumentName));
+        arch_Strcpy(instrument.ExchangeInstID, pInstrument->ExchangeInstID, sizeof(instrument.ExchangeInstID));
+        instrument.InstLifePhase = pInstrument->InstLifePhase;
+        instrument.IsTrading = pInstrument->IsTrading;
+        instrument.LongMarginRatio = pInstrument->LongMarginRatio;
+        instrument.ShortMarginRatio = pInstrument->ShortMarginRatio;
+        instrument.UnderlyingMultiple = pInstrument->UnderlyingMultiple;
+        instrument.VolumeMultiple = pInstrument->VolumeMultiple;
+        (*trade_callback)(CB_TRADE_RSP_QRY_INSTRUMENT, true, &instrument);
+        (*cmd_callback)(CB_CMD_TRADE_RSP_QRY_INSTRUMENT, CMDID_TRADE, true, &instrument);
+        */
+        log << "Success to Query Product";
+        LOGDBG(logger, log);
+    }
+    else {
+        /*
+        (*trade_callback)(CB_TRADE_RSP_QRY_INSTRUMENT, false, nullptr);
+        */
+        RSPINFO_ERROR(log, pRspInfo, "Failed to Query Product");
+    }
+    if (bIsLast) {
+        (*cmd_callback)(CB_CMD_TRADE_QRY_PRODUCT_COMPLETED, CMDID_TRADE, false, nullptr);
+    }
 }
 
 
-///ÇëÇó²éÑ¯ºÏÔ¼ÏìÓ¦
+///è¯·æ±‚æŸ¥è¯¢åˆçº¦å“åº”
 void TradeSpi::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pInstrument) {
-		InstrumentField instrument;
-		arch_Strcpy(instrument.InstrumentID, pInstrument->InstrumentID, sizeof(instrument.InstrumentID));
-		arch_Strcpy(instrument.ExchangeID, pInstrument->ExchangeID, sizeof(instrument.ExchangeID));
-		arch_Strcpy(instrument.InstrumentName, pInstrument->InstrumentName, sizeof(instrument.InstrumentName));
-		arch_Strcpy(instrument.ExchangeInstID, pInstrument->ExchangeInstID, sizeof(instrument.ExchangeInstID));
-		instrument.InstLifePhase = pInstrument->InstLifePhase;
-		instrument.IsTrading = pInstrument->IsTrading;
-		instrument.LongMarginRatio = pInstrument->LongMarginRatio;
-		instrument.ShortMarginRatio = pInstrument->ShortMarginRatio;
-		instrument.UnderlyingMultiple = pInstrument->UnderlyingMultiple;
-		instrument.VolumeMultiple = pInstrument->VolumeMultiple;
-		(*trade_callback)(CB_TRADE_RSP_QRY_INSTRUMENT, true, &instrument);
-		(*cmd_callback)(CB_CMD_TRADE_RSP_QRY_INSTRUMENT, CMDID_TRADE, true, &instrument);
-		log << "Success to Query Instrument";
-		LOGDBG(logger, log);
-	}
-	else {
-		(*trade_callback)(CB_TRADE_RSP_QRY_INSTRUMENT, false, nullptr);
-		RSPINFO_ERROR(log, pRspInfo, "Failed to Query Instrument");
-	}
-	if (bIsLast) {
-		(*cmd_callback)(CB_CMD_TRADE_QRY_INSTRUMENT_COMPLETED, CMDID_TRADE, false, nullptr);
-	}
+    std::stringstream log;
+    if (pRspInfo && pRspInfo->ErrorID == 0 && pInstrument) {
+        InstrumentField instrument;
+        arch_Strcpy(instrument.InstrumentID, pInstrument->InstrumentID, sizeof(instrument.InstrumentID));
+        arch_Strcpy(instrument.ExchangeID, pInstrument->ExchangeID, sizeof(instrument.ExchangeID));
+        arch_Strcpy(instrument.InstrumentName, pInstrument->InstrumentName, sizeof(instrument.InstrumentName));
+        arch_Strcpy(instrument.ExchangeInstID, pInstrument->ExchangeInstID, sizeof(instrument.ExchangeInstID));
+        instrument.InstLifePhase = pInstrument->InstLifePhase;
+        instrument.IsTrading = pInstrument->IsTrading;
+        instrument.LongMarginRatio = pInstrument->LongMarginRatio;
+        instrument.ShortMarginRatio = pInstrument->ShortMarginRatio;
+        instrument.UnderlyingMultiple = pInstrument->UnderlyingMultiple;
+        instrument.VolumeMultiple = pInstrument->VolumeMultiple;
+        (*trade_callback)(CB_TRADE_RSP_QRY_INSTRUMENT, true, &instrument);
+        (*cmd_callback)(CB_CMD_TRADE_RSP_QRY_INSTRUMENT, CMDID_TRADE, true, &instrument);
+        log << "Success to Query Instrument";
+        LOGDBG(logger, log);
+    }
+    else {
+        (*trade_callback)(CB_TRADE_RSP_QRY_INSTRUMENT, false, nullptr);
+        RSPINFO_ERROR(log, pRspInfo, "Failed to Query Instrument");
+    }
+    if (bIsLast) {
+        (*cmd_callback)(CB_CMD_TRADE_QRY_INSTRUMENT_COMPLETED, CMDID_TRADE, false, nullptr);
+    }
 }
 
 
-///±¨µ¥Â¼ÈëÇëÇóÏìÓ¦
+///æŠ¥å•å½•å…¥è¯·æ±‚å“åº”
 void TradeSpi::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pInputOrder) {
-		(*trade_callback)(CB_TRADE_RSP_ORDER_INSERT, true, nullptr);
-		log << "Success to Insert Order";
-		LOGDBG(logger, log);
-	}
-	else {
-		(*trade_callback)(CB_TRADE_RSP_ORDER_INSERT, false, nullptr);
-		RSPINFO_ERROR(log, pRspInfo, "Failed to Insert Order");
-	}
+    std::stringstream log;
+    if (pRspInfo && pRspInfo->ErrorID == 0 && pInputOrder) {
+        (*trade_callback)(CB_TRADE_RSP_ORDER_INSERT, true, nullptr);
+        log << "Success to Insert Order";
+        LOGDBG(logger, log);
+    }
+    else {
+        (*trade_callback)(CB_TRADE_RSP_ORDER_INSERT, false, nullptr);
+        RSPINFO_ERROR(log, pRspInfo, "Failed to Insert Order");
+    }
 }
 
 
-///±¨µ¥²Ù×÷ÇëÇóÏìÓ¦
+///æŠ¥å•æ“ä½œè¯·æ±‚å“åº”
 void TradeSpi::OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pInputOrderAction) {
-		(*trade_callback)(CB_TRADE_RSP_ORDER_ACTION, true, nullptr);
-		log << "Success to Response Order Action";
-		LOGDBG(logger, log);
-	}
-	else {
-		(*trade_callback)(CB_TRADE_RSP_ORDER_ACTION, false, nullptr);
-		RSPINFO_ERROR(log, pRspInfo, "Failed to Response Order Action");
-	}
+    std::stringstream log;
+    if (pRspInfo && pRspInfo->ErrorID == 0 && pInputOrderAction) {
+        (*trade_callback)(CB_TRADE_RSP_ORDER_ACTION, true, nullptr);
+        log << "Success to Response Order Action";
+        LOGDBG(logger, log);
+    }
+    else {
+        (*trade_callback)(CB_TRADE_RSP_ORDER_ACTION, false, nullptr);
+        RSPINFO_ERROR(log, pRspInfo, "Failed to Response Order Action");
+    }
 }
 
 
-///±¨µ¥Í¨Öª
+///æŠ¥å•é€šçŸ¥
 void TradeSpi::OnRtnOrder(CThostFtdcOrderField *pOrder)
 {
-	std::stringstream log;
-	(*trade_callback)(CB_TRADE_RTN_ORDER, true, nullptr);
-	log << "Rtn Order";
-	LOGTRACE(logger, log);
+    std::stringstream log;
+    (*trade_callback)(CB_TRADE_RTN_ORDER, true, nullptr);
+    log << "Rtn Order";
+    LOGTRACE(logger, log);
 }
 
 
-///³É½»Í¨Öª
+///æˆäº¤é€šçŸ¥
 void TradeSpi::OnRtnTrade(CThostFtdcTradeField *pTrade)
 {
-	std::stringstream log;
-	MatchField match;
-	match.MatchDateTime = arch_Str2TimeStamp(pTrade->TradeDate, pTrade->TradeTime, 0);
-	arch_Strcpy(match.InvestorID, pTrade->InvestorID, sizeof(match.InvestorID));
-	arch_Strcpy(match.InstrumentID, pTrade->InstrumentID, sizeof(match.InstrumentID));
-	match.MatchPrice = pTrade->Price;
-	match.Fee = 0;
-	match.MatchQty = pTrade->Volume;
-	match.MatchSide = (pTrade->Direction == THOST_FTDC_D_Buy ? ORDER_SIDE_BUY : ORDER_SIDE_SELL);
-	match.MatchFlag = (pTrade->OffsetFlag == THOST_FTDC_OF_Open ? ORDER_FLAG_OPEN : ORDER_FLAG_CLOSE);
-	(*trade_callback)(CB_TRADE_RTN_TRADE, true, &match);
-	log << "Rtn Trade";
-	LOGTRACE(logger, log);
+    std::stringstream log;
+    MatchField match;
+    match.MatchDateTime = arch_Str2TimeStamp(pTrade->TradeDate, pTrade->TradeTime, 0);
+    arch_Strcpy(match.InvestorID, pTrade->InvestorID, sizeof(match.InvestorID));
+    arch_Strcpy(match.InstrumentID, pTrade->InstrumentID, sizeof(match.InstrumentID));
+    match.MatchPrice = pTrade->Price;
+    match.Fee = 0;
+    match.MatchQty = pTrade->Volume;
+    match.MatchSide = (pTrade->Direction == THOST_FTDC_D_Buy ? ORDER_SIDE_BUY : ORDER_SIDE_SELL);
+    match.MatchFlag = (pTrade->OffsetFlag == THOST_FTDC_OF_Open ? ORDER_FLAG_OPEN : ORDER_FLAG_CLOSE);
+    (*trade_callback)(CB_TRADE_RTN_TRADE, true, &match);
+    log << "Rtn Trade";
+    LOGTRACE(logger, log);
 
 
 }
 
 
-///±¨µ¥Â¼Èë´íÎó»Ø±¨
+///æŠ¥å•å½•å…¥é”™è¯¯å›žæŠ¥
 void TradeSpi::OnErrRtnOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo)
 {
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pInputOrder) {
-		(*trade_callback)(CB_TRADE_ERR_RTN_ORDER_INSERT, true, nullptr);
-		log << "Error on Order Insert";
-		LOGERR(logger, log);
-	}
-	else {
-		(*trade_callback)(CB_TRADE_ERR_RTN_ORDER_INSERT, false, nullptr);
-		RSPINFO_ERROR(log, pRspInfo, "Error on Order Insert");
-	}
+    std::stringstream log;
+    if (pRspInfo && pRspInfo->ErrorID == 0 && pInputOrder) {
+        (*trade_callback)(CB_TRADE_ERR_RTN_ORDER_INSERT, true, nullptr);
+        log << "Error on Order Insert";
+        LOGERR(logger, log);
+    }
+    else {
+        (*trade_callback)(CB_TRADE_ERR_RTN_ORDER_INSERT, false, nullptr);
+        RSPINFO_ERROR(log, pRspInfo, "Error on Order Insert");
+    }
 }
 
 
-///±¨µ¥²Ù×÷´íÎó»Ø±¨
+///æŠ¥å•æ“ä½œé”™è¯¯å›žæŠ¥
 void TradeSpi::OnErrRtnOrderAction(CThostFtdcOrderActionField *pOrderAction, CThostFtdcRspInfoField *pRspInfo)
 {
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pOrderAction) {
-		(*trade_callback)(CB_TRADE_ERR_RTN_ORDER_ACTION, true, nullptr);
-		log << "Error on Order Action";
-		LOGERR(logger, log);
-	}
-	else {
-		(*trade_callback)(CB_TRADE_ERR_RTN_ORDER_ACTION, false, nullptr);
-		RSPINFO_ERROR(log, pRspInfo, "Error on Order Action");
-	}
+    std::stringstream log;
+    if (pRspInfo && pRspInfo->ErrorID == 0 && pOrderAction) {
+        (*trade_callback)(CB_TRADE_ERR_RTN_ORDER_ACTION, true, nullptr);
+        log << "Error on Order Action";
+        LOGERR(logger, log);
+    }
+    else {
+        (*trade_callback)(CB_TRADE_ERR_RTN_ORDER_ACTION, false, nullptr);
+        RSPINFO_ERROR(log, pRspInfo, "Error on Order Action");
+    }
 }
 
 
-///ºÏÔ¼½»Ò××´Ì¬Í¨Öª
+///åˆçº¦äº¤æ˜“çŠ¶æ€é€šçŸ¥
 void TradeSpi::OnRtnInstrumentStatus(CThostFtdcInstrumentStatusField *pInstrumentStatus)
 {
-	std::stringstream log;
-	log << pInstrumentStatus->EnterReason << "," << pInstrumentStatus->EnterTime << ","
-		<< pInstrumentStatus->ExchangeID << "," << pInstrumentStatus->ExchangeInstID << ","
-		<< pInstrumentStatus->InstrumentID << "," << pInstrumentStatus->InstrumentStatus << ","
-		<< pInstrumentStatus->SettlementGroupID << "," << pInstrumentStatus->TradingSegmentSN;
-	LOGTRACE(logger, log);
+    std::stringstream log;
+    log << pInstrumentStatus->EnterReason << "," << pInstrumentStatus->EnterTime << ","
+        << pInstrumentStatus->ExchangeID << "," << pInstrumentStatus->ExchangeInstID << ","
+        << pInstrumentStatus->InstrumentID << "," << pInstrumentStatus->InstrumentStatus << ","
+        << pInstrumentStatus->SettlementGroupID << "," << pInstrumentStatus->TradingSegmentSN;
+    LOGTRACE(logger, log);
 }
 
 
-///½»Ò×Í¨Öª
+///äº¤æ˜“é€šçŸ¥
 void TradeSpi::OnRtnTradingNotice(CThostFtdcTradingNoticeInfoField *pTradingNoticeInfo)
 {
-	std::stringstream log;
-	log << pTradingNoticeInfo->BrokerID << "," << pTradingNoticeInfo->FieldContent << ","
-		<< pTradingNoticeInfo->InvestorID << "," << pTradingNoticeInfo->InvestUnitID << ","
-		<< pTradingNoticeInfo->SendTime << "," << pTradingNoticeInfo->SequenceNo << ","
-		<< pTradingNoticeInfo->SequenceSeries;
-	LOGINFO(logger, log);
+    std::stringstream log;
+    log << pTradingNoticeInfo->BrokerID << "," << pTradingNoticeInfo->FieldContent << ","
+        << pTradingNoticeInfo->InvestorID << "," << pTradingNoticeInfo->InvestUnitID << ","
+        << pTradingNoticeInfo->SendTime << "," << pTradingNoticeInfo->SequenceNo << ","
+        << pTradingNoticeInfo->SequenceSeries;
+    LOGINFO(logger, log);
 }
 
 
-///ÇëÇó²éÑ¯×Ê½ðÕË»§ÏìÓ¦
+///è¯·æ±‚æŸ¥è¯¢èµ„é‡‘è´¦æˆ·å“åº”
 void TradeSpi::OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pTradingAccount) {
-		CapitalField capital;
-		
-		capital.Available = pTradingAccount->Available;
-		capital.Balance = pTradingAccount->Balance;
-		capital.CashIn = pTradingAccount->CashIn;
-		capital.CloseProfit = pTradingAccount->CloseProfit;
-		capital.Commission = pTradingAccount->Commission;
-		capital.CurrMargin = pTradingAccount->CurrMargin;
-		capital.ExchangeMargin = pTradingAccount->ExchangeMargin;
-		capital.FrozenCash = pTradingAccount->FrozenCash;
-		capital.FrozenCommission = pTradingAccount->FrozenCommission;
-		capital.FrozenMargin = pTradingAccount->FrozenMargin;
-		capital.PositionProfit = pTradingAccount->PositionProfit;
-		capital.Reserve = pTradingAccount->Reserve;
-		capital.ReserveBalance = pTradingAccount->ReserveBalance;
-		(*trade_callback)(CB_TRADE_RSP_QRY_TRADING_ACCOUNT, true, &capital);
-		log << "Success to Query Trading Account";
-		LOGINFO(logger, log);
-	}
-	else {
-		(*trade_callback)(CB_TRADE_RSP_QRY_TRADING_ACCOUNT, false, nullptr);
-		RSPINFO_ERROR(log, pRspInfo, "Failed to Query Trading Account");
-	}
+    std::stringstream log;
+    if (pRspInfo && pRspInfo->ErrorID == 0 && pTradingAccount) {
+        CapitalField capital;
+        
+        capital.Available = pTradingAccount->Available;
+        capital.Balance = pTradingAccount->Balance;
+        capital.CashIn = pTradingAccount->CashIn;
+        capital.CloseProfit = pTradingAccount->CloseProfit;
+        capital.Commission = pTradingAccount->Commission;
+        capital.CurrMargin = pTradingAccount->CurrMargin;
+        capital.ExchangeMargin = pTradingAccount->ExchangeMargin;
+        capital.FrozenCash = pTradingAccount->FrozenCash;
+        capital.FrozenCommission = pTradingAccount->FrozenCommission;
+        capital.FrozenMargin = pTradingAccount->FrozenMargin;
+        capital.PositionProfit = pTradingAccount->PositionProfit;
+        capital.Reserve = pTradingAccount->Reserve;
+        capital.ReserveBalance = pTradingAccount->ReserveBalance;
+        (*trade_callback)(CB_TRADE_RSP_QRY_TRADING_ACCOUNT, true, &capital);
+        log << "Success to Query Trading Account";
+        LOGINFO(logger, log);
+    }
+    else {
+        (*trade_callback)(CB_TRADE_RSP_QRY_TRADING_ACCOUNT, false, nullptr);
+        RSPINFO_ERROR(log, pRspInfo, "Failed to Query Trading Account");
+    }
 }
 
 
-///ÇëÇó²éÑ¯Í¶×ÊÕßÏìÓ¦
+///è¯·æ±‚æŸ¥è¯¢æŠ•èµ„è€…å“åº”
 void TradeSpi::OnRspQryInvestor(CThostFtdcInvestorField *pInvestor, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
-	std::stringstream log;
-	if (pRspInfo && pRspInfo->ErrorID == 0 && pInvestor) {
-		(*trade_callback)(CB_TRADE_RSP_QRY_INVESTOR, true, nullptr);
-		log << "Success to Query Investor, " << pInvestor->InvestorID << "," << pInvestor->BrokerID;
-		LOGINFO(logger, log);
-	}
-	else {
-		(*trade_callback)(CB_TRADE_RSP_QRY_INVESTOR, false, nullptr);
-		RSPINFO_ERROR(log, pRspInfo, "Failed to Query Investor");
-	}
+    std::stringstream log;
+    if (pRspInfo && pRspInfo->ErrorID == 0 && pInvestor) {
+        (*trade_callback)(CB_TRADE_RSP_QRY_INVESTOR, true, nullptr);
+        log << "Success to Query Investor, " << pInvestor->InvestorID << "," << pInvestor->BrokerID;
+        LOGINFO(logger, log);
+    }
+    else {
+        (*trade_callback)(CB_TRADE_RSP_QRY_INVESTOR, false, nullptr);
+        RSPINFO_ERROR(log, pRspInfo, "Failed to Query Investor");
+    }
 }

@@ -9,44 +9,43 @@
 class QuoteSpi : public CThostFtdcMdSpi
 {
 private:
-	Logger * logger = nullptr;
-	quote_callback_fn quote_callback = nullptr;
-	plat_callback_fn cmd_callback = nullptr;
-	HandicapField * handicap = nullptr;
+    Logger * logger = nullptr;
+    ctpspi_callback_fn quote_callback = nullptr;
+    CbQuoteField *spiData = nullptr;
 
 public:
-	///ÖØÔØ¹¹Ôìº¯Êı
-	QuoteSpi(Logger * logger, quote_callback_fn qfn, plat_callback_fn pfn);
-	///µ±¿Í»§¶ËÓë½»Ò×ºóÌ¨½¨Á¢ÆğÍ¨ĞÅÁ¬½ÓÊ±£¨»¹Î´µÇÂ¼Ç°£©£¬¸Ã·½·¨±»µ÷ÓÃ¡£
-	void OnFrontConnected();
-	///µ±¿Í»§¶ËÓë½»Ò×ºóÌ¨Í¨ĞÅÁ¬½Ó¶Ï¿ªÊ±£¬¸Ã·½·¨±»µ÷ÓÃ¡£µ±·¢ÉúÕâ¸öÇé¿öºó£¬API»á×Ô¶¯ÖØĞÂÁ¬½Ó£¬¿Í»§¶Ë¿É²»×ö´¦Àí¡£
-	void OnFrontDisconnected(int nReason);
-	///µÇÂ¼ÇëÇóÏìÓ¦
-	void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
-	///µÇ³öÇëÇóÏìÓ¦
-	void OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
-	///´íÎóÓ¦´ğ
-	void OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
-	///¶©ÔÄĞĞÇéÓ¦´ğ
-	void OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
-	///È¡Ïû¶©ÔÄĞĞÇéÓ¦´ğ
-	void OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
-	///Éî¶ÈĞĞÇéÍ¨Öª
-	void OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData);
+    ///é‡è½½æ„é€ å‡½æ•°
+    QuoteSpi(Logger * logger, ctpspi_callback_fn qfn);
+    ///å½“å®¢æˆ·ç«¯ä¸äº¤æ˜“åå°å»ºç«‹èµ·é€šä¿¡è¿æ¥æ—¶ï¼ˆè¿˜æœªç™»å½•å‰ï¼‰ï¼Œè¯¥æ–¹æ³•è¢«è°ƒç”¨ã€‚
+    void OnFrontConnected();
+    ///å½“å®¢æˆ·ç«¯ä¸äº¤æ˜“åå°é€šä¿¡è¿æ¥æ–­å¼€æ—¶ï¼Œè¯¥æ–¹æ³•è¢«è°ƒç”¨ã€‚å½“å‘ç”Ÿè¿™ä¸ªæƒ…å†µåï¼ŒAPIä¼šè‡ªåŠ¨é‡æ–°è¿æ¥ï¼Œå®¢æˆ·ç«¯å¯ä¸åšå¤„ç†ã€‚
+    void OnFrontDisconnected(int nReason);
+    ///ç™»å½•è¯·æ±‚å“åº”
+    void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    ///ç™»å‡ºè¯·æ±‚å“åº”
+    void OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    ///é”™è¯¯åº”ç­”
+    void OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    ///è®¢é˜…è¡Œæƒ…åº”ç­”
+    void OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    ///å–æ¶ˆè®¢é˜…è¡Œæƒ…åº”ç­”
+    void OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    ///æ·±åº¦è¡Œæƒ…é€šçŸ¥
+    void OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData);
 
 
-	////////////////////////////////
-	/********** NOT USED **********/
-	////////////////////////////////
+    ////////////////////////////////
+    /********** NOT USED **********/
+    ////////////////////////////////
 public:
-	///¶©ÔÄÑ¯¼ÛÓ¦´ğ
-	void OnRspSubForQuoteRsp(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {}
-	///È¡Ïû¶©ÔÄÑ¯¼ÛÓ¦´ğ
-	void OnRspUnSubForQuoteRsp(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {}
-	///Ñ¯¼ÛÍ¨Öª
-	void OnRtnForQuoteRsp(CThostFtdcForQuoteRspField *pForQuoteRsp) {}
-	///ĞÄÌø³¬Ê±¾¯¸æ¡£µ±³¤Ê±¼äÎ´ÊÕµ½±¨ÎÄÊ±£¬¸Ã·½·¨±»µ÷ÓÃ¡£
-	void OnHeartBeatWarning(int nTimeLapse) {}
+    ///è®¢é˜…è¯¢ä»·åº”ç­”
+    void OnRspSubForQuoteRsp(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {}
+    ///å–æ¶ˆè®¢é˜…è¯¢ä»·åº”ç­”
+    void OnRspUnSubForQuoteRsp(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {}
+    ///è¯¢ä»·é€šçŸ¥
+    void OnRtnForQuoteRsp(CThostFtdcForQuoteRspField *pForQuoteRsp) {}
+    ///å¿ƒè·³è¶…æ—¶è­¦å‘Šã€‚å½“é•¿æ—¶é—´æœªæ”¶åˆ°æŠ¥æ–‡æ—¶ï¼Œè¯¥æ–¹æ³•è¢«è°ƒç”¨ã€‚
+    void OnHeartBeatWarning(int nTimeLapse) {}
 };
 
 #endif // !OPTSP_CTPCORE_QUOTESPI_H_

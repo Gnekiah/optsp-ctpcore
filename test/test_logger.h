@@ -6,21 +6,21 @@
 class _Logger
 {
 private:
-	Logger * logger = nullptr;
-	int level;
-	int n;
+    Logger * logger = nullptr;
+    int level;
+    int n;
 
 public:
-	_Logger(Logger * logger, int level, int n);
-	void run();
-	void run_stress();
-	static void logger_callback0(int loglevel, const char* buff);
-	static void logger_callback1(int loglevel, const char* buff);
-	static void logger_callback2(int loglevel, const char* buff);
-	static void logger_callback3(int loglevel, const char* buff);
-	static void logger_callback4(int loglevel, const char* buff);
-	static void logger_callback5(int loglevel, const char* buff);
-	static void logger_callback6(int loglevel, const char* buff);
+    _Logger(Logger * logger, int level, int n);
+    void run();
+    void run_stress();
+    static void logger_callback0(int loglevel, const char* buff);
+    static void logger_callback1(int loglevel, const char* buff);
+    static void logger_callback2(int loglevel, const char* buff);
+    static void logger_callback3(int loglevel, const char* buff);
+    static void logger_callback4(int loglevel, const char* buff);
+    static void logger_callback5(int loglevel, const char* buff);
+    static void logger_callback6(int loglevel, const char* buff);
 };
 
 

@@ -13,47 +13,47 @@
 class Config
 {
 private:
-	boost::property_tree::ptree pt;
+    boost::property_tree::ptree pt;
 
 public:
-	///·ÃÎÊÀàµÄpublicÊôĞÔÊ±£¬Òª¼ÓËø
-	std::mutex lock;
-	std::atomic_bool ready;
+    ///è®¿é—®ç±»çš„publicå±æ€§æ—¶ï¼Œè¦åŠ é”
+    std::mutex lock;
+    std::atomic_bool ready;
 
 public:
-	const int VERSION = 0;
-	const int SUBVERSION = 1;
-	const int EXTRAVERSION = 0;
-	const char* APP_TITLE = "OPTSP£º³ÌĞò»¯½»Ò× CTP ·ÂÕæ²âÊÔ";
+    const int VERSION = 0;
+    const int SUBVERSION = 1;
+    const int EXTRAVERSION = 0;
+    const char* APP_TITLE = "OPTSPï¼šç¨‹åºåŒ–äº¤æ˜“ CTP ä»¿çœŸæµ‹è¯•";
 
-	const char* HOME_FILE = ".optsp";					///³ÌĞòÖ÷Ä¿Â¼
-	const char* CONFIG_FILE = "config.ini";				///ÅäÖÃÎÄ¼ş
-	const char* RUNNING_LOG_FILE = "running.log";		///³ÌĞòÔËĞĞÈÕÖ¾
-	const char* MATCH_LOG_FILE = "match.csv";			///³É½»ĞÅÏ¢±£´æÎÄ¼ş
-	const char* POSITION_LOG_FILE = "position.csv";		///³Ö²ÖĞÅÏ¢±£´æÎÄ¼ş
-	const char* STATE_LOG_FILE = "state.csv";			///×´Ì¬ĞÅÏ¢±£´æÎÄ¼ş
-	const char* INSTRUMENT_FILE = "instrument.csv";		///ºÏÔ¼ÁĞ±í±£´æÎÄ¼ş
-	const char* MD_CSV_FORMAT = "md-%s-tick.csv";		///Êı¾İ±£´æµÄÎÄ¼ş¸ñÊ½
-	
+    const char* HOME_FILE = ".optsp";                       ///ç¨‹åºä¸»ç›®å½•
+    const char* CONFIG_FILE = "config.ini";                 ///é…ç½®æ–‡ä»¶
+    const char* RUNNING_LOG_FILE = "running.log";           ///ç¨‹åºè¿è¡Œæ—¥å¿—
+    const char* MATCH_LOG_FILE = "match.csv";               ///æˆäº¤ä¿¡æ¯ä¿å­˜æ–‡ä»¶
+    const char* POSITION_LOG_FILE = "position.csv";         ///æŒä»“ä¿¡æ¯ä¿å­˜æ–‡ä»¶
+    const char* STATE_LOG_FILE = "state.csv";               ///çŠ¶æ€ä¿¡æ¯ä¿å­˜æ–‡ä»¶
+    const char* INSTRUMENT_FILE = "instrument.csv";         ///åˆçº¦åˆ—è¡¨ä¿å­˜æ–‡ä»¶
+    const char* MD_CSV_FORMAT = "md-%s-tick.csv";           ///æ•°æ®ä¿å­˜çš„æ–‡ä»¶æ ¼å¼
+    
 public:
-	boost::filesystem::path homepath;				///Ö÷Ä¿Â¼
-	boost::filesystem::path datapath;				///Êı¾İÄ¿Â¼
-	int loglevel;									///ÈÕÖ¾¹ıÂËµÈ¼¶
-
-public:
-	ProductNameType productName = { 0 };			///²úÆ·Ãû³Æ
-	AuthenticateCodeType authCode = { 0 };			///ÑéÖ¤±àÂë
-	BrokerIDType brokerID = { 0 };					///¾­¼Í¹«Ë¾´úÂë
-	UserIDType userID = { 0 };						///ÓÃ»§ÕËºÅ
-	InvestorIDType investorID = { 0 };				///Í¶×ÊÕßÕËºÅ
-	PasswordType password = { 0 };					///¿ÚÁî
-	FrontAddrType quoteFrontAddr = { 0 };			///ĞĞÇéAPIÇ°ÖÃµØÖ·
-	FrontAddrType tradeFrontAddr = { 0 };			///½»Ò×APIÇ°ÖÃµØÖ·
+    boost::filesystem::path homepath;                       ///ä¸»ç›®å½•
+    boost::filesystem::path datapath;                       ///æ•°æ®ç›®å½•
+    int loglevel;                                           ///æ—¥å¿—è¿‡æ»¤ç­‰çº§
 
 public:
-	Config();
-	void SaveConfig();
-	bool CheckConfig();
+    ProductNameType productName = { 0 };                    ///äº§å“åç§°
+    AuthenticateCodeType authCode = { 0 };                  ///éªŒè¯ç¼–ç 
+    BrokerIDType brokerID = { 0 };                          ///ç»çºªå…¬å¸ä»£ç 
+    UserIDType userID = { 0 };                              ///ç”¨æˆ·è´¦å·
+    InvestorIDType investorID = { 0 };                      ///æŠ•èµ„è€…è´¦å·
+    PasswordType password = { 0 };                          ///å£ä»¤
+    FrontAddrType quoteFrontAddr = { 0 };                   ///è¡Œæƒ…APIå‰ç½®åœ°å€
+    FrontAddrType tradeFrontAddr = { 0 };                   ///äº¤æ˜“APIå‰ç½®åœ°å€
+
+public:
+    Config();
+    void SaveConfig();
+    bool CheckConfig();
 };
 
 #endif // !OPTSP_CTPCORE_CONFIG_H_

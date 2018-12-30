@@ -13,56 +13,52 @@
 #include "datatype.hpp"
 
 
-static void* cmdfn = nullptr;
-void CmdCallBack(int cmdtype, int cmdid, bool flag, void* ptr);
+static void* cbfn = nullptr;
+void CtpspiCallBack(int cbtype, void* ptr);
 
 
 class PlatCtp
 {
 private:
-	Config * config = nullptr;
-	Logger * logger = nullptr;
-	///called by spi
-	quote_callback_fn quote_callback = nullptr;
-	trade_callback_fn trade_callback = nullptr;
-	///called by current instance
-	plat_callback_fn plat_callback = nullptr;
+    Config * config = nullptr;
+    Logger * logger = nullptr;
+    ///called by current instance
+    plat_callback_fn plat_callback = nullptr;
 
-	QuoteSpi * quoteSpi = nullptr;
-	TradeSpi * tradeSpi = nullptr;
-	CThostFtdcMdApi * quoteApi = nullptr;
-	CThostFtdcTraderApi * tradeApi = nullptr;
+    QuoteSpi * quoteSpi = nullptr;
+    TradeSpi * tradeSpi = nullptr;
+    CThostFtdcMdApi * quoteApi = nullptr;
+    CThostFtdcTraderApi * tradeApi = nullptr;
 
-	int nInstrumentID;
-	char *instrumentIDs[PLATCTP_INSTRUMENT_MAX];
-	boost::lockfree::queue<PlatCmdField> *cmdQueue = nullptr;
+    int nInstrumentID;
+    char *instrumentIDs[PLATCTP_INSTRUMENT_MAX];
+    boost::lockfree::queue<PlatCmdField> *cmdQueue = nullptr;
 
 public:
-	std::atomic_int quoteState;		///±ê¼ÇQuoteApiµÄ×´Ì¬
-	std::atomic_int tradeState;		///±ê¼ÇTradeApiµÄ×´Ì¬
+    std::atomic_int quoteState;        ///æ ‡è®°QuoteApiçš„çŠ¶æ€
+    std::atomic_int tradeState;        ///æ ‡è®°TradeApiçš„çŠ¶æ€
 
 public:
-	PlatCtp(Config * config, Logger * logger, quote_callback_fn qfn, trade_callback_fn tfn, plat_callback_fn pfn);
-	///Insert cmd. into plat.
-	///int cmdtype - CMDµÄÀàĞÍ
-	///int cmdid - ÃüÁîµÄID, ÓÉÏÂ·¢ÃüÁîÊ±·ÖÅä
-	///bool flag - ±ê¼ÇÊı¾İÊÇ·ñÓĞĞ§
-	///void* ptr - Ö¸ÏòÊı¾İÇøÓòµÄÊ×µØÖ·Ö¸Õë
-	void InsertCommand(int cmdtype, int cmdid, bool flag, void* ptr);
-	void run();
+    PlatCtp(Config * config, Logger * logger, plat_callback_fn pfn);
+    ///Insert cmd. into plat.
+    ///int cmdtype - CMDçš„ç±»å‹
+    ///int cmdid - å‘½ä»¤çš„ID, ç”±ä¸‹å‘å‘½ä»¤æ—¶åˆ†é…
+    ///void* ptr - æŒ‡å‘æ•°æ®åŒºåŸŸçš„é¦–åœ°å€æŒ‡é’ˆ
+    void InsertCommand(int cmdtype, int cmdid, void* ptr);
+    void run();
 
 private:
-	///Quote cmd.
-	int DoQuoteLogin(PlatCmdField &);
-	int DoQuoteSubscribe(PlatCmdField &);
+    ///Quote cmd.
+    int DoQuoteLogin(PlatCmdField &);
+    int DoQuoteSubscribe(PlatCmdField &);
 
-	///Trade cmd.
-	int DoTradeAuthenticate(PlatCmdField &);
-	int DoTradeLogin(PlatCmdField &);
-	int DoTradeSettlementConfirm(PlatCmdField &);
-	int DoTradeQryExchange(PlatCmdField &);
-	int DoTradeQryProduct(PlatCmdField &);
-	int DoTradeQryInstrument(PlatCmdField &);
+    ///Trade cmd.
+    int DoTradeAuthenticate(PlatCmdField &);
+    int DoTradeLogin(PlatCmdField &);
+    int DoTradeSettlementConfirm(PlatCmdField &);
+    int DoTradeQryExchange(PlatCmdField &);
+    int DoTradeQryProduct(PlatCmdField &);
+    int DoTradeQryInstrument(PlatCmdField &);
 };
 
 #endif // !OPTSP_CTPCORE_PLATCTP_H_

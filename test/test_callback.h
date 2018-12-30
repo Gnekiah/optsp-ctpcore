@@ -8,30 +8,30 @@
 static void* pfn = nullptr;
 
 typedef struct BuffField {
-	char data[1024];
+    char data[1024];
 } BuffField;
 
 class TestClass 
 {
 private:
-	int id;
-	boost::lockfree::queue<BuffField> *queue = nullptr;
+    int id;
+    boost::lockfree::queue<BuffField> *queue = nullptr;
 
 public:
-	TestClass(int id);
-	void run();
-	void callback(int level, const char *ptr);
+    TestClass(int id);
+    void run();
+    void callback(int level, const char *ptr);
 };
 
 
 class _Logger2
 {
 private:
-	Logger * logger = nullptr;
-	int cnt;
+    Logger * logger = nullptr;
+    int cnt;
 public:
-	_Logger2(Logger * logger, int cnt);
-	void run();
+    _Logger2(Logger * logger, int cnt);
+    void run();
 };
 
 int test_Callback(int cnt);

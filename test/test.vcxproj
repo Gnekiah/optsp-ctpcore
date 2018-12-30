@@ -47,8 +47,8 @@
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(IncludePath)</IncludePath>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>$(BoostPath);$(GoogleTestPath)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(GoogleTestLibPath)\x64-Debug\;$(GoogleTestLibPath)\x64-Release\;$(ProjectDir)ctpapi\win64\;$(ProjectDir)..\ctpapi\win64\;$(GoogleTestPath)\lib;$(BoostPath)\stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

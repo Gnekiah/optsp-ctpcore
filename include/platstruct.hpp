@@ -8,41 +8,41 @@
 
 
 #define RSPINFO_ERROR(log, rsp, msg) do { \
-	log << msg; \
-	if (rsp) \
-		log << ", ErrorID=" << rsp->ErrorID << ", ErrorMsg=" << rsp->ErrorMsg; \
-	else \
-		log << ", pRspInfo == NULL"; \
-	LOGERR(logger, log); \
+    log << msg; \
+    if (rsp) \
+        log << ", ErrorID=" << rsp->ErrorID << ", ErrorMsg=" << rsp->ErrorMsg; \
+    else \
+        log << ", pRspInfo == NULL"; \
+    LOGERR(logger, log); \
 } while(0)
 
 
-#define QUOTE_STATE_NONE						0x00
-#define QUOTE_STATE_CONNECTED					0x01
-#define QUOTE_STATE_LOGINED						0x02
+#define QUOTE_STATE_NONE                        0x00
+#define QUOTE_STATE_CONNECTED                    0x01
+#define QUOTE_STATE_LOGINED                        0x02
 
-#define TRADE_STATE_NONE						0x10
-#define TRADE_STATE_AUTHENED					0x11
-#define TRADE_STATE_CONNECTED					0x12
-#define TRADE_STATE_LOGINED						0x13
-#define TRADE_STATE_SETTLEMENT_CONFIRMED		0x14
+#define TRADE_STATE_NONE                        0x10
+#define TRADE_STATE_AUTHENED                    0x11
+#define TRADE_STATE_CONNECTED                    0x12
+#define TRADE_STATE_LOGINED                        0x13
+#define TRADE_STATE_SETTLEMENT_CONFIRMED        0x14
 
-#define TRADE_STATE_EXCHANGE_QUERIED			0x21
-#define	TRADE_STATE_PRODUCT_QUERIED				0x22
-#define TRADE_STATE_INSTRUMENT_QUERIED			0x23
+#define TRADE_STATE_EXCHANGE_QUERIED            0x21
+#define    TRADE_STATE_PRODUCT_QUERIED                0x22
+#define TRADE_STATE_INSTRUMENT_QUERIED            0x23
 
 
 typedef struct PlatCmdField {
-	 union {
-		InstrumentField			Instrument;
-		OrderField				Order;
-		CapitalField			Capital;
-		MatchField				Match;
-		PositionField			Position;
-	};
-	 int Type;										///ÃüÁîÀàÐÍ
-	 int Id;										///ÃüÁîµÄID£»À´×Ôlower²ãµÄÃüÁîµÄIDÎª¸º£¬·Ö±ðÎª-1ºÍ-2
-	 bool Flag;										///±ê¼Ç¸ÃcmdµÄunionÇøÓòÊÇ·ñÓÐÓÐÐ§Êý¾Ý
+     union {
+        InstrumentField            Instrument;
+        OrderField                Order;
+        CapitalField            Capital;
+        MatchField                Match;
+        PositionField            Position;
+    };
+     int Type;                                        ///å‘½ä»¤ç±»åž‹
+     int Id;                                        ///å‘½ä»¤çš„IDï¼›æ¥è‡ªlowerå±‚çš„å‘½ä»¤çš„IDä¸ºè´Ÿï¼Œåˆ†åˆ«ä¸º-1å’Œ-2
+     bool Flag;                                        ///æ ‡è®°è¯¥cmdçš„unionåŒºåŸŸæ˜¯å¦æœ‰æœ‰æ•ˆæ•°æ®
 } PlatCmdField;
 
 #endif // !OPTSP_CTPCORE_PLATSTRUCT_HPP_

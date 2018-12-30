@@ -73,13 +73,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ReferencePath>$(ReferencePath)</ReferencePath>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(GoogleTestLibPath)\x64-Debug\;$(GoogleTestLibPath)\x64-Release\;$(ProjectDir)ctpapi\win64\;$(ProjectDir)..\ctpapi\win64\;$(GoogleTestPath)\lib;$(BoostPath)\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(BoostPath);$(GoogleTestPath)\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ReferencePath>$(ReferencePath)</ReferencePath>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(GoogleTestLibPath)\x64-Debug\;$(GoogleTestLibPath)\x64-Release\;$(BoostPath)\stage\lib;$(GoogleTestPath)\lib;$(ProjectDir)..\ctpapi\win64\;$(ProjectDir)ctpapi\win64\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(GoogleTestPath)\include;$(BoostPath);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

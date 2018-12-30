@@ -4,296 +4,296 @@
 #include "../include/magic.hpp"
 
 
-PlatCtp::PlatCtp(Config * config, Logger * logger, quote_callback_fn qfn, trade_callback_fn tfn, plat_callback_fn pfn)
-	: config(config), logger(logger), quote_callback(qfn), trade_callback(tfn), plat_callback(pfn)
+PlatCtp::PlatCtp(Config * config, Logger * logger, plat_callback_fn pfn)
+    : config(config), logger(logger), plat_callback(pfn)
 {
-	std::stringstream log;
-	cmdfn = this;
+    std::stringstream log;
+    cbfn = this;
 
-	quoteState = QUOTE_STATE_NONE;
-	tradeState = TRADE_STATE_NONE;
-	nInstrumentID = 0;
-	cmdQueue = new boost::lockfree::queue<PlatCmdField>(64);
+    quoteState = QUOTE_STATE_NONE;
+    tradeState = TRADE_STATE_NONE;
+    nInstrumentID = 0;
+    cmdQueue = new boost::lockfree::queue<PlatCmdField>(64);
 
-	quoteSpi = new QuoteSpi(logger, quote_callback, CmdCallBack);
-	tradeSpi = new TradeSpi(logger, trade_callback, CmdCallBack);
-	
-	quoteApi = CThostFtdcMdApi::CreateFtdcMdApi(config->homepath.string().c_str());
-	quoteApi->RegisterSpi(quoteSpi);
-	quoteApi->RegisterFront(config->quoteFrontAddr);
+    quoteSpi = new QuoteSpi(logger, CtpspiCallBack);
+    tradeSpi = new TradeSpi(logger, CtpspiCallBack);
+    
+    quoteApi = CThostFtdcMdApi::CreateFtdcMdApi(config->homepath.string().c_str());
+    quoteApi->RegisterSpi(quoteSpi);
+    quoteApi->RegisterFront(config->quoteFrontAddr);
 
-	tradeApi = CThostFtdcTraderApi::CreateFtdcTraderApi(config->homepath.string().c_str());
-	tradeApi->RegisterSpi(tradeSpi);
-	tradeApi->SubscribePublicTopic(THOST_TERT_RESTART);
-	tradeApi->SubscribePrivateTopic(THOST_TERT_RESTART);
-	tradeApi->RegisterFront(config->tradeFrontAddr);
+    tradeApi = CThostFtdcTraderApi::CreateFtdcTraderApi(config->homepath.string().c_str());
+    tradeApi->RegisterSpi(tradeSpi);
+    tradeApi->SubscribePublicTopic(THOST_TERT_RESTART);
+    tradeApi->SubscribePrivateTopic(THOST_TERT_RESTART);
+    tradeApi->RegisterFront(config->tradeFrontAddr);
 
-	log << "CTP Registered";
-	LOGINFO(logger, log);
+    log << "CTP Registered";
+    LOGINFO(logger, log);
 }
 
 
-void PlatCtp::InsertCommand(int cmdtype, int cmdid, bool flag, void* ptr)
+void PlatCtp::InsertCommand(int cmdtype, int cmdid, void* ptr)
 {
-	PlatCmdField cmd = { 0 };
-	cmd.Type = cmdtype;
-	cmd.Id = cmdid;
-	cmd.Flag = flag;
-	switch (cmdtype) {
-	/* QuoteSpi Callback */
-	case CB_CMD_QUOTE_LOGIN:						///QuoteSpi·¢À´µÄÇëÇóµÇÂ¼Í¨Öª
-		quoteState = QUOTE_STATE_CONNECTED;
-		break;
-	case CB_CMD_QUOTE_SUBSCRIBE:					///QuoteSpi·¢À´µÄÇëÇó¶©ÔÄÍ¨Öª£¬¶©ÔÄ²Ù×÷ÒªµÈtradeReadyÖ®ºó²Å½øÐÐ
-		quoteState = QUOTE_STATE_LOGINED;
-		break;
+    PlatCmdField cmd = { 0 };
+    cmd.Type = cmdtype;
+    cmd.Id = cmdid;
+    cmd.Flag = flag;
+    switch (cmdtype) {
+    /* QuoteSpi Callback */
+    case CB_CMD_QUOTE_LOGIN:                        ///QuoteSpiå‘æ¥çš„è¯·æ±‚ç™»å½•é€šçŸ¥
+        quoteState = QUOTE_STATE_CONNECTED;
+        break;
+    case CB_CMD_QUOTE_SUBSCRIBE:                    ///QuoteSpiå‘æ¥çš„è¯·æ±‚è®¢é˜…é€šçŸ¥ï¼Œè®¢é˜…æ“ä½œè¦ç­‰tradeReadyä¹‹åŽæ‰è¿›è¡Œ
+        quoteState = QUOTE_STATE_LOGINED;
+        break;
 
-	/* TradeSpi Callback */
-	case CB_CMD_TRADE_AUTHENTICATE:					///TradeSpi·¢À´µÄÇëÇóÑéÖ¤Í¨Öª
-		tradeState = TRADE_STATE_CONNECTED;
-		break;
-	case CB_CMD_TRADE_LOGIN:						///TradeSpi·¢À´µÄÇëÇóµÇÂ¼Í¨Öª
-		tradeState = TRADE_STATE_AUTHENED;
-		break;
-	case CB_CMD_TRADE_SETTLEMENT_CONFIRM:			///TradeSpi·¢À´µÄÇëÇó½áËãÈ·ÈÏÍ¨Öª
-		tradeState = TRADE_STATE_LOGINED;
-		break;
-	case CB_CMD_TRADE_QRY_INSTRUMENT:				///TradeSpi·¢À´µÄÇëÇó²éÑ¯ºÏÔ¼Í¨Öª
-		tradeState = TRADE_STATE_SETTLEMENT_CONFIRMED;
-		break;
-	case CB_CMD_TRADE_QRY_EXCHANGE_COMPLETED:
-		tradeState = TRADE_STATE_EXCHANGE_QUERIED;
-		cmd.Type = CB_CMD_TRADE_QRY_PRODUCT;
-		break;
-	case CB_CMD_TRADE_RSP_QRY_INSTRUMENT:			///TradeSpi·¢À´µÄºÏÔ¼±àºÅÊý¾Ý£¬Ö»ÓÃÓÚ¿ØÖÆquoteApiÖ´ÐÐ¶©ÔÄ
-		arch_Memcpy(instrumentIDs[nInstrumentID], ptr, sizeof(InstrumentField));
-		nInstrumentID++;
-		return;
-	case CB_CMD_TRADE_QRY_INSTRUMENT_COMPLETED:		///TradeSpi·¢À´µÄºÏÔ¼ÁÐ±í»ñÈ¡Íê±ÏµÄÍ¨Öª£¬»ñÈ¡¸ÃÍ¨Öªºó£¬Ö±½ÓÐÞ¸ÄtradeReady£¬²»²åÈëÃüÁî¶ÓÁÐ
-		tradeState = TRADE_STATE_INSTRUMENT_QUERIED;
-		return;
+    /* TradeSpi Callback */
+    case CB_CMD_TRADE_AUTHENTICATE:                    ///TradeSpiå‘æ¥çš„è¯·æ±‚éªŒè¯é€šçŸ¥
+        tradeState = TRADE_STATE_CONNECTED;
+        break;
+    case CB_CMD_TRADE_LOGIN:                        ///TradeSpiå‘æ¥çš„è¯·æ±‚ç™»å½•é€šçŸ¥
+        tradeState = TRADE_STATE_AUTHENED;
+        break;
+    case CB_CMD_TRADE_SETTLEMENT_CONFIRM:            ///TradeSpiå‘æ¥çš„è¯·æ±‚ç»“ç®—ç¡®è®¤é€šçŸ¥
+        tradeState = TRADE_STATE_LOGINED;
+        break;
+    case CB_CMD_TRADE_QRY_INSTRUMENT:                ///TradeSpiå‘æ¥çš„è¯·æ±‚æŸ¥è¯¢åˆçº¦é€šçŸ¥
+        tradeState = TRADE_STATE_SETTLEMENT_CONFIRMED;
+        break;
+    case CB_CMD_TRADE_QRY_EXCHANGE_COMPLETED:
+        tradeState = TRADE_STATE_EXCHANGE_QUERIED;
+        cmd.Type = CB_CMD_TRADE_QRY_PRODUCT;
+        break;
+    case CB_CMD_TRADE_RSP_QRY_INSTRUMENT:            ///TradeSpiå‘æ¥çš„åˆçº¦ç¼–å·æ•°æ®ï¼Œåªç”¨äºŽæŽ§åˆ¶quoteApiæ‰§è¡Œè®¢é˜…
+        arch_Memcpy(instrumentIDs[nInstrumentID], ptr, sizeof(InstrumentField));
+        nInstrumentID++;
+        return;
+    case CB_CMD_TRADE_QRY_INSTRUMENT_COMPLETED:        ///TradeSpiå‘æ¥çš„åˆçº¦åˆ—è¡¨èŽ·å–å®Œæ¯•çš„é€šçŸ¥ï¼ŒèŽ·å–è¯¥é€šçŸ¥åŽï¼Œç›´æŽ¥ä¿®æ”¹tradeReadyï¼Œä¸æ’å…¥å‘½ä»¤é˜Ÿåˆ—
+        tradeState = TRADE_STATE_INSTRUMENT_QUERIED;
+        return;
 
-	/* STGroup Command */
+    /* STGroup Command */
 
-	default:
-		return;
-	}
-	cmdQueue->push(cmd);
+    default:
+        return;
+    }
+    cmdQueue->push(cmd);
 }
 
 
 void PlatCtp::run()
 {
-	int ret = 0;
-	std::stringstream log;
-	PlatCmdField cmd = { 0 };
+    int ret = 0;
+    std::stringstream log;
+    PlatCmdField cmd = { 0 };
 
-	while (!config->ready)
-		arch_Sleep(100);
+    while (!config->ready)
+        arch_Sleep(100);
 
-	quoteApi->Init();
-	tradeApi->Init();
+    quoteApi->Init();
+    tradeApi->Init();
 
-	log << "Looping...";
-	LOGINFO(logger, log);
+    log << "Looping...";
+    LOGINFO(logger, log);
 
-	while (true) {
-		while (cmdQueue->empty())
-			arch_Sleep(10);
-		cmdQueue->pop(cmd);
+    while (true) {
+        while (cmdQueue->empty())
+            arch_Sleep(10);
+        cmdQueue->pop(cmd);
 
-		switch (cmd.Type) {
-		/* QuoteSpi Command */
-		case CB_CMD_QUOTE_LOGIN:
-			ret = DoQuoteLogin(cmd);
-			break;
-		case CB_CMD_QUOTE_SUBSCRIBE:
-			ret = DoQuoteSubscribe(cmd);
-			break;
-		/* TradeSpi Command */
-		case CB_CMD_TRADE_AUTHENTICATE:
-			ret = DoTradeAuthenticate(cmd);
-			break;
-		case CB_CMD_TRADE_LOGIN:
-			ret = DoTradeLogin(cmd);
-			break;
-		case CB_CMD_TRADE_SETTLEMENT_CONFIRM:
-			ret = DoTradeSettlementConfirm(cmd);
-			break;
-		case CB_CMD_TRADE_QRY_INSTRUMENT:
-			ret = DoTradeQryInstrument(cmd);
-			break;
-		/* StGroup Command */
+        switch (cmd.Type) {
+        /* QuoteSpi Command */
+        case CB_CMD_QUOTE_LOGIN:
+            ret = DoQuoteLogin(cmd);
+            break;
+        case CB_CMD_QUOTE_SUBSCRIBE:
+            ret = DoQuoteSubscribe(cmd);
+            break;
+        /* TradeSpi Command */
+        case CB_CMD_TRADE_AUTHENTICATE:
+            ret = DoTradeAuthenticate(cmd);
+            break;
+        case CB_CMD_TRADE_LOGIN:
+            ret = DoTradeLogin(cmd);
+            break;
+        case CB_CMD_TRADE_SETTLEMENT_CONFIRM:
+            ret = DoTradeSettlementConfirm(cmd);
+            break;
+        case CB_CMD_TRADE_QRY_INSTRUMENT:
+            ret = DoTradeQryInstrument(cmd);
+            break;
+        /* StGroup Command */
 
-		default:
-			ret = 0;
-			break;
-		}
-		
-		if (cmd.Id != CMDID_QUOTE && cmd.Id != CMDID_TRADE) {
-			(*plat_callback)(cmd.Type, cmd.Id, (ret == 0 ? true : false), nullptr);
-		}
-		arch_Sleep(500);
-	}
-	
-	quoteApi->Join();
-	tradeApi->Join();
-	delete quoteSpi;
-	delete tradeSpi;
-	quoteApi->Release();
-	tradeApi->Release();
+        default:
+            ret = 0;
+            break;
+        }
+        
+        if (cmd.Id != CMDID_QUOTE && cmd.Id != CMDID_TRADE) {
+            (*plat_callback)(cmd.Type, cmd.Id, (ret == 0 ? true : false), nullptr);
+        }
+        arch_Sleep(500);
+    }
+    
+    quoteApi->Join();
+    tradeApi->Join();
+    delete quoteSpi;
+    delete tradeSpi;
+    quoteApi->Release();
+    tradeApi->Release();
 }
 
 
 
 int PlatCtp::DoQuoteLogin(PlatCmdField &cmd)
 {
-	int ret = 0;
-	std::stringstream log;
+    int ret = 0;
+    std::stringstream log;
 
-	CThostFtdcReqUserLoginField req = { 0 };
-	arch_Strcpy(req.UserID, config->userID, sizeof(req.UserID));
-	arch_Strcpy(req.BrokerID, config->brokerID, sizeof(req.BrokerID));
-	arch_Strcpy(req.Password, config->password, sizeof(req.Password));
-	ret = quoteApi->ReqUserLogin(&req, cmd.Id);
-	if (ret) {
-		log << "Failed to login quote front server, nRequest=" << cmd.Id << ", ret=" << ret;
-		LOGERR(logger, log);
-	}
-	return ret;
+    CThostFtdcReqUserLoginField req = { 0 };
+    arch_Strcpy(req.UserID, config->userID, sizeof(req.UserID));
+    arch_Strcpy(req.BrokerID, config->brokerID, sizeof(req.BrokerID));
+    arch_Strcpy(req.Password, config->password, sizeof(req.Password));
+    ret = quoteApi->ReqUserLogin(&req, cmd.Id);
+    if (ret) {
+        log << "Failed to login quote front server, nRequest=" << cmd.Id << ", ret=" << ret;
+        LOGERR(logger, log);
+    }
+    return ret;
 }
 
 
 int PlatCtp::DoQuoteSubscribe(PlatCmdField &cmd)
 {
-	int ret = 0;
-	std::stringstream log;
+    int ret = 0;
+    std::stringstream log;
 
-	if (tradeState < TRADE_STATE_INSTRUMENT_QUERIED) {
-		InsertCommand(CB_CMD_QUOTE_SUBSCRIBE, CMDID_QUOTE, false, nullptr);
-		return -1;
-	}
-	ret = quoteApi->SubscribeMarketData(instrumentIDs, nInstrumentID);
-	if (ret) {
-		log << "Failed to subscribe market data, nRequest=" << cmd.Id << ", ret=" << ret;
-		LOGERR(logger, log);
-	}
-	return ret;
+    if (tradeState < TRADE_STATE_INSTRUMENT_QUERIED) {
+        InsertCommand(CB_CMD_QUOTE_SUBSCRIBE, CMDID_QUOTE, false, nullptr);
+        return -1;
+    }
+    ret = quoteApi->SubscribeMarketData(instrumentIDs, nInstrumentID);
+    if (ret) {
+        log << "Failed to subscribe market data, nRequest=" << cmd.Id << ", ret=" << ret;
+        LOGERR(logger, log);
+    }
+    return ret;
 }
 
 
 int PlatCtp::DoTradeAuthenticate(PlatCmdField &cmd)
 {
-	int ret = 0;
-	std::stringstream log;
+    int ret = 0;
+    std::stringstream log;
 
 #ifdef _OPTSP_CTPCORE_WITHOUT_AUTHENTICATE_
-	cmd.Type = CB_CMD_TRADE_LOGIN;
-	cmdQueue->push(cmd);
-	return -1;
+    cmd.Type = CB_CMD_TRADE_LOGIN;
+    cmdQueue->push(cmd);
+    return -1;
 #endif // _OPTSP_CTPCORE_WITHOUT_AUTHENTICATE_
-	
-	CThostFtdcReqAuthenticateField req = { 0 };
-	arch_Strcpy(req.AuthCode, config->authCode, sizeof(req.AuthCode));
-	arch_Strcpy(req.UserProductInfo, config->productName, sizeof(req.UserProductInfo));
-	arch_Strcpy(req.BrokerID, config->brokerID, sizeof(req.BrokerID));
-	arch_Strcpy(req.UserID, config->userID, sizeof(req.UserID));
-	ret = tradeApi->ReqAuthenticate(&req, cmd.Id);
-	if (ret) {
-		log << "Failed to do trade authenticate, nRequestID=" << cmd.Id << ", ret=" << ret;
-		LOGERR(logger, log);
-	}
-	return ret;
+    
+    CThostFtdcReqAuthenticateField req = { 0 };
+    arch_Strcpy(req.AuthCode, config->authCode, sizeof(req.AuthCode));
+    arch_Strcpy(req.UserProductInfo, config->productName, sizeof(req.UserProductInfo));
+    arch_Strcpy(req.BrokerID, config->brokerID, sizeof(req.BrokerID));
+    arch_Strcpy(req.UserID, config->userID, sizeof(req.UserID));
+    ret = tradeApi->ReqAuthenticate(&req, cmd.Id);
+    if (ret) {
+        log << "Failed to do trade authenticate, nRequestID=" << cmd.Id << ", ret=" << ret;
+        LOGERR(logger, log);
+    }
+    return ret;
 }
 
 
 int PlatCtp::DoTradeLogin(PlatCmdField &cmd)
 {
-	int ret = 0;
-	std::stringstream log;
+    int ret = 0;
+    std::stringstream log;
 
-	CThostFtdcReqUserLoginField req = { 0 };
-	arch_Strcpy(req.UserID, config->userID, sizeof(req.UserID));
-	arch_Strcpy(req.BrokerID, config->brokerID, sizeof(req.BrokerID));
-	arch_Strcpy(req.Password, config->password, sizeof(req.Password));
-	arch_Strcpy(req.UserProductInfo, config->productName, sizeof(req.UserProductInfo));
-	ret = tradeApi->ReqUserLogin(&req, cmd.Id);
-	if (ret) {
-		log << "Failed to login trade front server, nRequestID=" << cmd.Id << ", ret=" << ret;
-		LOGERR(logger, log);
-	}
-	return ret;
+    CThostFtdcReqUserLoginField req = { 0 };
+    arch_Strcpy(req.UserID, config->userID, sizeof(req.UserID));
+    arch_Strcpy(req.BrokerID, config->brokerID, sizeof(req.BrokerID));
+    arch_Strcpy(req.Password, config->password, sizeof(req.Password));
+    arch_Strcpy(req.UserProductInfo, config->productName, sizeof(req.UserProductInfo));
+    ret = tradeApi->ReqUserLogin(&req, cmd.Id);
+    if (ret) {
+        log << "Failed to login trade front server, nRequestID=" << cmd.Id << ", ret=" << ret;
+        LOGERR(logger, log);
+    }
+    return ret;
 }
 
 
 int PlatCtp::DoTradeSettlementConfirm(PlatCmdField &cmd)
 {
-	int ret = 0;
-	std::stringstream log;
+    int ret = 0;
+    std::stringstream log;
 
-	CThostFtdcQrySettlementInfoConfirmField req1 = { 0 };
-	arch_Strcpy(req1.BrokerID, config->brokerID, sizeof(req1.BrokerID));
-	arch_Strcpy(req1.InvestorID, config->investorID, sizeof(req1.InvestorID));
-	ret = tradeApi->ReqQrySettlementInfoConfirm(&req1, cmd.Id);
-	if (ret) {
-		log << "Failed to query settlement info confirm, ret=" << ret;
-		LOGERR(logger, log);
-	}
-	arch_Sleep(1000);
-	CThostFtdcQrySettlementInfoField req2 = { 0 };
-	arch_Strcpy(req2.BrokerID, config->brokerID, sizeof(req2.BrokerID));
-	arch_Strcpy(req2.InvestorID, config->investorID, sizeof(req2.InvestorID));
-	ret = tradeApi->ReqQrySettlementInfo(&req2, cmd.Id);
-	if (ret) {
-		log << "Failed to query settlement info, ret=" << ret;
-		LOGERR(logger, log);
-	}
-	arch_Sleep(1000);
-	CThostFtdcSettlementInfoConfirmField req3 = { 0 };
-	arch_Strcpy(req3.BrokerID, config->brokerID, sizeof(req3.BrokerID));
-	arch_Strcpy(req3.InvestorID, config->investorID, sizeof(req3.InvestorID));
-	ret = tradeApi->ReqSettlementInfoConfirm(&req3, cmd.Id);
-	if (ret) {
-		log << "Failed to do settlement info confirm, ret=" << ret;
-		LOGERR(logger, log);
-	}
-	return ret;
+    CThostFtdcQrySettlementInfoConfirmField req1 = { 0 };
+    arch_Strcpy(req1.BrokerID, config->brokerID, sizeof(req1.BrokerID));
+    arch_Strcpy(req1.InvestorID, config->investorID, sizeof(req1.InvestorID));
+    ret = tradeApi->ReqQrySettlementInfoConfirm(&req1, cmd.Id);
+    if (ret) {
+        log << "Failed to query settlement info confirm, ret=" << ret;
+        LOGERR(logger, log);
+    }
+    arch_Sleep(1000);
+    CThostFtdcQrySettlementInfoField req2 = { 0 };
+    arch_Strcpy(req2.BrokerID, config->brokerID, sizeof(req2.BrokerID));
+    arch_Strcpy(req2.InvestorID, config->investorID, sizeof(req2.InvestorID));
+    ret = tradeApi->ReqQrySettlementInfo(&req2, cmd.Id);
+    if (ret) {
+        log << "Failed to query settlement info, ret=" << ret;
+        LOGERR(logger, log);
+    }
+    arch_Sleep(1000);
+    CThostFtdcSettlementInfoConfirmField req3 = { 0 };
+    arch_Strcpy(req3.BrokerID, config->brokerID, sizeof(req3.BrokerID));
+    arch_Strcpy(req3.InvestorID, config->investorID, sizeof(req3.InvestorID));
+    ret = tradeApi->ReqSettlementInfoConfirm(&req3, cmd.Id);
+    if (ret) {
+        log << "Failed to do settlement info confirm, ret=" << ret;
+        LOGERR(logger, log);
+    }
+    return ret;
 }
 
 
 int PlatCtp::DoTradeQryExchange(PlatCmdField &cmd)
 {
-	int ret = 0;
-	return ret;
+    int ret = 0;
+    return ret;
 }
 
 
 int PlatCtp::DoTradeQryProduct(PlatCmdField &cmd)
 {
-	int ret = 0;
-	return ret;
+    int ret = 0;
+    return ret;
 }
 
 
 int PlatCtp::DoTradeQryInstrument(PlatCmdField &cmd)
 {
-	int ret = 0;
-	std::stringstream log;
+    int ret = 0;
+    std::stringstream log;
 
-	CThostFtdcQryExchangeField reqQryExchange = { 0 };
-	ret = tradeApi->ReqQryExchange(&reqQryExchange, cmd.Id);
-	arch_Sleep(1000);
-	CThostFtdcQryProductField reqQryProduct = { 0 };
-	ret = tradeApi->ReqQryProduct(&reqQryProduct, cmd.Id);
-	arch_Sleep(1000);
+    CThostFtdcQryExchangeField reqQryExchange = { 0 };
+    ret = tradeApi->ReqQryExchange(&reqQryExchange, cmd.Id);
+    arch_Sleep(1000);
+    CThostFtdcQryProductField reqQryProduct = { 0 };
+    ret = tradeApi->ReqQryProduct(&reqQryProduct, cmd.Id);
+    arch_Sleep(1000);
 
-	CThostFtdcQryInstrumentField req = { 0 };
-	ret = tradeApi->ReqQryInstrument(&req, cmd.Id);
-	if (ret) {
-		log << "Failed to query instrument, ret=" << ret;
-		LOGWARN(logger, log);
-	}
-	return ret;
+    CThostFtdcQryInstrumentField req = { 0 };
+    ret = tradeApi->ReqQryInstrument(&req, cmd.Id);
+    if (ret) {
+        log << "Failed to query instrument, ret=" << ret;
+        LOGWARN(logger, log);
+    }
+    return ret;
 }
 
 
@@ -302,6 +302,6 @@ int PlatCtp::DoTradeQryInstrument(PlatCmdField &cmd)
 ///for callback
 void CmdCallBack(int cmdtype, int cmdid, bool flag, void* ptr)
 {
-	PlatCtp *plat = (PlatCtp*)cmdfn;
-	plat->InsertCommand(cmdtype, cmdid, flag, ptr);
+    PlatCtp *plat = (PlatCtp*)cbfn;
+    plat->InsertCommand(cmdtype, cmdid, ptr);
 }
