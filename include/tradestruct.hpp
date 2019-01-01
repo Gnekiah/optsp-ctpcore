@@ -34,7 +34,7 @@ typedef struct CbTradeRspAuthenticateField {
     BrokerIDType    BrokerID;           ///经纪公司代码
     UserIDType      UserID;             ///用户代码
     ProductInfoType	UserProductInfo;    ///用户端产品信息
-}CbTradeRspAuthenticateField;
+} CbTradeRspAuthenticateField;
 
 typedef struct CbTradeRspUserLoginField {
     uint64_t        DateStamp;      ///交易日, 日期戳："yyyy-MM-dd 00:00:00.000"
@@ -63,7 +63,7 @@ typedef struct CbTradeRspSubForQuoteRspField {
 } CbTradeRspSubForQuoteRspField;
 
 /********** 口令与密钥相关 **********/
-typedef struct CbTradeRspUserPasswordUpdateField{
+typedef struct CbTradeRspUserPasswordUpdateField {
     BrokerIDType            BrokerID;       ///经纪公司代码
     UserIDType              UserID;         ///用户代码
     PasswordType            OldPassword;    ///原来的口令
@@ -142,13 +142,22 @@ typedef struct CbTradeRspOrderActionField {
 } CbTradeRspOrderActionField;
 
 typedef struct CbTradeRspQryOrderField {
-
     BrokerIDType            BrokerID;               ///经纪公司代码
     InvestorIDType          InvestorID;             ///资金账号
     AccountIDType           AccountID;              ///资金账号
     InstrumentIDType        InstrumentID;           ///合约编号
     UserIDType              UserID;                 ///用户代码
+    IPAddressType           IPAddress;              ///IP地址
+    MacAddressType          MacAddress;             ///Mac地址
+    OrderLocalIDType        OrderLocalID;           ///本地报单编号
+    OrderSysIDType          OrderSysID;             ///报单编号
     uint64_t                OrderRef;               ///报单引用
+    uint64_t                InsertDate;             ///报单日期
+    uint64_t                InsertTime;             ///委托时间
+    uint64_t                ActiveTime;             ///激活时间
+    uint64_t                SuspendTime;            ///挂起时间
+    uint64_t                UpdateTime;             ///最后修改时间
+    uint64_t                CancelTime;             ///撤销时间
     double                  OrderPrice;             ///委托价格
     double                  StopPrice;              ///止损价
     int                     OrderQty;               ///委托数量
@@ -157,6 +166,10 @@ typedef struct CbTradeRspQryOrderField {
     int                     FrontID;                ///前置编号
     int                     SessionID;              ///会话编号
     int                     NotifySequence;         ///报单提示序号
+    int                     VolumeTraded;           ///今成交数量
+    int                     VolumeTotal;            ///剩余数量
+    int                     SequenceNo;             ///序号
+    int                     SettlementID;           ///结算编号
     char                    OrderSide;              ///买入 / 卖出
     char                    OrderFlag;              ///开仓 / 平仓
     char                    OrderPriceType;         ///报单价格条件
@@ -164,53 +177,11 @@ typedef struct CbTradeRspQryOrderField {
     char                    VolumeCondition;        ///成交量类型
     char                    ContingentCondition;    ///触发条件
     char                    ForceCloseReason;       ///强平原因
-    bool                    UserForceClose;         ///用户强评标志
-    IPAddressType           IPAddress;              ///IP地址
-    MacAddressType          MacAddress;             ///Mac地址
-    OrderLocalIDType        OrderLocalID;           ///本地报单编号
-
     char                    OrderSubmitStatus;      ///报单提交状态
-
-
-    ///交易日
-    TThostFtdcDateType	TradingDay;
-    ///结算编号
-    TThostFtdcSettlementIDType	SettlementID;
-    ///报单编号
-    TThostFtdcOrderSysIDType	OrderSysID;
-    ///报单来源
-    TThostFtdcOrderSourceType	OrderSource;
-    ///报单状态
-    TThostFtdcOrderStatusType	OrderStatus;
-    ///报单类型
-    TThostFtdcOrderTypeType	OrderType;
-    ///今成交数量
-    TThostFtdcVolumeType	VolumeTraded;
-    ///剩余数量
-    TThostFtdcVolumeType	VolumeTotal;
-    ///报单日期
-    TThostFtdcDateType	InsertDate;
-    ///委托时间
-    TThostFtdcTimeType	InsertTime;
-    ///激活时间
-    TThostFtdcTimeType	ActiveTime;
-    ///挂起时间
-    TThostFtdcTimeType	SuspendTime;
-    ///最后修改时间
-    TThostFtdcTimeType	UpdateTime;
-    ///撤销时间
-    TThostFtdcTimeType	CancelTime;
-    ///最后修改交易所交易员代码
-    TThostFtdcTraderIDType	ActiveTraderID;
-    ///结算会员编号
-    TThostFtdcParticipantIDType	ClearingPartID;
-    ///序号
-    TThostFtdcSequenceNoType	SequenceNo;
-
-
-
-
-
+    char                    OrderStatus;            ///报单状态
+    char                    OrderSource;            ///报单来源
+    char                    OrderType;              ///报单类型
+    bool                    UserForceClose;         ///用户强评标志
 } CbTradeRspQryOrderField;
 
 typedef struct CbTradeRspQryTradeField {
@@ -219,24 +190,537 @@ typedef struct CbTradeRspQryTradeField {
 
 typedef struct CbTradeRtnOrderField {
 
-
-
-
-    
-
-};
+} CbTradeRtnOrderField;
 
 typedef struct CbTradeRtnTradeField {
 
-};
+} CbTradeRtnTradeField;
 
 typedef struct CbTradeErrRtnOrderInsertField {
 
-};
+} CbTradeErrRtnOrderInsertField;
 
 typedef struct CbTradeErrRtnOrderActionField {
 
-};
+} CbTradeErrRtnOrderActionField;
+
+typedef struct CbTradeRspForQuoteInsertField {
+
+} CbTradeRspForQuoteInsertField;
+
+typedef struct CbTradeRspQuoteInsertField {
+
+} CbTradeRspQuoteInsertField;
+
+typedef struct CbTradeRspQuoteActionField {
+
+} CbTradeRspQuoteActionField;
+
+typedef struct CbTradeRspBatchOrderActionField {
+
+} CbTradeRspBatchOrderActionField;
+
+typedef struct CbTradeRspQryForQuoteField {
+
+} CbTradeRspQryForQuoteField;
+
+typedef struct CbTradeRspQryQuoteField {
+
+} CbTradeRspQryQuoteField;
+
+typedef struct CbTradeRtnForQuoteRspField {
+
+} CbTradeRtnForQuoteRspField;
+
+typedef struct CbTradeRtnQuoteField {
+
+} CbTradeRtnQuoteField;
+
+typedef struct CbTradeErrRtnForQuoteInsertField {
+
+} CbTradeErrRtnForQuoteInsertField;
+
+typedef struct CbTradeErrRtnQuoteInsertField {
+
+} CbTradeErrRtnQuoteInsertField;
+
+typedef struct CbTradeErrRtnQuoteActionField {
+
+} CbTradeErrRtnQuoteActionField;
+
+typedef struct CbTradeErrRtnBatchOrderActionField {
+
+} CbTradeErrRtnBatchOrderActionField;
+
+typedef struct CbTradeRspExecOrderInsertField {
+
+} CbTradeRspExecOrderInsertField;
+
+typedef struct CbTradeRspExecOrderActionField {
+
+} CbTradeRspExecOrderActionField;
+
+typedef struct CbTradeRspQryExecOrderField {
+
+} CbTradeRspQryExecOrderField;
+
+typedef struct CbTradeRtnExecOrderField {
+
+} CbTradeRtnExecOrderField;
+
+typedef struct CbTradeErrRtnExecOrderInsertField {
+
+} CbTradeErrRtnExecOrderInsertField;
+
+typedef struct CbTradeErrRtnExecOrderActionField {
+
+} CbTradeErrRtnExecOrderActionField;
+
+typedef struct CbTradeRspCombActionInsertField {
+
+} CbTradeRspCombActionInsertField;
+
+typedef struct CbTradeRspQryCombActionField {
+
+} CbTradeRspQryCombActionField;
+
+typedef struct CbTradeRspQryInvestUnitField {
+
+} CbTradeRspQryInvestUnitField;
+
+typedef struct CbTradeRspQryProductGroupField {
+
+} CbTradeRspQryProductGroupField;
+
+typedef struct CbTradeRspQryCombInstrumentGuardField {
+
+} CbTradeRspQryCombInstrumentGuardField;
+
+typedef struct CbTradeRtnCombActionField {
+
+} CbTradeRtnCombActionField;
+
+typedef struct CbTradeErrRtnCombActionInsertField {
+
+} CbTradeErrRtnCombActionInsertField;
+
+typedef struct CbTradeRspOptionSelfCloseInsertField {
+
+} CbTradeRspOptionSelfCloseInsertField;
+
+typedef struct CbTradeRspOptionSelfCloseActionField {
+
+} CbTradeRspOptionSelfCloseActionField;
+
+typedef struct CbTradeRspQryOptionSelfCloseField {
+
+} CbTradeRspQryOptionSelfCloseField;
+
+typedef struct CbTradeRspQryOptionInstrCommRateField {
+
+} CbTradeRspQryOptionInstrCommRateField;
+
+typedef struct CbTradeRspQryOptionInstrTradeCostField {
+
+} CbTradeRspQryOptionInstrTradeCostField;
+
+typedef struct CbTradeRtnOptionSelfCloseField {
+
+} CbTradeRtnOptionSelfCloseField;
+
+typedef struct CbTradeErrRtnOptionSelfCloseInsertField {
+
+} CbTradeErrRtnOptionSelfCloseInsertField;
+
+typedef struct CbTradeErrRtnOptionSelfCloseActionField {
+
+} CbTradeErrRtnOptionSelfCloseActionField;
+
+typedef struct CbTradeRspSettlementInfoConfirmField {
+
+} CbTradeRspSettlementInfoConfirmField;
+
+typedef struct CbTradeRspQrySettlementInfoField {
+
+} CbTradeRspQrySettlementInfoField;
+
+typedef struct CbTradeRspQrySettlementInfoConfirmField {
+
+} CbTradeRspQrySettlementInfoConfirmField;
+
+typedef struct CbTradeRtnFromBankToFutureByBankField {
+
+} CbTradeRtnFromBankToFutureByBankField;
+
+typedef struct CbTradeRtnFromFutureToBankByBankField {
+
+} CbTradeRtnFromFutureToBankByBankField;
+
+typedef struct CbTradeRtnRepealFromBankToFutureByBankField {
+
+} CbTradeRtnRepealFromBankToFutureByBankField;
+
+typedef struct CbTradeRtnRepealFromFutureToBankByBankField {
+
+} CbTradeRtnRepealFromFutureToBankByBankField;
+
+typedef struct CbTradeRtnOpenAccountByBankField {
+
+} CbTradeRtnOpenAccountByBankField;
+
+typedef struct CbTradeRtnChangeAccountByBankField {
+
+} CbTradeRtnChangeAccountByBankField;
+
+typedef struct CbTradeRtnCancelAccountByBankField {
+
+} CbTradeRtnCancelAccountByBankField;
+
+typedef struct CbTradeRspFromBankToFutureByFutureField {
+
+} CbTradeRspFromBankToFutureByFutureField;
+
+typedef struct CbTradeRspFromFutureToBankByFutureField {
+
+} CbTradeRspFromFutureToBankByFutureField;
+
+typedef struct CbTradeRspQryBankAccountMoneyByFutureField {
+
+} CbTradeRspQryBankAccountMoneyByFutureField;
+
+typedef struct CbTradeRtnQryBankBalanceByFutureField {
+
+} CbTradeRtnQryBankBalanceByFutureField;
+
+typedef struct CbTradeRtnFromBankToFutureByFutureField {
+
+} CbTradeRtnFromBankToFutureByFutureField;
+
+typedef struct CbTradeRtnFromFutureToBankByFutureField {
+
+} CbTradeRtnFromFutureToBankByFutureField;
+
+typedef struct CbTradeRtnRepealFromBankToFutureByFutureField {
+
+} CbTradeRtnRepealFromBankToFutureByFutureField;
+
+typedef struct CbTradeRtnRepealFromFutureToBankByFutureField {
+
+} CbTradeRtnRepealFromFutureToBankByFutureField;
+
+typedef struct CbTradeErrRtnBankToFutureByFutureField {
+
+} CbTradeErrRtnBankToFutureByFutureField;
+
+typedef struct CbTradeErrRtnFutureToBankByFutureField {
+
+} CbTradeErrRtnFutureToBankByFutureField;
+
+typedef struct CbTradeErrRtnQryBankBalanceByFutureField {
+
+} CbTradeErrRtnQryBankBalanceByFutureField;
+
+typedef struct CbTradeRtnRepealFromBankToFutureByFutureManualField {
+
+} CbTradeRtnRepealFromBankToFutureByFutureManualField;
+
+typedef struct CbTradeRtnRepealFromFutureToBankByFutureManualField {
+
+} CbTradeRtnRepealFromFutureToBankByFutureManualField;
+
+typedef struct CbTradeErrRtnRepealBankToFutureByFutureManualField {
+
+} CbTradeErrRtnRepealBankToFutureByFutureManualField;
+
+typedef struct CbTradeErrRtnRepealFutureToBankByFutureManualField {
+
+} CbTradeErrRtnRepealFutureToBankByFutureManualField;
+
+typedef struct CbTradeRspQryNoticeField {
+
+} CbTradeRspQryNoticeField;
+
+typedef struct CbTradeRspQryTradingNoticeField {
+
+} CbTradeRspQryTradingNoticeField;
+
+typedef struct CbTradeRtnTradingNoticeField {
+
+} CbTradeRtnTradingNoticeField;
+
+typedef struct CbTradeRtnBulletinField {
+
+} CbTradeRtnBulletinField;
+
+typedef struct CbTradeRspQryExchangeField {
+
+} CbTradeRspQryExchangeField;
+
+typedef struct CbTradeRspQryExchangeRateField {
+
+} CbTradeRspQryExchangeRateField;
+
+typedef struct CbTradeRspQryExchangeMarginRateField {
+
+} CbTradeRspQryExchangeMarginRateField;
+
+typedef struct CbTradeRspQryExchangeMarginRateAdjustField {
+
+} CbTradeRspQryExchangeMarginRateAdjustField;
+
+typedef struct CbTradeRspQryProductField {
+
+} CbTradeRspQryProductField;
+
+typedef struct CbTradeRspQryProductExchRateField {
+
+} CbTradeRspQryProductExchRateField;
+
+typedef struct CbTradeRspQryInstrumentField {
+
+} CbTradeRspQryInstrumentField;
+
+typedef struct CbTradeRspQryInstrumentMarginRateField {
+
+} CbTradeRspQryInstrumentMarginRateField;
+
+typedef struct CbTradeRspQryInstrumentCommissionRateField {
+
+} CbTradeRspQryInstrumentCommissionRateField;
+
+typedef struct CbTradeRspQryInstrumentOrderCommRateField {
+
+} CbTradeRspQryInstrumentOrderCommRateField;
+
+typedef struct CbTradeRtnInstrumentStatusField {
+
+} CbTradeRtnInstrumentStatusField;
+
+typedef struct CbTradeRspQryInvestorField {
+
+} CbTradeRspQryInvestorField;
+
+typedef struct CbTradeRspQryInvestorPositionField {
+
+} CbTradeRspQryInvestorPositionField;
+
+typedef struct CbTradeRspQryInvestorPositionDetailField {
+
+} CbTradeRspQryInvestorPositionDetailField;
+
+typedef struct CbTradeRspQryInvestorPositionCombineDetailField {
+
+} CbTradeRspQryInvestorPositionCombineDetailField;
+
+typedef struct CbTradeRspQryInvestorProductGroupMarginField {
+
+} CbTradeRspQryInvestorProductGroupMarginField;
+
+typedef struct CbTradeRspQryTradingCodeField {
+
+} CbTradeRspQryTradingCodeField;
+
+typedef struct CbTradeRspQryTradingAccountField {
+
+} CbTradeRspQryTradingAccountField;
+
+typedef struct CbTradeRspQryTransferSerialField {
+
+} CbTradeRspQryTransferSerialField;
+
+typedef struct CbTradeRspQryContractBankField {
+
+} CbTradeRspQryContractBankField;
+
+typedef struct CbTradeRspQryTransferBankField {
+
+} CbTradeRspQryTransferBankField;
+
+typedef struct CbTradeRspQryAccountRegisterField {
+
+} CbTradeRspQryAccountRegisterField;
+
+typedef struct CbTradeRspQryBrokerTradingParamsField {
+
+} CbTradeRspQryBrokerTradingParamsField;
+
+typedef struct CbTradeRspQryBrokerTradingAlgosField {
+
+} CbTradeRspQryBrokerTradingAlgosField;
+
+typedef struct CbTradeRspQrySecAgentAcidMapField {
+
+} CbTradeRspQrySecAgentAcidMapField;
+
+typedef struct CbTradeRspQrySecAgentCheckModeField {
+
+} CbTradeRspQrySecAgentCheckModeField;
+
+typedef struct CbTradeRspQrySecAgentTradingAccountField {
+
+} CbTradeRspQrySecAgentTradingAccountField;
+
+typedef struct CbTradeRspQryMmInstrumentCommissionRateField {
+
+} CbTradeRspQryMmInstrumentCommissionRateField;
+
+typedef struct CbTradeRspQryMmOptionInstrCommRateField {
+
+} CbTradeRspQryMmOptionInstrCommRateField;
+
+typedef struct CbTradeRspQryCfmmcTradingAccountTokenField {
+
+} CbTradeRspQryCfmmcTradingAccountTokenField;
+
+typedef struct CbTradeRspQryCfmmcTradingAccountKeyField {
+
+} CbTradeRspQryCfmmcTradingAccountKeyField;
+
+typedef struct CbTradeRtnCfmmcTradingAccountTokenField {
+
+} CbTradeRtnCfmmcTradingAccountTokenField;
+
+typedef struct CbTradeRspQryDepthMarketDataField {
+
+} CbTradeRspQryDepthMarketDataField;
+
+typedef struct CbTradeRspQryMaxOrderVolumeField {
+
+} CbTradeRspQryMaxOrderVolumeField;
+
+typedef struct CbTradeRspQryEwarrantOffsetField {
+
+} CbTradeRspQryEwarrantOffsetField;
+
+typedef struct CbTradeRtnErrorConditionalOrderField {
+
+} CbTradeRtnErrorConditionalOrderField;
+
+
+typedef union CbTradeField {
+    CbTradeFrontConnectedField                          FrontConnected;
+    CbTradeFrontDisconnectedField                       FrontDisconnected;
+    CbTradeRspAuthenticateField                         RspAuthenticate;
+    CbTradeRspUserLoginField                            RspUserLogin;
+    CbTradeRspUserLogoutField                           RspUserLogout;
+    CbTradeRspErrorField                                RspError;
+    CbTradeRspSubForQuoteRspField                       RspSubForQuoteRsp;
+    CbTradeRspUserPasswordUpdateField                   RspUserPasswordUpdate;
+    CbTradeRspTradingAccountPasswordUpdateField         RspTradingAccountPasswordUpdate;
+    CbTradeRspParkedOrderInsertField                    RspParkedOrderInsert;
+    CbTradeRspParkedOrderActionField                    RspParkedOrderAction;
+    CbTradeRspQryParkedOrderField                       RspQryParkedOrder;
+    CbTradeRspQryParkedOrderActionField                 RspQryParkedOrderAction;
+    CbTradeRspRemoveParkedOrderField                    RspRemoveParkedOrder;
+    CbTradeRspRemoveParkedOrderActionField              RspRemoveParkedOrderAction;
+    CbTradeRspOrderInsertField                          RspOrderInsert;
+    CbTradeRspOrderActionField                          RspOrderAction;
+    CbTradeRspQryOrderField                             RspQryOrder;
+    CbTradeRspQryTradeField                             RspQryTrade;
+    CbTradeRtnOrderField                                RtnOrder;
+    CbTradeRtnTradeField                                RtnTrade;
+    CbTradeErrRtnOrderInsertField                       ErrRtnOrderInsert;
+    CbTradeErrRtnOrderActionField                       ErrRtnOrderAction;
+    CbTradeRspForQuoteInsertField                       RspForQuoteInsert;
+    CbTradeRspQuoteInsertField                          RspQuoteInsert;
+    CbTradeRspQuoteActionField                          RspQuoteAction;
+    CbTradeRspBatchOrderActionField                     RspBatchOrderAction;
+    CbTradeRspQryForQuoteField                          RspQryForQuote;
+    CbTradeRspQryQuoteField                             RspQryQuote;
+    CbTradeRtnForQuoteRspField                          RtnForQuoteRsp;
+    CbTradeRtnQuoteField                                RtnQuote;
+    CbTradeErrRtnForQuoteInsertField                    ErrRtnForQuoteInsert;
+    CbTradeErrRtnQuoteInsertField                       ErrRtnQuoteInsert;
+    CbTradeErrRtnQuoteActionField                       ErrRtnQuoteAction;
+    CbTradeErrRtnBatchOrderActionField                  ErrRtnBatchOrderAction;
+    CbTradeRspExecOrderInsertField                      RspExecOrderInsert;
+    CbTradeRspExecOrderActionField                      RspExecOrderAction;
+    CbTradeRspQryExecOrderField                         RspQryExecOrder;
+    CbTradeRtnExecOrderField                            RtnExecOrder;
+    CbTradeErrRtnExecOrderInsertField                   ErrRtnExecOrderInsert;
+    CbTradeErrRtnExecOrderActionField                   ErrRtnExecOrderAction;
+    CbTradeRspCombActionInsertField                     RspCombActionInsert;
+    CbTradeRspQryCombActionField                        RspQryCombAction;
+    CbTradeRspQryInvestUnitField                        RspQryInvestUnit;
+    CbTradeRspQryProductGroupField                      RspQryProductGroup;
+    CbTradeRspQryCombInstrumentGuardField               RspQryCombInstrumentGuard;
+    CbTradeRtnCombActionField                           RtnCombAction;
+    CbTradeErrRtnCombActionInsertField                  ErrRtnCombActionInsert;
+    CbTradeRspOptionSelfCloseInsertField                RspOptionSelfCloseInsert;
+    CbTradeRspOptionSelfCloseActionField                RspOptionSelfCloseAction;
+    CbTradeRspQryOptionSelfCloseField                   RspQryOptionSelfClose;
+    CbTradeRspQryOptionInstrCommRateField               RspQryOptionInstrCommRate;
+    CbTradeRspQryOptionInstrTradeCostField              RspQryOptionInstrTradeCost;
+    CbTradeRtnOptionSelfCloseField                      RtnOptionSelfClose;
+    CbTradeErrRtnOptionSelfCloseInsertField             ErrRtnOptionSelfCloseInsert;
+    CbTradeErrRtnOptionSelfCloseActionField             ErrRtnOptionSelfCloseAction;
+    CbTradeRspSettlementInfoConfirmField                RspSettlementInfoConfirm;
+    CbTradeRspQrySettlementInfoField                    RspQrySettlementInfo;
+    CbTradeRspQrySettlementInfoConfirmField             RspQrySettlementInfoConfirm;
+    CbTradeRtnFromBankToFutureByBankField               RtnFromBankToFutureByBank;
+    CbTradeRtnFromFutureToBankByBankField               RtnFromFutureToBankByBank;
+    CbTradeRtnRepealFromBankToFutureByBankField         RtnRepealFromBankToFutureByBank;
+    CbTradeRtnRepealFromFutureToBankByBankField         RtnRepealFromFutureToBankByBank;
+    CbTradeRtnOpenAccountByBankField                    RtnOpenAccountByBank;
+    CbTradeRtnChangeAccountByBankField                  RtnChangeAccountByBank;
+    CbTradeRtnCancelAccountByBankField                  RtnCancelAccountByBank;
+    CbTradeRspFromBankToFutureByFutureField             RspFromBankToFutureByFuture;
+    CbTradeRspFromFutureToBankByFutureField             RspFromFutureToBankByFuture;
+    CbTradeRspQryBankAccountMoneyByFutureField          RspQryBankAccountMoneyByFuture;
+    CbTradeRtnQryBankBalanceByFutureField               RtnQryBankBalanceByFuture;
+    CbTradeRtnFromBankToFutureByFutureField             RtnFromBankToFutureByFuture;
+    CbTradeRtnFromFutureToBankByFutureField             RtnFromFutureToBankByFuture;
+    CbTradeRtnRepealFromBankToFutureByFutureField       RtnRepealFromBankToFutureByFuture;
+    CbTradeRtnRepealFromFutureToBankByFutureField       RtnRepealFromFutureToBankByFuture;
+    CbTradeErrRtnBankToFutureByFutureField              ErrRtnBankToFutureByFuture;
+    CbTradeErrRtnFutureToBankByFutureField              ErrRtnFutureToBankByFuture;
+    CbTradeErrRtnQryBankBalanceByFutureField            ErrRtnQryBankBalanceByFuture;
+    CbTradeRtnRepealFromBankToFutureByFutureManualField RtnRepealFromBankToFutureByFutureManual;
+    CbTradeRtnRepealFromFutureToBankByFutureManualField RtnRepealFromFutureToBankByFutureManual;
+    CbTradeErrRtnRepealBankToFutureByFutureManualField  ErrRtnRepealBankToFutureByFutureManual;
+    CbTradeErrRtnRepealFutureToBankByFutureManualField  ErrRtnRepealFutureToBankByFutureManual;
+    CbTradeRspQryNoticeField                            RspQryNotice;
+    CbTradeRspQryTradingNoticeField                     RspQryTradingNotice;
+    CbTradeRtnTradingNoticeField                        RtnTradingNotice;
+    CbTradeRtnBulletinField                             RtnBulletin;
+    CbTradeRspQryExchangeField                          RspQryExchange;
+    CbTradeRspQryExchangeRateField                      RspQryExchangeRate;
+    CbTradeRspQryExchangeMarginRateField                RspQryExchangeMarginRate;
+    CbTradeRspQryExchangeMarginRateAdjustField          RspQryExchangeMarginRateAdjust;
+    CbTradeRspQryProductField                           RspQryProduct;
+    CbTradeRspQryProductExchRateField                   RspQryProductExchRate;
+    CbTradeRspQryInstrumentField                        RspQryInstrument;
+    CbTradeRspQryInstrumentMarginRateField              RspQryInstrumentMarginRate;
+    CbTradeRspQryInstrumentCommissionRateField          RspQryInstrumentCommissionRate;
+    CbTradeRspQryInstrumentOrderCommRateField           RspQryInstrumentOrderCommRate;
+    CbTradeRtnInstrumentStatusField                     RtnInstrumentStatus;
+    CbTradeRspQryInvestorField                          RspQryInvestor;
+    CbTradeRspQryInvestorPositionField                  RspQryInvestorPosition;
+    CbTradeRspQryInvestorPositionDetailField            RspQryInvestorPositionDetail;
+    CbTradeRspQryInvestorPositionCombineDetailField     RspQryInvestorPositionCombineDetail;
+    CbTradeRspQryInvestorProductGroupMarginField        RspQryInvestorProductGroupMargin;
+    CbTradeRspQryTradingCodeField                       RspQryTradingCode;
+    CbTradeRspQryTradingAccountField                    RspQryTradingAccount;
+    CbTradeRspQryTransferSerialField                    RspQryTransferSerial;
+    CbTradeRspQryContractBankField                      RspQryContractBank;
+    CbTradeRspQryTransferBankField                      RspQryTransferBank;
+    CbTradeRspQryAccountRegisterField                   RspQryAccountRegister;
+    CbTradeRspQryBrokerTradingParamsField               RspQryBrokerTradingParams;
+    CbTradeRspQryBrokerTradingAlgosField                RspQryBrokerTradingAlgos;
+    CbTradeRspQrySecAgentAcidMapField                   RspQrySecAgentAcidMap;
+    CbTradeRspQrySecAgentCheckModeField                 RspQrySecAgentCheckMode;
+    CbTradeRspQrySecAgentTradingAccountField            RspQrySecAgentTradingAccount;
+    CbTradeRspQryMmInstrumentCommissionRateField        RspQryMmInstrumentCommissionRate;
+    CbTradeRspQryMmOptionInstrCommRateField             RspQryMmOptionInstrCommRate;
+    CbTradeRspQryCfmmcTradingAccountTokenField          RspQryCfmmcTradingAccountToken;
+    CbTradeRspQryCfmmcTradingAccountKeyField            RspQryCfmmcTradingAccountKey;
+    CbTradeRtnCfmmcTradingAccountTokenField             RtnCfmmcTradingAccountToken;
+    CbTradeRspQryDepthMarketDataField                   RspQryDepthMarketData;
+    CbTradeRspQryMaxOrderVolumeField                    RspQryMaxOrderVolume;
+    CbTradeRspQryEwarrantOffsetField                    RspQryEwarrantOffset;
+    CbTradeRtnErrorConditionalOrderField                RtnErrorConditionalOrder;
+
+} CbTradeField;
 
 
 
@@ -247,10 +731,7 @@ typedef struct CbTradeErrRtnOrderActionField {
 
 
 
-
-
-
-
+/*
 
 
 typedef struct InstrumentField {
@@ -319,6 +800,6 @@ typedef struct PositionField {
     int                    PositionQty;        ///今日持仓
     char                PositionSide;        ///买入 / 卖出
 } PositionField;
-
+*/
 
 #endif // !OPTSP_CTPCORE_TRADESTRUCT_HPP_
