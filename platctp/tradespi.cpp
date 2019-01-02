@@ -37,7 +37,7 @@ void TradeSpi::OnFrontDisconnected(int nReason)
 void TradeSpi::OnRspAuthenticate(CThostFtdcRspAuthenticateField *pRspAuthenticateField, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pRspAuthenticateField) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pRspAuthenticateField) {
         (*trade_callback)(CB_TRADE_RSP_AUTHENTICATE, nullptr);
         log << "Success to Authenticate, BrokerID=" << pRspAuthenticateField->BrokerID
             << ", UserID=" << pRspAuthenticateField->UserID
@@ -55,7 +55,7 @@ void TradeSpi::OnRspAuthenticate(CThostFtdcRspAuthenticateField *pRspAuthenticat
 void TradeSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pRspUserLogin) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pRspUserLogin) {
         (*trade_callback)(CB_TRADE_RSP_USER_LOGIN, nullptr);
         uint64_t maxOrderRef = strtoull(pRspUserLogin->MaxOrderRef, 0, 10);
         log << "Login on Trade Front Server, TradingDay=" << pRspUserLogin->TradingDay
@@ -75,7 +75,7 @@ void TradeSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThost
 void TradeSpi::OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pUserLogout) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pUserLogout) {
         (*trade_callback)(CB_TRADE_RSP_USER_LOGOUT, true, nullptr);
         log << "Success to Logout";
         LOGINFO(logger, log);
@@ -91,7 +91,7 @@ void TradeSpi::OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostFtd
 void TradeSpi::OnRspUserPasswordUpdate(CThostFtdcUserPasswordUpdateField *pUserPasswordUpdate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pUserPasswordUpdate) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pUserPasswordUpdate) {
         (*trade_callback)(CB_TRADE_RSP_USER_PASSWD_UPDATE, true, nullptr);
         log << "Success to Update User Password, BrokerID=" << pUserPasswordUpdate->BrokerID
             << ", UserID=" << pUserPasswordUpdate->UserID;
@@ -108,7 +108,7 @@ void TradeSpi::OnRspUserPasswordUpdate(CThostFtdcUserPasswordUpdateField *pUserP
 void TradeSpi::OnRspTradingAccountPasswordUpdate(CThostFtdcTradingAccountPasswordUpdateField *pTradingAccountPasswordUpdate, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pTradingAccountPasswordUpdate) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pTradingAccountPasswordUpdate) {
         (*trade_callback)(CB_TRADE_RSP_TRADING_ACCOUNT_PASSWD_UPDATE, true, nullptr);
         log << "Success to Update Trading Account Password, BrokerID=" << pTradingAccountPasswordUpdate->BrokerID
             << ", UserID=" << pTradingAccountPasswordUpdate->AccountID;
@@ -125,7 +125,7 @@ void TradeSpi::OnRspTradingAccountPasswordUpdate(CThostFtdcTradingAccountPasswor
 void TradeSpi::OnRspQrySettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pSettlementInfoConfirm) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pSettlementInfoConfirm) {
         (*trade_callback)(CB_TRADE_RSP_QRY_SETTLEMENT_INFO_CONFIRM, true, nullptr);
         log << "Success to Query Settlement Info Confirm";
         LOGINFO(logger, log);
@@ -141,7 +141,7 @@ void TradeSpi::OnRspQrySettlementInfoConfirm(CThostFtdcSettlementInfoConfirmFiel
 void TradeSpi::OnRspQrySettlementInfo(CThostFtdcSettlementInfoField *pSettlementInfo, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pSettlementInfo) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pSettlementInfo) {
         (*trade_callback)(CB_TRADE_RSP_QRY_SETTLEMENT_INFO, true, nullptr);
         log << "Success to Query Settlement Info";
         LOGINFO(logger, log);
@@ -157,7 +157,7 @@ void TradeSpi::OnRspQrySettlementInfo(CThostFtdcSettlementInfoField *pSettlement
 void TradeSpi::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pSettlementInfoConfirm) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pSettlementInfoConfirm) {
         (*trade_callback)(CB_TRADE_RSP_SETTLEMENT_INFO_CONFIRM, true, nullptr);
         (*cmd_callback)(CB_CMD_TRADE_QRY_INSTRUMENT, CMDID_TRADE, false, nullptr);
         log << "Success to Response Settlement Info Confirm, " 
@@ -178,7 +178,7 @@ void TradeSpi::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *
 void TradeSpi::OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pInvestorPosition) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pInvestorPosition) {
         PositionField position;
         arch_Strcpy(position.InvestorID, pInvestorPosition->InvestorID, sizeof(position.InvestorID));
         arch_Strcpy(position.InstrumentID, pInvestorPosition->InstrumentID, sizeof(position.InstrumentID));
@@ -208,7 +208,7 @@ void TradeSpi::OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvest
 void TradeSpi::OnRspQryExchange(CThostFtdcExchangeField *pExchange, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pExchange) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pExchange) {
         /*TODO
         InstrumentField instrument;
         arch_Strcpy(instrument.InstrumentID, pInstrument->InstrumentID, sizeof(instrument.InstrumentID));
@@ -243,7 +243,7 @@ void TradeSpi::OnRspQryExchange(CThostFtdcExchangeField *pExchange, CThostFtdcRs
 void TradeSpi::OnRspQryProduct(CThostFtdcProductField *pProduct, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pProduct) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pProduct) {
         /*TODO
         InstrumentField instrument;
         arch_Strcpy(instrument.InstrumentID, pInstrument->InstrumentID, sizeof(instrument.InstrumentID));
@@ -278,7 +278,7 @@ void TradeSpi::OnRspQryProduct(CThostFtdcProductField *pProduct, CThostFtdcRspIn
 void TradeSpi::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pInstrument) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pInstrument) {
         InstrumentField instrument;
         arch_Strcpy(instrument.InstrumentID, pInstrument->InstrumentID, sizeof(instrument.InstrumentID));
         arch_Strcpy(instrument.ExchangeID, pInstrument->ExchangeID, sizeof(instrument.ExchangeID));
@@ -309,7 +309,7 @@ void TradeSpi::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThost
 void TradeSpi::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pInputOrder) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pInputOrder) {
         (*trade_callback)(CB_TRADE_RSP_ORDER_INSERT, true, nullptr);
         log << "Success to Insert Order";
         LOGDBG(logger, log);
@@ -325,7 +325,7 @@ void TradeSpi::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFt
 void TradeSpi::OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pInputOrderAction) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pInputOrderAction) {
         (*trade_callback)(CB_TRADE_RSP_ORDER_ACTION, true, nullptr);
         log << "Success to Response Order Action";
         LOGDBG(logger, log);
@@ -372,7 +372,7 @@ void TradeSpi::OnRtnTrade(CThostFtdcTradeField *pTrade)
 void TradeSpi::OnErrRtnOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pInputOrder) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pInputOrder) {
         (*trade_callback)(CB_TRADE_ERR_RTN_ORDER_INSERT, true, nullptr);
         log << "Error on Order Insert";
         LOGERR(logger, log);
@@ -388,7 +388,7 @@ void TradeSpi::OnErrRtnOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThos
 void TradeSpi::OnErrRtnOrderAction(CThostFtdcOrderActionField *pOrderAction, CThostFtdcRspInfoField *pRspInfo)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pOrderAction) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pOrderAction) {
         (*trade_callback)(CB_TRADE_ERR_RTN_ORDER_ACTION, true, nullptr);
         log << "Error on Order Action";
         LOGERR(logger, log);
@@ -428,7 +428,7 @@ void TradeSpi::OnRtnTradingNotice(CThostFtdcTradingNoticeInfoField *pTradingNoti
 void TradeSpi::OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pTradingAccount) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pTradingAccount) {
         CapitalField capital;
         
         capital.Available = pTradingAccount->Available;
@@ -459,7 +459,7 @@ void TradeSpi::OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAcc
 void TradeSpi::OnRspQryInvestor(CThostFtdcInvestorField *pInvestor, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pInvestor) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pInvestor) {
         (*trade_callback)(CB_TRADE_RSP_QRY_INVESTOR, true, nullptr);
         log << "Success to Query Investor, " << pInvestor->InvestorID << "," << pInvestor->BrokerID;
         LOGINFO(logger, log);

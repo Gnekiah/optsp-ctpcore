@@ -25,7 +25,7 @@ void QuoteSpi::OnFrontConnected()
 void QuoteSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pRspUserLogin) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pRspUserLogin) {
         CbQuoteRspUserLoginField *data = &spiData->RspUserLogin;
         data->DateStamp = arch_Str2TimeStamp(pRspUserLogin->TradingDay, "00:00:00", 0);
         data->LoginTime = arch_Str2TimeStamp(pRspUserLogin->TradingDay, pRspUserLogin->LoginTime, 0);
@@ -53,7 +53,7 @@ void QuoteSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThost
 void QuoteSpi::OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pSpecificInstrument) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pSpecificInstrument) {
         CbQuoteRspSubMarketDataField *data = &spiData->RspSubMarketData;
         arch_Strcpy(data->InstrumentID, pSpecificInstrument->InstrumentID, sizeof(data->InstrumentID));
         (*quote_callback)(CB_QUOTE_RSP_SUB_MARKET_DATA, spiData);
@@ -132,7 +132,7 @@ void QuoteSpi::OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool
 void QuoteSpi::OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pUserLogout) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pUserLogout) {
         CbQuoteRspUserLogoutField *data = &spiData->RspUserLogout;
         arch_Strcpy(data->BrokerID, pUserLogout->BrokerID, sizeof(data->BrokerID));
         arch_Strcpy(data->UserID, pUserLogout->UserID, sizeof(data->UserID));
@@ -150,7 +150,7 @@ void QuoteSpi::OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostFtd
 void QuoteSpi::OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
     std::stringstream log;
-    if (pRspInfo && pRspInfo->ErrorID == 0 && pSpecificInstrument) {
+    if (!(pRspInfo && pRspInfo->ErrorID != 0) && pSpecificInstrument) {
         CbQuoteRspUnsubMarketDataField *data = &spiData->RspUnsubMarketData;
         arch_Strcpy(data->InstrumentID, pSpecificInstrument->InstrumentID, sizeof(data->InstrumentID));
         (*quote_callback)(CB_QUOTE_RSP_UNSUB_MARKET_DATA, spiData);
