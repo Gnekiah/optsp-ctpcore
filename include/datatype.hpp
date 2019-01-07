@@ -9,6 +9,10 @@
 #define PLATCTP_INSTRUMENT_MAX                  1024        ///用于保存合约的数组最大长度
 
 
+
+#define CB_QUOTE_TYPE_START         0x00000000
+#define CB_TRADE_TYPE_START         0x10000000
+
 /********** Quote回调类型 **********/
 #define CB_QUOTE_FRONT_CONNECTED                                    0x00000001  ///客户端与交易后台建立起通信连接
 #define CB_QUOTE_FRONT_DISCONNECTED                                 0x00000002  ///客户端与交易后台通信连接断开，API会自动重新连接，客户端可不做处理
@@ -214,12 +218,14 @@ typedef base_callback_fn plat_callback_fn;
 typedef base_callback_fn stgroup_callback_fn;
 
 
-typedef char MdCsvFormatType[128];                                      ///行情CSV保存格式类型
-typedef char FrontAddrType[64];                                         ///前置地址类型
-typedef char DateTimeType[24];                                          ///时间字符串类型, yyyy-MM-dd hh:mm:ss.zzz
-typedef char ProductNameType[24];                                       ///产品名称 - 用于TradeApi的验证
-typedef char AuthenticateCodeType[32];                                  ///验证编码 - 用于TradeApi的验证
+typedef char MdCsvFormatType[128];                                          ///行情CSV保存格式类型
+typedef char FrontAddrType[64];                                             ///前置地址类型
+typedef char DateTimeType[24];                                              ///时间字符串类型, yyyy-MM-dd hh:mm:ss.zzz
+typedef char ProductNameType[24];                                           ///产品名称 - 用于TradeApi的验证
+typedef char AuthenticateCodeType[32];                                      ///验证编码 - 用于TradeApi的验证
 
+typedef TThostFtdcDateType                  DateType;                       ///日期类型，yyyyMMdd
+typedef TThostFtdcTimeType                  TimeType;                       ///时间类型，hh:mm:ss
 typedef TThostFtdcBrokerIDType              BrokerIDType;                   ///经纪公司代码类型
 typedef TThostFtdcUserIDType                UserIDType;                     ///用户代码类型
 typedef TThostFtdcInvestorIDType            InvestorIDType;                 ///投资者代码类型

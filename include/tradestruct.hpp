@@ -37,18 +37,19 @@ typedef struct CbTradeRspAuthenticateField {
 } CbTradeRspAuthenticateField;
 
 typedef struct CbTradeRspUserLoginField {
-    uint64_t        DateStamp;      ///交易日, 日期戳："yyyy-MM-dd 00:00:00.000"
-    uint64_t        LoginTime;      ///登录成功时间, 时间的格式采用时间戳: "yyyy-MM-dd hh:mm:ss.zzz"
+    DateType        TradingDay;     ///交易日
+    TimeType        LoginTime;      ///登录成功时间
     BrokerIDType    BrokerID;       ///经纪公司代码
     UserIDType      UserID;         ///用户代码
+    TimeType        SHFETime;       ///上期所时间
+    TimeType        DCETime;        ///大商所时间
+    TimeType        CZCETime;       ///郑商所时间
+    TimeType        FFEXTime;       ///中金所时间
+    TimeType        INETime;        ///能源中心时间
     int             FrontID;        ///前置编号
     int             SessionID;      ///会话编号
     uint64_t        MaxOrderRef;    ///最大报单引用
-    uint64_t        SHFETime;       ///上期所时间
-    uint64_t        DCETime;        ///大商所时间
-    uint64_t        CZCETime;       ///郑商所时间
-    uint64_t        FFEXTime;       ///中金所时间
-    uint64_t        INETime;        ///能源中心时间
+
 } CbTradeRspUserLoginField;
 
 typedef struct CbTradeRspUserLogoutField {
@@ -99,45 +100,45 @@ typedef struct CbTradeRspRemoveParkedOrderActionField {
 
 /********** 下单 **********/
 typedef struct CbTradeRspOrderInsertField {
-    uint64_t                ExpireTime;             ///有效时间（时间戳）
     BrokerIDType            BrokerID;               ///经纪公司代码
     InvestorIDType          InvestorID;             ///资金账号
     AccountIDType           AccountID;              ///资金账号
     InstrumentIDType        InstrumentID;           ///合约编号
     UserIDType              UserID;                 ///用户代码
+    DateType                GTDDate;                ///GTD日期
+    IPAddressType           IPAddress;              ///IP地址
+    MacAddressType          MacAddress;             ///Mac地址
     uint64_t                OrderRef;               ///报单引用
-    double                  OrderPrice;             ///委托价格
+    double                  LimitPrice;             ///委托价格
     double                  StopPrice;              ///止损价
-    int                     OrderQty;               ///委托数量
-    int                     OrderMinQty;            ///最小成交量
+    int                     VolumeTotalOriginal;    ///委托数量
+    int                     MinVolume;              ///最小成交量
     int                     RequestID;              ///请求编号
-    char                    OrderSide;              ///买入 / 卖出
-    char                    OrderFlag;              ///开仓 / 平仓
+    char                    Direction;              ///买入 / 卖出
     char                    OrderPriceType;         ///报单价格条件
     char                    TimeCondition;          ///有效期类型
     char                    VolumeCondition;        ///成交量类型
     char                    ContingentCondition;    ///触发条件
     char                    ForceCloseReason;       ///强平原因
     bool                    UserForceClose;         ///用户强评标志
-    IPAddressType           IPAddress;              ///IP地址
-    MacAddressType          MacAddress;             ///Mac地址
 } CbTradeRspOrderInsertField;
 
 typedef struct CbTradeRspOrderActionField {
     BrokerIDType            BrokerID;               ///经纪公司代码
     UserIDType              UserID;                 ///用户代码
     InvestorIDType          InvestorID;             ///资金账号
+    ExchangeIDType	        ExchangeID;             ///交易所代码
     InstrumentIDType        InstrumentID;           ///合约编号
+    OrderSysIDType          OrderSysID;             ///报单编号
+    IPAddressType           IPAddress;              ///IP地址
+    MacAddressType          MacAddress;             ///Mac地址
     uint64_t                OrderRef;               ///报单引用
-    double                  OrderPrice;             ///委托价格
+    double                  LimitPrice;             ///委托价格
     int                     OrderActionRef;         ///报单操作引用
     int                     RequestID;              ///请求编号
     int                     FrontID;                ///前置编号
     int                     SessionID;              ///会话编号
-    int                     QtyChange;              ///数量变化
-    IPAddressType           IPAddress;              ///IP地址
-    MacAddressType          MacAddress;             ///Mac地址
-    OrderSysIDType          OrderSysID;             ///报单编号
+    int                     VolumeChange;           ///数量变化
     char                    ActionFlag;             ///操作标志
 } CbTradeRspOrderActionField;
 
@@ -151,17 +152,17 @@ typedef struct CbTradeRspQryOrderField {
     MacAddressType          MacAddress;             ///Mac地址
     OrderLocalIDType        OrderLocalID;           ///本地报单编号
     OrderSysIDType          OrderSysID;             ///报单编号
+    DateType                InsertDate;             ///报单日期
+    TimeType                InsertTime;             ///委托时间
+    TimeType                ActiveTime;             ///激活时间
+    TimeType                SuspendTime;            ///挂起时间
+    TimeType                UpdateTime;             ///最后修改时间
+    TimeType                CancelTime;             ///撤销时间
     uint64_t                OrderRef;               ///报单引用
-    uint64_t                InsertDate;             ///报单日期
-    uint64_t                InsertTime;             ///委托时间
-    uint64_t                ActiveTime;             ///激活时间
-    uint64_t                SuspendTime;            ///挂起时间
-    uint64_t                UpdateTime;             ///最后修改时间
-    uint64_t                CancelTime;             ///撤销时间
-    double                  OrderPrice;             ///委托价格
+    double                  LimitPrice;             ///委托价格
     double                  StopPrice;              ///止损价
-    int                     OrderQty;               ///委托数量
-    int                     OrderMinQty;            ///最小成交量
+    int                     VolumeTotalOriginal;    ///委托数量
+    int                     MinVolume;              ///最小成交量
     int                     RequestID;              ///请求编号
     int                     FrontID;                ///前置编号
     int                     SessionID;              ///会话编号
@@ -170,8 +171,7 @@ typedef struct CbTradeRspQryOrderField {
     int                     VolumeTotal;            ///剩余数量
     int                     SequenceNo;             ///序号
     int                     SettlementID;           ///结算编号
-    char                    OrderSide;              ///买入 / 卖出
-    char                    OrderFlag;              ///开仓 / 平仓
+    char                    Direction;              ///买入 / 卖出
     char                    OrderPriceType;         ///报单价格条件
     char                    TimeCondition;          ///有效期类型
     char                    VolumeCondition;        ///成交量类型
@@ -185,15 +185,39 @@ typedef struct CbTradeRspQryOrderField {
 } CbTradeRspQryOrderField;
 
 typedef struct CbTradeRspQryTradeField {
-
+    BrokerIDType            BrokerID;               ///经纪公司代码
+    InvestorIDType          InvestorID;             ///资金账号
+    InstrumentIDType        InstrumentID;           ///合约编号
+    UserIDType              UserID;                 ///用户代码
+    OrderSysIDType          OrderSysID;             ///报单编号
+    OrderLocalIDType        OrderLocalID;           ///本地报单编号
+    DateType	            TradeDate;              ///成交时期
+    TimeType	            TradeTime;              ///成交时间
+    uint64_t                OrderRef;               ///报单引用
+    double                  Price;                  ///价格
+    int                     SettlementID;           ///结算编号
+    int                     Volume;                 ///数量
+    char                    Direction;              ///买卖方向
 } CbTradeRspQryTradeField;
 
 typedef struct CbTradeRtnOrderField {
-
+    
 } CbTradeRtnOrderField;
 
 typedef struct CbTradeRtnTradeField {
-
+    BrokerIDType            BrokerID;               ///经纪公司代码
+    InvestorIDType          InvestorID;             ///资金账号
+    InstrumentIDType        InstrumentID;           ///合约编号
+    UserIDType              UserID;                 ///用户代码
+    OrderSysIDType          OrderSysID;             ///报单编号
+    OrderLocalIDType        OrderLocalID;           ///本地报单编号
+    DateType	            TradeDate;              ///成交时期
+    TimeType	            TradeTime;              ///成交时间
+    uint64_t                OrderRef;               ///报单引用
+    double                  Price;                  ///价格
+    int                     SettlementID;           ///结算编号
+    int                     Volume;                 ///数量
+    char                    Direction;              ///买卖方向
 } CbTradeRtnTradeField;
 
 typedef struct CbTradeErrRtnOrderInsertField {
@@ -204,6 +228,7 @@ typedef struct CbTradeErrRtnOrderActionField {
 
 } CbTradeErrRtnOrderActionField;
 
+/********** 报价 **********/
 typedef struct CbTradeRspForQuoteInsertField {
 
 } CbTradeRspForQuoteInsertField;
@@ -252,6 +277,7 @@ typedef struct CbTradeErrRtnBatchOrderActionField {
 
 } CbTradeErrRtnBatchOrderActionField;
 
+/********** 执行宣告 **********/
 typedef struct CbTradeRspExecOrderInsertField {
 
 } CbTradeRspExecOrderInsertField;
@@ -276,6 +302,7 @@ typedef struct CbTradeErrRtnExecOrderActionField {
 
 } CbTradeErrRtnExecOrderActionField;
 
+/********** 组合相关 **********/
 typedef struct CbTradeRspCombActionInsertField {
 
 } CbTradeRspCombActionInsertField;
@@ -304,6 +331,7 @@ typedef struct CbTradeErrRtnCombActionInsertField {
 
 } CbTradeErrRtnCombActionInsertField;
 
+/********** 期权相关 **********/
 typedef struct CbTradeRspOptionSelfCloseInsertField {
 
 } CbTradeRspOptionSelfCloseInsertField;
@@ -336,6 +364,7 @@ typedef struct CbTradeErrRtnOptionSelfCloseActionField {
 
 } CbTradeErrRtnOptionSelfCloseActionField;
 
+/********** 投资者结算结果 **********/
 typedef struct CbTradeRspSettlementInfoConfirmField {
 
 } CbTradeRspSettlementInfoConfirmField;
@@ -348,6 +377,7 @@ typedef struct CbTradeRspQrySettlementInfoConfirmField {
 
 } CbTradeRspQrySettlementInfoConfirmField;
 
+/********** 银行发起操作的通知 **********/
 typedef struct CbTradeRtnFromBankToFutureByBankField {
 
 } CbTradeRtnFromBankToFutureByBankField;
@@ -376,6 +406,7 @@ typedef struct CbTradeRtnCancelAccountByBankField {
 
 } CbTradeRtnCancelAccountByBankField;
 
+/********** 期货发起操作 **********/
 typedef struct CbTradeRspFromBankToFutureByFutureField {
 
 } CbTradeRspFromBankToFutureByFutureField;
@@ -420,6 +451,7 @@ typedef struct CbTradeErrRtnQryBankBalanceByFutureField {
 
 } CbTradeErrRtnQryBankBalanceByFutureField;
 
+/********** 手工发起冲正 **********/
 typedef struct CbTradeRtnRepealFromBankToFutureByFutureManualField {
 
 } CbTradeRtnRepealFromBankToFutureByFutureManualField;
@@ -436,6 +468,7 @@ typedef struct CbTradeErrRtnRepealFutureToBankByFutureManualField {
 
 } CbTradeErrRtnRepealFutureToBankByFutureManualField;
 
+/********** 查询通知 **********/
 typedef struct CbTradeRspQryNoticeField {
 
 } CbTradeRspQryNoticeField;
@@ -452,6 +485,7 @@ typedef struct CbTradeRtnBulletinField {
 
 } CbTradeRtnBulletinField;
 
+/********** 查询交易所与合约 **********/
 typedef struct CbTradeRspQryExchangeField {
 
 } CbTradeRspQryExchangeField;
@@ -477,7 +511,16 @@ typedef struct CbTradeRspQryProductExchRateField {
 } CbTradeRspQryProductExchRateField;
 
 typedef struct CbTradeRspQryInstrumentField {
-
+    InstrumentIDType        InstrumentID;               ///合约代码
+    ExchangeIDType          ExchangeID;                 ///交易所代码
+    InstrumentNameType      InstrumentName;             ///合约名称
+    ExchangeInstIDType      ExchangeInstID;             ///合约在交易所的代码
+    double                  LongMarginRatio;            ///多头保证金率
+    double                  ShortMarginRatio;           ///空头保证金率
+    double                  UnderlyingMultiple;         ///合约基础商品乘数
+    int                     VolumeMultiple;             ///合约数量乘数
+    char                    InstLifePhase;              ///合约生命周期状态
+    bool                    IsTrading;                  ///当前是否交易
 } CbTradeRspQryInstrumentField;
 
 typedef struct CbTradeRspQryInstrumentMarginRateField {
@@ -496,12 +539,31 @@ typedef struct CbTradeRtnInstrumentStatusField {
 
 } CbTradeRtnInstrumentStatusField;
 
+/********** 查询投资者 **********/
 typedef struct CbTradeRspQryInvestorField {
 
 } CbTradeRspQryInvestorField;
 
 typedef struct CbTradeRspQryInvestorPositionField {
-
+    DateType                TradingDay;             ///交易日
+    InvestorIDType          InvestorID;             ///资金账号
+    InstrumentIDType        InstrumentID;           ///合约编号
+    double                  OpenAmount;             ///开仓金额    
+    double                  CloseAmount;            ///平仓金额
+    double                  Commission;             ///手续费
+    double                  CloseProfit;            ///平仓盈亏
+    double                  PositionProfit;         ///持仓盈亏
+    double                  OpenCost;               ///开仓成本
+    double                  UseMargin;              ///占用的保证金
+    double                  PositionCost;           ///持仓成本
+    int                     YdPosition;             ///上日持仓
+    int                     Position;               ///今日持仓
+    int                     TodayPosition;          ///今日持仓
+    int                     OpenVolume;             ///开仓量
+    int                     CloseVolume;            ///平仓量
+    int                     SettlementID;           ///结算编号
+    char                    PosiDirection;          ///持仓多空方向
+    char                    PositionDate;           ///持仓日期
 } CbTradeRspQryInvestorPositionField;
 
 typedef struct CbTradeRspQryInvestorPositionDetailField {
@@ -521,9 +583,26 @@ typedef struct CbTradeRspQryTradingCodeField {
 } CbTradeRspQryTradingCodeField;
 
 typedef struct CbTradeRspQryTradingAccountField {
-
+    DateType            TradingDay;             ///交易日
+    InvestorIDType      InvestorID;             ///投资者帐号
+    BrokerIDType        BrokerID;               ///经纪公司代码
+    CurrencyIDType      CurrencyID;             ///币种代码
+    double              FrozenMargin;           ///冻结的保证金
+    double              FrozenCash;             ///冻结的资金
+    double              FrozenCommission;       ///冻结的手续费
+    double              CurrMargin;             ///当前保证金总额
+    double              CashIn;                 ///资金差额
+    double              Commission;             ///手续费
+    double              CloseProfit;            ///平仓盈亏
+    double              PositionProfit;         ///持仓盈亏
+    double              Balance;                ///期货结算准备金
+    double              Available;              ///可用资金
+    double              Reserve;                ///基本准备金
+    double              ExchangeMargin;         ///交易所保证金
+    double              ReserveBalance;         ///保底期货结算准备金
 } CbTradeRspQryTradingAccountField;
 
+/********** 查询银期等 **********/
 typedef struct CbTradeRspQryTransferSerialField {
 
 } CbTradeRspQryTransferSerialField;
@@ -540,6 +619,7 @@ typedef struct CbTradeRspQryAccountRegisterField {
 
 } CbTradeRspQryAccountRegisterField;
 
+/********** 查询经纪公司 **********/
 typedef struct CbTradeRspQryBrokerTradingParamsField {
 
 } CbTradeRspQryBrokerTradingParamsField;
@@ -548,6 +628,7 @@ typedef struct CbTradeRspQryBrokerTradingAlgosField {
 
 } CbTradeRspQryBrokerTradingAlgosField;
 
+/********** 查询二级代理 **********/
 typedef struct CbTradeRspQrySecAgentAcidMapField {
 
 } CbTradeRspQrySecAgentAcidMapField;
@@ -560,6 +641,7 @@ typedef struct CbTradeRspQrySecAgentTradingAccountField {
 
 } CbTradeRspQrySecAgentTradingAccountField;
 
+/********** 查询做市商 **********/
 typedef struct CbTradeRspQryMmInstrumentCommissionRateField {
 
 } CbTradeRspQryMmInstrumentCommissionRateField;
@@ -568,6 +650,7 @@ typedef struct CbTradeRspQryMmOptionInstrCommRateField {
 
 } CbTradeRspQryMmOptionInstrCommRateField;
 
+/********** 查询保证金监控中心 **********/
 typedef struct CbTradeRspQryCfmmcTradingAccountTokenField {
 
 } CbTradeRspQryCfmmcTradingAccountTokenField;
@@ -580,6 +663,7 @@ typedef struct CbTradeRtnCfmmcTradingAccountTokenField {
 
 } CbTradeRtnCfmmcTradingAccountTokenField;
 
+/********** 其他查询 **********/
 typedef struct CbTradeRspQryDepthMarketDataField {
 
 } CbTradeRspQryDepthMarketDataField;
@@ -719,87 +803,7 @@ typedef union CbTradeField {
     CbTradeRspQryMaxOrderVolumeField                    RspQryMaxOrderVolume;
     CbTradeRspQryEwarrantOffsetField                    RspQryEwarrantOffset;
     CbTradeRtnErrorConditionalOrderField                RtnErrorConditionalOrder;
-
 } CbTradeField;
 
-
-
-
-
-
-
-
-
-
-/*
-
-
-typedef struct InstrumentField {
-    InstrumentIDType    InstrumentID;            ///合约代码
-    ExchangeIDType        ExchangeID;                ///交易所代码
-    InstrumentNameType    InstrumentName;            ///合约名称
-    ExchangeInstIDType    ExchangeInstID;            ///合约在交易所的代码
-    double                LongMarginRatio;        ///多头保证金率
-    double                ShortMarginRatio;        ///空头保证金率
-    double                UnderlyingMultiple;        ///合约基础商品乘数
-    int                    VolumeMultiple;            ///合约数量乘数
-    char                InstLifePhase;            ///合约生命周期状态
-    bool                IsTrading;                ///当前是否交易
-} InstrumentField;
-
-
-typedef struct OrderField {
-    
-} OrderField;
-
-
-typedef struct CapitalField {
-    InvestorIDType    InvestorID;            ///投资者帐号
-    BrokerIDType    BrokerID;            ///经纪公司代码
-    CurrencyIDType    CurrencyID;            ///币种代码
-    double            FrozenMargin;        ///冻结的保证金
-    double            FrozenCash;            ///冻结的资金
-    double            FrozenCommission;    ///冻结的手续费
-    double            CurrMargin;            ///当前保证金总额
-    double            CashIn;                ///资金差额
-    double            Commission;            ///手续费
-    double            CloseProfit;        ///平仓盈亏
-    double            PositionProfit;        ///持仓盈亏
-    double            Balance;            ///期货结算准备金
-    double            Available;            ///可用资金
-    double            Reserve;            ///基本准备金
-    double            ExchangeMargin;        ///交易所保证金
-    double            ReserveBalance;        ///保底期货结算准备金
-} CapitalField;
-
-
-typedef struct MatchField {
-    uint64_t            MatchDateTime;        ///成交时间（时间戳）
-    InvestorIDType        InvestorID;            ///资金账号
-    InstrumentIDType    InstrumentID;        ///合约编号
-    double                MatchPrice;            ///成交价
-    double                Fee;                ///手续费
-    int                    MatchQty;            ///成交量
-    char                MatchSide;            ///买入 / 卖出
-    char                MatchFlag;            ///开仓 / 平仓
-} MatchField;
-
-
-typedef struct PositionField {
-    InvestorIDType        InvestorID;            ///资金账号
-    InstrumentIDType    InstrumentID;        ///合约编号
-    double                OpenCost;            ///开仓成本
-    double                PositionCost;        ///持仓成本
-    double                PositionProfit;        ///持仓盈亏
-    double                CloseProfit;        ///平仓盈亏
-    double                Fee;                ///手续费
-    double                UseMargin;            ///占用的保证金                                                    
-    int                    SettlementID;        ///结算编号
-    int                    OpenVolume;            ///开仓量
-    int                    CloseVolume;        ///平仓量
-    int                    PositionQty;        ///今日持仓
-    char                PositionSide;        ///买入 / 卖出
-} PositionField;
-*/
 
 #endif // !OPTSP_CTPCORE_TRADESTRUCT_HPP_
