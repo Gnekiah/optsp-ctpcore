@@ -38,7 +38,7 @@ void QuoteSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThost
         arch_Strcpy(data->INETime, pRspUserLogin->INETime, sizeof(data->INETime));
         data->FrontID = pRspUserLogin->FrontID;
         data->SessionID = pRspUserLogin->SessionID;
-        data->MaxOrderRef = atol(pRspUserLogin->MaxOrderRef);
+        data->MaxOrderRef = arch_Str2Int64(pRspUserLogin->MaxOrderRef);
         (*quote_callback)(CB_QUOTE_RSP_USER_LOGIN, spiData);
         log << "Login on Quote Front Server, " << pRspUserLogin->TradingDay << ", " << pRspUserLogin->LoginTime;
         LOGINFO(logger, log);
