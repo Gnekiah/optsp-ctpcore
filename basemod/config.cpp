@@ -277,6 +277,78 @@ int Config::GetLogLevel()
 }
 
 
+std::string Config::GetProductName()
+{
+    lock.lock();
+    std::string s(this->productName);
+    lock.unlock();
+    return s;
+}
+
+
+std::string Config::GetAuthCode()
+{
+    lock.lock();
+    std::string s(this->authCode);
+    lock.unlock();
+    return s;
+}
+
+
+std::string Config::GetBrokerID()
+{
+    lock.lock();
+    std::string s(this->brokerID);
+    lock.unlock();
+    return s;
+}
+
+
+std::string Config::GetUserID()
+{
+    lock.lock();
+    std::string s(this->userID);
+    lock.unlock();
+    return s;
+}
+
+
+std::string Config::GetInvestorID()
+{
+    lock.lock();
+    std::string s(this->investorID);
+    lock.unlock();
+    return s;
+}
+
+
+std::string Config::GetPassword()
+{
+    lock.lock();
+    std::string s(this->password);
+    lock.unlock();
+    return s;
+}
+
+
+std::string Config::GetQuoteFrontAddr()
+{
+    lock.lock();
+    std::string s(this->quoteFrontAddr);
+    lock.unlock();
+    return s;
+}
+
+
+std::string Config::GetTradeFrontAddr()
+{
+    lock.lock();
+    std::string s(this->tradeFrontAddr);
+    lock.unlock();
+    return s;
+}
+
+
 bool Config::GetHomePath(char *s)
 {
     lock.lock();

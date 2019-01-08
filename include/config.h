@@ -78,6 +78,14 @@ public:
     boost::filesystem::path GetHomePath();
     boost::filesystem::path GetDataPath();
     int GetLogLevel();
+    std::string GetProductName();
+    std::string GetAuthCode();
+    std::string GetBrokerID();
+    std::string GetUserID();
+    std::string GetInvestorID();
+    std::string GetPassword();
+    std::string GetQuoteFrontAddr();
+    std::string GetTradeFrontAddr();
     bool GetHomePath(char *);
     bool GetDataPath(char *);
     bool GetProductName(char *);
