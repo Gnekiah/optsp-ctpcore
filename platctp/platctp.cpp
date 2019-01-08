@@ -18,15 +18,19 @@ PlatCtp::PlatCtp(Config * config, Logger * logger, plat_callback_fn pfn)
     quoteSpi = new QuoteSpi(logger, CtpspiCallBack);
     tradeSpi = new TradeSpi(logger, CtpspiCallBack);
     
-    quoteApi = CThostFtdcMdApi::CreateFtdcMdApi(config->homepath.string().c_str());
+    quoteApi = CThostFtdcMdApi::CreateFtdcMdApi(config->GetHomePath().string().c_str());
     quoteApi->RegisterSpi(quoteSpi);
-    quoteApi->RegisterFront(config->quoteFrontAddr);
+    FrontAddrType quoteAddr = { 0 };
+    arch_Strcpy(quoteAddr, config->GetQuoteFrontAddr().c_str(), sizeof(quoteAddr));
+    quoteApi->RegisterFront(quoteAddr);
 
-    tradeApi = CThostFtdcTraderApi::CreateFtdcTraderApi(config->homepath.string().c_str());
+    tradeApi = CThostFtdcTraderApi::CreateFtdcTraderApi(config->GetHomePath().string().c_str());
     tradeApi->RegisterSpi(tradeSpi);
     tradeApi->SubscribePublicTopic(THOST_TERT_RESTART);
     tradeApi->SubscribePrivateTopic(THOST_TERT_RESTART);
-    tradeApi->RegisterFront(config->tradeFrontAddr);
+    FrontAddrType tradeAddr = { 0 };
+    arch_Strcpy(tradeAddr, config->GetTradeFrontAddr().c_str(), sizeof(tradeAddr));
+    tradeApi->RegisterFront(tradeAddr);
 
     log << "CTP Registered";
     LOGINFO(logger, log);

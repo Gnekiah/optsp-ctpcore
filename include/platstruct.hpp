@@ -32,9 +32,70 @@
 #define TRADE_STATE_INSTRUMENT_QUERIED              0x23
 
 
+typedef struct PlatCmdReqUserLoginField {
+    BrokerIDType            BrokerID;
+    UserIDType              UserID;
+    PasswordType            Password;
+    ProductInfoType         ProductInfo;
+    IPAddressType           ClientIPAddress;
+} PlatCmdReqUserLoginField;
+
+typedef struct PlatCmdReqUserLogoutField {
+    BrokerIDType            BrokerID;
+    UserIDType              UserID;
+} PlatCmdReqUserLogoutField;
+
+typedef struct PlatCmdReqUserPasswordUpdateField {
+    BrokerIDType            BrokerID;
+    UserIDType              UserID;
+    PasswordType            OldPassword;
+    PasswordType            NewPassword;
+} PlatCmdReqUserPasswordUpdateField;
+
+typedef struct PlatCmdReqTradingAccountPasswordUpdateField {
+    BrokerIDType            BrokerID;
+    AccountIDType           AccountID;
+    PasswordType            OldPassword;
+    PasswordType            NewPassword;
+} PlatCmdReqTradingAccountPasswordUpdateField;
+
+typedef struct PlatCmdReqOrderInsertField {
+    BrokerIDType            BrokerID;
+    UserIDType              UserID;
+    InvestorIDType          InvestorID;
+    InstrumentIDType        InstrumentID;
+    DateType                GTDDate;
+    uint64_t                OrderRef;
+    double                  LimitPrice;
+    double                  StopPrice;
+    int                     VolumeTotalOriginal;
+    int                     MinVolume;
+    int                     RequestID;
+    char                    OrderPriceType;
+    char                    Direction;
+    char                    TimeCondition;
+    char                    VolumeCondition;
+    char                    ContingentCondition;
+    char                    ForceCloseReason;
+    bool                    UserForceClose;
+} PlatCmdReqOrderInsertField;
+
+CThostFtdcInputOrderField
+
+typedef struct PlatCmdReqOrderActionField {
+    BrokerIDType            BrokerID;
+    InvestorIDType          InvestorID;
+    uint64_t                OrderRef;
+    int                     OrderActionRef;
+    int                     RequestID;
+    int                     FrontID;
+    int                     SessionID;
+    
+} PlatCmdReqOrderActionField;
+
 typedef struct PlatCmdField {
      union {
-         /*
+         
         InstrumentField            Instrument;
         OrderField                Order;
         CapitalField            Capital;
