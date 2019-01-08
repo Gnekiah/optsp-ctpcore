@@ -241,7 +241,13 @@ typedef TThostFtdcIPAddressType             IPAddressType;                  ///I
 typedef TThostFtdcMacAddressType            MacAddressType;                 ///Mac地址
 typedef TThostFtdcOrderSysIDType            OrderSysIDType;                 ///报单编号
 typedef TThostFtdcOrderLocalIDType          OrderLocalIDType;               ///本地报单编号
-
+typedef TThostFtdcContentType               ContentType;                    ///消息正文
+typedef TThostFtdcExchangeNameType          ExchangeNameType;               ///交易所名称
+typedef TThostFtdcPartyNameType             PartyNameType;                  ///投资者名称
+typedef TThostFtdcIdentifiedCardNoType      IdentifiedCardNoType;           ///证件号码
+typedef TThostFtdcTelephoneType             TelephoneType;                  ///联系电话
+typedef TThostFtdcAddressType               AddressType;                    ///通讯地址
+typedef TThostFtdcMobileType                MobileType;                     ///手机
 
 #endif // !OPTSP_CTPCORE_DATATYPE_HPP_
 
