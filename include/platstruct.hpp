@@ -16,6 +16,13 @@
     LOGERR(logger, log); \
 } while(0)
 
+#define APIRTN_ERROR(log, cmdid, ret, msg) do { \
+    if (ret) { \
+        log << msg << ", nRequest=" << cmdid << ", ret=" << ret; \
+        LOGERR(logger, log); \
+    } \
+} while(0)
+
 
 #define QUOTE_STATE_NONE                            0x00
 #define QUOTE_STATE_CONNECTED                       0x01
@@ -31,7 +38,7 @@
 #define TRADE_STATE_PRODUCT_QUERIED                 0x22
 #define TRADE_STATE_INSTRUMENT_QUERIED              0x23
 
-
+/*
 typedef struct PlatCmdReqUserLoginField {
     BrokerIDType            BrokerID;
     UserIDType              UserID;
@@ -80,8 +87,6 @@ typedef struct PlatCmdReqOrderInsertField {
     bool                    UserForceClose;
 } PlatCmdReqOrderInsertField;
 
-CThostFtdcInputOrderField
-
 typedef struct PlatCmdReqOrderActionField {
     BrokerIDType            BrokerID;
     InvestorIDType          InvestorID;
@@ -90,22 +95,29 @@ typedef struct PlatCmdReqOrderActionField {
     int                     RequestID;
     int                     FrontID;
     int                     SessionID;
-    
+    //TODO
 } PlatCmdReqOrderActionField;
+*/
 
 typedef struct PlatCmdField {
+    int Type;           ///命令类型
+    int Id;             ///命令的ID；来自lower层的命令的ID为负，分别为-1和-2
+    int Ret;            ///执行API的返回值
      union {
-         
-        InstrumentField            Instrument;
-        OrderField                Order;
-        CapitalField            Capital;
-        MatchField                Match;
-        PositionField            Position;
-        */
+         CThostFtdcReqUserLoginField                    ReqUserLogin;
+         CThostFtdcUserLogoutField                      UserLogout;
+         CThostFtdcReqAuthenticateField                 ReqAuthenticate;
+         CThostFtdcUserPasswordUpdateField              UserPasswordUpdate;
+         CThostFtdcTradingAccountPasswordUpdateField    TradingAccountPasswordUpdate;
+         CThostFtdcInputOrderField                      InputOrder;
+         CThostFtdcOrderActionField                     OrderAction;
+         CThostFtdcQrySettlementInfoConfirmField        QrySettlementInfoConfirm;
+         CThostFtdcQrySettlementInfoField               QrySettlementInfo;
+         CThostFtdcSettlementInfoConfirmField           SettlementInfoConfirm;
+         CThostFtdcQryExchangeField                     QryExchange;
+         CThostFtdcQryProductField                      QryProduct;
+         CThostFtdcQryInstrumentField                   QryInstrument;
     };
-     int Type;                                          ///命令类型
-     int Id;                                            ///命令的ID；来自lower层的命令的ID为负，分别为-1和-2
-     bool Flag;                                         ///标记该cmd的union区域是否有有效数据
 } PlatCmdField;
 
 #endif // !OPTSP_CTPCORE_PLATSTRUCT_HPP_

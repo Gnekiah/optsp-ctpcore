@@ -1,5 +1,6 @@
 #include "quotespi.h"
 #include <sstream>
+#include <cassert>
 #include "../include/quotestruct.hpp"
 #include "../include/arch.h"
 
@@ -39,6 +40,7 @@ void QuoteSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThost
         data->FrontID = pRspUserLogin->FrontID;
         data->SessionID = pRspUserLogin->SessionID;
         data->MaxOrderRef = arch_Str2Int64(pRspUserLogin->MaxOrderRef);
+        spiData->IsLast = bIsLast;
         (*quote_callback)(CB_QUOTE_RSP_USER_LOGIN, spiData);
         log << "Login on Quote Front Server, " << pRspUserLogin->TradingDay << ", " << pRspUserLogin->LoginTime;
         LOGINFO(logger, log);
@@ -56,6 +58,7 @@ void QuoteSpi::OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificIn
     if (!(pRspInfo && pRspInfo->ErrorID != 0) && pSpecificInstrument) {
         CbQuoteRspSubMarketDataField *data = &spiData->RspSubMarketData;
         arch_Strcpy(data->InstrumentID, pSpecificInstrument->InstrumentID, sizeof(data->InstrumentID));
+        spiData->IsLast = bIsLast;
         (*quote_callback)(CB_QUOTE_RSP_SUB_MARKET_DATA, spiData);
         log << "Success to Subscribe: " << pSpecificInstrument->InstrumentID;
         LOGDBG(logger, log);
@@ -69,6 +72,12 @@ void QuoteSpi::OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificIn
 
 void QuoteSpi::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData)
 {
+    /*
+    std::stringstream log;
+    log << pDepthMarketData->TradingDay << "====" << pDepthMarketData->UpdateTime;
+    LOGTRACE(logger, log);
+    assert(strlen(pDepthMarketData->TradingDay) == 8);
+    */
     CbQuoteRtnDepthMarketDataField *handicap = &spiData->RtnDepthMarketData;
     arch_Strcpy(handicap->TradingDay, pDepthMarketData->TradingDay, sizeof(handicap->TradingDay));
     arch_Strcpy(handicap->InstrumentID, pDepthMarketData->InstrumentID, sizeof(handicap->InstrumentID));
@@ -139,6 +148,7 @@ void QuoteSpi::OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostFtd
         CbQuoteRspUserLogoutField *data = &spiData->RspUserLogout;
         arch_Strcpy(data->BrokerID, pUserLogout->BrokerID, sizeof(data->BrokerID));
         arch_Strcpy(data->UserID, pUserLogout->UserID, sizeof(data->UserID));
+        spiData->IsLast = bIsLast;
         (*quote_callback)(CB_QUOTE_RSP_USER_LOGOUT, spiData);
         log << "Success to Logout";
         LOGINFO(logger, log);
@@ -156,6 +166,7 @@ void QuoteSpi::OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecific
     if (!(pRspInfo && pRspInfo->ErrorID != 0) && pSpecificInstrument) {
         CbQuoteRspUnsubMarketDataField *data = &spiData->RspUnsubMarketData;
         arch_Strcpy(data->InstrumentID, pSpecificInstrument->InstrumentID, sizeof(data->InstrumentID));
+        spiData->IsLast = bIsLast;
         (*quote_callback)(CB_QUOTE_RSP_UNSUB_MARKET_DATA, spiData);
         log << "Success to Unsubscribe: " << pSpecificInstrument->InstrumentID;
         LOGDBG(logger, log);

@@ -43,6 +43,7 @@ void TradeSpi::OnRspAuthenticate(CThostFtdcRspAuthenticateField *pRspAuthenticat
         arch_Strcpy(data->BrokerID, pRspAuthenticateField->BrokerID, sizeof(data->BrokerID));
         arch_Strcpy(data->UserID, pRspAuthenticateField->UserID, sizeof(data->UserID));
         arch_Strcpy(data->UserProductInfo, pRspAuthenticateField->UserProductInfo, sizeof(data->UserProductInfo));
+        spiData->IsLast = bIsLast;
         (*trade_callback)(CB_TRADE_RSP_AUTHENTICATE, spiData);
         log << "Success to Authenticate, BrokerID=" << pRspAuthenticateField->BrokerID
             << ", UserID=" << pRspAuthenticateField->UserID
@@ -74,6 +75,7 @@ void TradeSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThost
         data->FrontID = pRspUserLogin->FrontID;
         data->SessionID = pRspUserLogin->SessionID;
         data->MaxOrderRef = arch_Str2Int64(pRspUserLogin->MaxOrderRef);
+        spiData->IsLast = bIsLast;
         (*trade_callback)(CB_TRADE_RSP_USER_LOGIN, spiData);
 
         uint64_t maxOrderRef = arch_Str2Int64(pRspUserLogin->MaxOrderRef);
@@ -98,6 +100,7 @@ void TradeSpi::OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostFtd
         CbTradeRspUserLogoutField *data = &spiData->RspUserLogout;
         arch_Strcpy(data->UserID, pUserLogout->UserID, sizeof(data->UserID));
         arch_Strcpy(data->BrokerID, pUserLogout->BrokerID, sizeof(data->BrokerID));
+        spiData->IsLast = bIsLast;
         (*trade_callback)(CB_TRADE_RSP_USER_LOGOUT, spiData);
         log << "Success to Logout";
         LOGINFO(logger, log);
@@ -119,6 +122,7 @@ void TradeSpi::OnRspUserPasswordUpdate(CThostFtdcUserPasswordUpdateField *pUserP
         arch_Strcpy(data->UserID, pUserPasswordUpdate->UserID, sizeof(data->UserID));
         arch_Strcpy(data->OldPassword, pUserPasswordUpdate->OldPassword, sizeof(data->OldPassword));
         arch_Strcpy(data->NewPassword, pUserPasswordUpdate->NewPassword, sizeof(data->NewPassword));
+        spiData->IsLast = bIsLast;
         (*trade_callback)(CB_TRADE_RSP_USER_PASSWORD_UPDATE, spiData);
         log << "Success to Update User Password, BrokerID=" << pUserPasswordUpdate->BrokerID
             << ", UserID=" << pUserPasswordUpdate->UserID;
@@ -142,6 +146,7 @@ void TradeSpi::OnRspTradingAccountPasswordUpdate(CThostFtdcTradingAccountPasswor
         arch_Strcpy(data->CurrencyID, pTradingAccountPasswordUpdate->CurrencyID, sizeof(data->CurrencyID));
         arch_Strcpy(data->OldPassword, pTradingAccountPasswordUpdate->OldPassword, sizeof(data->OldPassword));
         arch_Strcpy(data->NewPassword, pTradingAccountPasswordUpdate->NewPassword, sizeof(data->NewPassword));
+        spiData->IsLast = bIsLast;
         (*trade_callback)(CB_TRADE_RSP_TRADING_ACCOUNT_PASSWORD_UPDATE, spiData);
         log << "Success to Update Trading Account Password, BrokerID=" << pTradingAccountPasswordUpdate->BrokerID
             << ", UserID=" << pTradingAccountPasswordUpdate->AccountID;
@@ -168,6 +173,7 @@ void TradeSpi::OnRspQrySettlementInfoConfirm(CThostFtdcSettlementInfoConfirmFiel
         arch_Strcpy(data->AccountID, pSettlementInfoConfirm->AccountID, sizeof(data->AccountID));
         arch_Strcpy(data->CurrencyID, pSettlementInfoConfirm->CurrencyID, sizeof(data->CurrencyID));
         data->SettlementID = pSettlementInfoConfirm->SettlementID;
+        spiData->IsLast = bIsLast;
         (*trade_callback)(CB_TRADE_RSP_QRY_SETTLEMENT_INFO_CONFIRM, spiData);
         log << "Success to Query Settlement Info Confirm";
         LOGINFO(logger, log);
@@ -193,6 +199,7 @@ void TradeSpi::OnRspQrySettlementInfo(CThostFtdcSettlementInfoField *pSettlement
         arch_Strcpy(data->TradingDay, pSettlementInfo->TradingDay, sizeof(data->TradingDay));
         data->SequenceNo = pSettlementInfo->SequenceNo;
         data->SettlementID = pSettlementInfo->SettlementID;
+        spiData->IsLast = bIsLast;
         (*trade_callback)(CB_TRADE_RSP_QRY_SETTLEMENT_INFO, spiData);
         log << "Success to Query Settlement Info";
         LOGINFO(logger, log);
@@ -218,6 +225,7 @@ void TradeSpi::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *
         arch_Strcpy(data->AccountID, pSettlementInfoConfirm->AccountID, sizeof(data->AccountID));
         arch_Strcpy(data->CurrencyID, pSettlementInfoConfirm->CurrencyID, sizeof(data->CurrencyID));
         data->SettlementID = pSettlementInfoConfirm->SettlementID;
+        spiData->IsLast = bIsLast;
         (*trade_callback)(CB_TRADE_RSP_SETTLEMENT_INFO_CONFIRM, spiData);
         log << "Success to Response Settlement Info Confirm, " 
             << pSettlementInfoConfirm->AccountID << ", " << pSettlementInfoConfirm->BrokerID << ", "
@@ -258,6 +266,7 @@ void TradeSpi::OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvest
         data->SettlementID = pInvestorPosition->SettlementID;
         data->PosiDirection = pInvestorPosition->PosiDirection;
         data->PositionDate = pInvestorPosition->PositionDate;
+        spiData->IsLast = bIsLast;
         (*trade_callback)(CB_TRADE_RSP_QRY_INVESTOR_POSITION, spiData);
         log << "Success to Query Investor Position";
         LOGDBG(logger , log);
@@ -278,6 +287,7 @@ void TradeSpi::OnRspQryExchange(CThostFtdcExchangeField *pExchange, CThostFtdcRs
         arch_Strcpy(data->ExchangeID, pExchange->ExchangeID, sizeof(data->ExchangeID));
         arch_Strcpy(data->ExchangeName, pExchange->ExchangeName, sizeof(data->ExchangeName));
         data->ExchangeProperty = pExchange->ExchangeProperty;
+        spiData->IsLast = bIsLast;
         (*trade_callback)(CB_TRADE_RSP_QRY_EXCHANGE, spiData);
         log << "Success to Query Exchange";
         LOGDBG(logger, log);
@@ -307,6 +317,7 @@ void TradeSpi::OnRspQryProduct(CThostFtdcProductField *pProduct, CThostFtdcRspIn
         data->PositionType = pProduct->PositionType;
         data->PositionDateType = pProduct->PositionDateType;
         data->CloseDealType = pProduct->CloseDealType;
+        spiData->IsLast = bIsLast;
         (*trade_callback)(CB_TRADE_RSP_QRY_PRODUCT, spiData);
         log << "Success to Query Product";
         LOGDBG(logger, log);
@@ -334,6 +345,7 @@ void TradeSpi::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThost
         data->VolumeMultiple = pInstrument->VolumeMultiple;
         data->InstLifePhase = pInstrument->InstLifePhase;
         data->IsTrading = pInstrument->IsTrading;
+        spiData->IsLast = bIsLast;
         (*trade_callback)(CB_TRADE_RSP_QRY_INSTRUMENT, spiData);
         log << "Success to Query Instrument";
         LOGDBG(logger, log);
@@ -372,6 +384,7 @@ void TradeSpi::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFt
         data->ContingentCondition = pInputOrder->ContingentCondition;
         data->ForceCloseReason = pInputOrder->ForceCloseReason;
         data->UserForceClose = pInputOrder->UserForceClose;
+        spiData->IsLast = bIsLast;
         (*trade_callback)(CB_TRADE_RSP_ORDER_INSERT, spiData);
         log << "Success to Insert Order";
         LOGDBG(logger, log);
@@ -405,6 +418,7 @@ void TradeSpi::OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderActi
         data->SessionID = pInputOrderAction->SessionID;
         data->VolumeChange = pInputOrderAction->VolumeChange;
         data->ActionFlag = pInputOrderAction->ActionFlag;
+        spiData->IsLast = bIsLast;
         (*trade_callback)(CB_TRADE_RSP_ORDER_ACTION, spiData);
         log << "Success to Response Order Action";
         LOGDBG(logger, log);
@@ -623,6 +637,7 @@ void TradeSpi::OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAcc
         data->Reserve = pTradingAccount->Reserve;
         data->ExchangeMargin = pTradingAccount->ExchangeMargin;
         data->ReserveBalance = pTradingAccount->ReserveBalance;
+        spiData->IsLast = bIsLast;
         (*trade_callback)(CB_TRADE_RSP_QRY_TRADING_ACCOUNT, spiData);
         log << "Success to Query Trading Account";
         LOGINFO(logger, log);
@@ -651,6 +666,7 @@ void TradeSpi::OnRspQryInvestor(CThostFtdcInvestorField *pInvestor, CThostFtdcRs
         arch_Strcpy(data->Mobile, pInvestor->Mobile, sizeof(data->Mobile));
         data->IdentifiedCardType = pInvestor->IdentifiedCardType;
         data->IsActive = pInvestor->IsActive;
+        spiData->IsLast = bIsLast;
         (*trade_callback)(CB_TRADE_RSP_QRY_INVESTOR, spiData);
         log << "Success to Query Investor, " << pInvestor->InvestorID << "," << pInvestor->BrokerID;
         LOGINFO(logger, log);
