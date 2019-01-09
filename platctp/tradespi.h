@@ -11,6 +11,7 @@ class TradeSpi : public CThostFtdcTraderSpi
 private:
     Logger * logger = nullptr;
     ctpspi_callback_fn trade_callback = nullptr;
+    CbTradeField *spiData = nullptr;
 
 public:
     TradeSpi(Logger * logger, ctpspi_callback_fn tfn);

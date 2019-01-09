@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 #include <cstring>
+#include <stdlib.h>
+
+#define arch_Str2Int64(s)          atoll(s)
 
 #if defined(__linux__) && defined( __x86_64__)
 #define arch_Strcpy(dst, src, n)    strncpy(dst, src, n)

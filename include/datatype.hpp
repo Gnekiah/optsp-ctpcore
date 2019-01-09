@@ -9,6 +9,10 @@
 #define PLATCTP_INSTRUMENT_MAX                  1024        ///用于保存合约的数组最大长度
 
 
+
+#define CB_QUOTE_TYPE_START         0x00000000
+#define CB_TRADE_TYPE_START         0x10000000
+
 /********** Quote回调类型 **********/
 #define CB_QUOTE_FRONT_CONNECTED                                    0x00000001  ///客户端与交易后台建立起通信连接
 #define CB_QUOTE_FRONT_DISCONNECTED                                 0x00000002  ///客户端与交易后台通信连接断开，API会自动重新连接，客户端可不做处理
@@ -173,7 +177,19 @@
 #define CMDID_QUOTE        -1
 #define CMDID_TRADE        -2
 ///command label: StGroup to Plat.
-//TODO: #define CMD_STG_......      0x40000001
+#define CMD_PLAT_QUOTE_REQ_USER_LOGIN                               0x20000001
+#define CMD_PLAT_QUOTE_REQ_USER_LOGOUT                              0x20000002
+#define CMD_PLAT_QUOTE_SUBSCRIBE_MARKET_DATA                        0x20010001
+#define CMD_PLAT_TRADE_REQ_USER_LOGIN                               0x30000001
+#define CMD_PLAT_TRADE_REQ_USER_LOGOUT                              0x30000002
+#define CMD_PLAT_TRADE_REQ_AUTHENTICATE                             0x30000003
+#define CMD_PLAT_TRADE_REQ_QRY_SETTLEMENT_INFO_CONFIRM              0x30010001
+#define CMD_PLAT_TRADE_REQ_QRY_SETTLEMENT_INFO                      0x30010002
+#define CMD_PLAT_TRADE_REQ_SETTLEMENT_INFO_CONFIRM                  0x30010003
+#define CMD_PLAT_TRADE_REQ_QRY_EXCHANGE                             0x30020001
+#define CMD_PLAT_TRADE_REQ_QRY_PRODUCT                              0x30020002
+#define CMD_PLAT_TRADE_REQ_QRY_INSTRUMENT                           0x30020003
+
 ///command label: Front to StGroup
 //TODO: #define CMD_FRONT_.....     0x50000001
 ///callback label: StGroup to front
@@ -214,12 +230,14 @@ typedef base_callback_fn plat_callback_fn;
 typedef base_callback_fn stgroup_callback_fn;
 
 
-typedef char MdCsvFormatType[128];                                      ///行情CSV保存格式类型
-typedef char FrontAddrType[64];                                         ///前置地址类型
-typedef char DateTimeType[24];                                          ///时间字符串类型, yyyy-MM-dd hh:mm:ss.zzz
-typedef char ProductNameType[24];                                       ///产品名称 - 用于TradeApi的验证
-typedef char AuthenticateCodeType[32];                                  ///验证编码 - 用于TradeApi的验证
+typedef char MdCsvFormatType[128];                                          ///行情CSV保存格式类型
+typedef char FrontAddrType[64];                                             ///前置地址类型
+typedef char DateTimeType[24];                                              ///时间字符串类型, yyyy-MM-dd hh:mm:ss.zzz
+typedef char ProductNameType[24];                                           ///产品名称 - 用于TradeApi的验证
+typedef char AuthenticateCodeType[32];                                      ///验证编码 - 用于TradeApi的验证
 
+typedef TThostFtdcDateType                  DateType;                       ///日期类型，yyyyMMdd
+typedef TThostFtdcTimeType                  TimeType;                       ///时间类型，hh:mm:ss
 typedef TThostFtdcBrokerIDType              BrokerIDType;                   ///经纪公司代码类型
 typedef TThostFtdcUserIDType                UserIDType;                     ///用户代码类型
 typedef TThostFtdcInvestorIDType            InvestorIDType;                 ///投资者代码类型
@@ -235,7 +253,13 @@ typedef TThostFtdcIPAddressType             IPAddressType;                  ///I
 typedef TThostFtdcMacAddressType            MacAddressType;                 ///Mac地址
 typedef TThostFtdcOrderSysIDType            OrderSysIDType;                 ///报单编号
 typedef TThostFtdcOrderLocalIDType          OrderLocalIDType;               ///本地报单编号
-
+typedef TThostFtdcContentType               ContentType;                    ///消息正文
+typedef TThostFtdcExchangeNameType          ExchangeNameType;               ///交易所名称
+typedef TThostFtdcPartyNameType             PartyNameType;                  ///投资者名称
+typedef TThostFtdcIdentifiedCardNoType      IdentifiedCardNoType;           ///证件号码
+typedef TThostFtdcTelephoneType             TelephoneType;                  ///联系电话
+typedef TThostFtdcAddressType               AddressType;                    ///通讯地址
+typedef TThostFtdcMobileType                MobileType;                     ///手机
 
 #endif // !OPTSP_CTPCORE_DATATYPE_HPP_
 

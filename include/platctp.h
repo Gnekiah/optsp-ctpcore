@@ -13,7 +13,7 @@
 #include "datatype.hpp"
 
 
-static void* cbfn = nullptr;
+static volatile void* cbfn = nullptr;
 void CtpspiCallBack(int cbtype, void* ptr);
 
 
@@ -22,16 +22,17 @@ class PlatCtp
 private:
     Config * config = nullptr;
     Logger * logger = nullptr;
-    ///called by current instance
-    plat_callback_fn plat_callback = nullptr;
+    plat_callback_fn plat_callback = nullptr;       ///called by current instance
 
     QuoteSpi * quoteSpi = nullptr;
     TradeSpi * tradeSpi = nullptr;
     CThostFtdcMdApi * quoteApi = nullptr;
     CThostFtdcTraderApi * tradeApi = nullptr;
 
+    std::atomic_bool bInstrumentIDReady = false;
     int nInstrumentID;
     char *instrumentIDs[PLATCTP_INSTRUMENT_MAX];
+
     boost::lockfree::queue<PlatCmdField> *cmdQueue = nullptr;
 
 public:
@@ -45,20 +46,8 @@ public:
     ///int cmdid - 命令的ID, 由下发命令时分配
     ///void* ptr - 指向数据区域的首地址指针
     void InsertCommand(int cmdtype, int cmdid, void* ptr);
+    void DispatchSpi(int cbtype, void* ptr);
     void run();
-
-private:
-    ///Quote cmd.
-    int DoQuoteLogin(PlatCmdField &);
-    int DoQuoteSubscribe(PlatCmdField &);
-
-    ///Trade cmd.
-    int DoTradeAuthenticate(PlatCmdField &);
-    int DoTradeLogin(PlatCmdField &);
-    int DoTradeSettlementConfirm(PlatCmdField &);
-    int DoTradeQryExchange(PlatCmdField &);
-    int DoTradeQryProduct(PlatCmdField &);
-    int DoTradeQryInstrument(PlatCmdField &);
 };
 
 #endif // !OPTSP_CTPCORE_PLATCTP_H_

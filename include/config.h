@@ -14,11 +14,7 @@ class Config
 {
 private:
     boost::property_tree::ptree pt;
-
-public:
-    ///访问类的public属性时，要加锁
-    std::mutex lock;
-    std::atomic_bool ready;
+    std::mutex lock;                        ///访问类的public属性时，要加锁
 
 public:
     const int VERSION = 0;
@@ -35,12 +31,12 @@ public:
     const char* INSTRUMENT_FILE = "instrument.csv";         ///合约列表保存文件
     const char* MD_CSV_FORMAT = "md-%s-tick.csv";           ///数据保存的文件格式
     
-public:
+private:
     boost::filesystem::path homepath;                       ///主目录
     boost::filesystem::path datapath;                       ///数据目录
     int loglevel;                                           ///日志过滤等级
 
-public:
+private:
     ProductNameType productName = { 0 };                    ///产品名称
     AuthenticateCodeType authCode = { 0 };                  ///验证编码
     BrokerIDType brokerID = { 0 };                          ///经纪公司代码
@@ -54,6 +50,52 @@ public:
     Config();
     void SaveConfig();
     bool CheckConfig();
+
+public:
+    void SetDataPath(std::string &);
+    void SetDataPath(const char *);
+    void SetLogLevel(std::string &);
+    void SetLogLevel(const char *);
+    void SetLogLevel(int);
+    void SetProductName(std::string &);
+    void SetProductName(const char *);
+    void SetAuthCode(std::string &);
+    void SetAuthCode(const char *);
+    void SetBrokerID(std::string &);
+    void SetBrokerID(const char *);
+    void SetUserID(std::string &);
+    void SetUserID(const char *);
+    void SetInvestorID(std::string &);
+    void SetInvestorID(const char *);
+    void SetPassword(std::string &);
+    void SetPassword(const char *);
+    void SetQuoteFrontAddr(std::string &);
+    void SetQuoteFrontAddr(const char *);
+    void SetTradeFrontAddr(std::string &);
+    void SetTradeFrontAddr(const char *);
+
+public:
+    boost::filesystem::path GetHomePath();
+    boost::filesystem::path GetDataPath();
+    int GetLogLevel();
+    std::string GetProductName();
+    std::string GetAuthCode();
+    std::string GetBrokerID();
+    std::string GetUserID();
+    std::string GetInvestorID();
+    std::string GetPassword();
+    std::string GetQuoteFrontAddr();
+    std::string GetTradeFrontAddr();
+    bool GetHomePath(char *);
+    bool GetDataPath(char *);
+    bool GetProductName(char *);
+    bool GetAuthCode(char *);
+    bool GetBrokerID(char *);
+    bool GetUserID(char *);
+    bool GetInvestorID(char *);
+    bool GetPassword(char *);
+    bool GetQuoteFrontAddr(char *);
+    bool GetTradeFrontAddr(char *);
 };
 
 #endif // !OPTSP_CTPCORE_CONFIG_H_

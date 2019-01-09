@@ -20,7 +20,7 @@ private:
 public:
     TestClass(int id);
     void run();
-    void callback(int level, const char *ptr);
+    void callback(int level, void *ptr);
 };
 
 

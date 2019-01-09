@@ -14,13 +14,13 @@ public:
     _Logger(Logger * logger, int level, int n);
     void run();
     void run_stress();
-    static void logger_callback0(int loglevel, const char* buff);
-    static void logger_callback1(int loglevel, const char* buff);
-    static void logger_callback2(int loglevel, const char* buff);
-    static void logger_callback3(int loglevel, const char* buff);
-    static void logger_callback4(int loglevel, const char* buff);
-    static void logger_callback5(int loglevel, const char* buff);
-    static void logger_callback6(int loglevel, const char* buff);
+    static void logger_callback0(int loglevel, void* buff);
+    static void logger_callback1(int loglevel, void* buff);
+    static void logger_callback2(int loglevel, void* buff);
+    static void logger_callback3(int loglevel, void* buff);
+    static void logger_callback4(int loglevel, void* buff);
+    static void logger_callback5(int loglevel, void* buff);
+    static void logger_callback6(int loglevel, void* buff);
 };
 
 

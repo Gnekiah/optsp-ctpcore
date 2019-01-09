@@ -39,14 +39,14 @@ void TestClass::run() {
 }
 
 
-void TestClass::callback(int level, const char *ptr) {
+void TestClass::callback(int level, void *ptr) {
     BuffField buf;
-    arch_Strcpy(buf.data, ptr, 1024);
+    arch_Strcpy(buf.data, (char*)ptr, 1024);
     queue->push(buf);
 }
 
 
-void callback(int level, const char* buff) {
+void callback(int level, void* buff) {
     TestClass *x = (TestClass*)pfn;
     x->callback(level, buff);
 }
@@ -57,7 +57,7 @@ int test_Callback(int cnt) {
     boost::thread thrd0(boost::bind(&TestClass::run, tc));
 
     Config *config = new Config();
-    std::string logpath = (config->homepath / "running-debug.log").string();
+    std::string logpath = (config->GetHomePath() / "running-debug.log").string();
 
     Logger * logger = new Logger(logpath, LOG_LEVEL_TRACE, callback);
     boost::thread thrd1(boost::bind(&Logger::run, logger));

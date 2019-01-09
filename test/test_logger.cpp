@@ -49,18 +49,18 @@ void _Logger::run_stress() {
 }
 
 
-void _Logger::logger_callback0(int loglevel, const char* buff) { gcnt0++; }
-void _Logger::logger_callback1(int loglevel, const char* buff) { gcnt1++; }
-void _Logger::logger_callback2(int loglevel, const char* buff) { gcnt2++; }
-void _Logger::logger_callback3(int loglevel, const char* buff) { gcnt3++; }
-void _Logger::logger_callback4(int loglevel, const char* buff) { gcnt4++; }
-void _Logger::logger_callback5(int loglevel, const char* buff) { gcnt5++; }
-void _Logger::logger_callback6(int loglevel, const char* buff) { gcnt6++; }
+void _Logger::logger_callback0(int loglevel, void* buff) { gcnt0++; }
+void _Logger::logger_callback1(int loglevel, void* buff) { gcnt1++; }
+void _Logger::logger_callback2(int loglevel, void* buff) { gcnt2++; }
+void _Logger::logger_callback3(int loglevel, void* buff) { gcnt3++; }
+void _Logger::logger_callback4(int loglevel, void* buff) { gcnt4++; }
+void _Logger::logger_callback5(int loglevel, void* buff) { gcnt5++; }
+void _Logger::logger_callback6(int loglevel, void* buff) { gcnt6++; }
 
 
 int test_Logger(int level, int cnt, void *ptr, int *p) {
     Config *config = new Config();
-    std::string logpath = (config->homepath / "running-debug.log").string();
+    std::string logpath = (config->GetHomePath() / "running-debug.log").string();
     Logger * logger = new Logger(logpath, level, (log_callback_fn)ptr);
     boost::thread thrd1(boost::bind(&Logger::run, logger));
     _Logger * _logger = new _Logger(logger, level, cnt);
@@ -105,7 +105,7 @@ int test_Logger_level_trace(int cnt) {
 
 int test_Logger_stress_test(int cnt) {
     Config *config = new Config();
-    std::string logpath = (config->homepath / "running-debug.log").string();
+    std::string logpath = (config->GetHomePath() / "running-debug.log").string();
     Logger * logger = new Logger(logpath, LOG_LEVEL_TRACE, &_Logger::logger_callback6);
     boost::thread thrd1(boost::bind(&Logger::run, logger));
     _Logger * _logger = new _Logger(logger, LOG_LEVEL_TRACE, cnt);
