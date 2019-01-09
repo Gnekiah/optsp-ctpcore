@@ -8,12 +8,12 @@
 class Master
 {
 private:
-	Logger * logger = nullptr;
-	Config * config = nullptr;
+    Logger * logger = nullptr;
+    Config * config = nullptr;
 
 public:
-	Master();
-	void run();
+    Master();
+    void run();
 };
 
 #endif // !OPTSP_CTPCORE_MASTER_H_

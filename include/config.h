@@ -13,47 +13,89 @@
 class Config
 {
 private:
-	boost::property_tree::ptree pt;
+    boost::property_tree::ptree pt;
+    std::mutex lock;                        ///è®¿é—®ç±»çš„publicå±æ€§æ—¶ï¼Œè¦åŠ é”
 
 public:
-	///·ÃÎÊÀàµÄpublicÊôĞÔÊ±£¬Òª¼ÓËø
-	std::mutex lock;
-	std::atomic_bool ready;
+    const int VERSION = 0;
+    const int SUBVERSION = 1;
+    const int EXTRAVERSION = 0;
+    const char* APP_TITLE = "OPTSPï¼šç¨‹åºåŒ–äº¤æ˜“ CTP ä»¿çœŸæµ‹è¯•";
+
+    const char* HOME_FILE = ".optsp";                       ///ç¨‹åºä¸»ç›®å½•
+    const char* CONFIG_FILE = "config.ini";                 ///é…ç½®æ–‡ä»¶
+    const char* RUNNING_LOG_FILE = "running.log";           ///ç¨‹åºè¿è¡Œæ—¥å¿—
+    const char* MATCH_LOG_FILE = "match.csv";               ///æˆäº¤ä¿¡æ¯ä¿å­˜æ–‡ä»¶
+    const char* POSITION_LOG_FILE = "position.csv";         ///æŒä»“ä¿¡æ¯ä¿å­˜æ–‡ä»¶
+    const char* STATE_LOG_FILE = "state.csv";               ///çŠ¶æ€ä¿¡æ¯ä¿å­˜æ–‡ä»¶
+    const char* INSTRUMENT_FILE = "instrument.csv";         ///åˆçº¦åˆ—è¡¨ä¿å­˜æ–‡ä»¶
+    const char* MD_CSV_FORMAT = "md-%s-tick.csv";           ///æ•°æ®ä¿å­˜çš„æ–‡ä»¶æ ¼å¼
+    
+private:
+    boost::filesystem::path homepath;                       ///ä¸»ç›®å½•
+    boost::filesystem::path datapath;                       ///æ•°æ®ç›®å½•
+    int loglevel;                                           ///æ—¥å¿—è¿‡æ»¤ç­‰çº§
+
+private:
+    ProductNameType productName = { 0 };                    ///äº§å“åç§°
+    AuthenticateCodeType authCode = { 0 };                  ///éªŒè¯ç¼–ç 
+    BrokerIDType brokerID = { 0 };                          ///ç»çºªå…¬å¸ä»£ç 
+    UserIDType userID = { 0 };                              ///ç”¨æˆ·è´¦å·
+    InvestorIDType investorID = { 0 };                      ///æŠ•èµ„è€…è´¦å·
+    PasswordType password = { 0 };                          ///å£ä»¤
+    FrontAddrType quoteFrontAddr = { 0 };                   ///è¡Œæƒ…APIå‰ç½®åœ°å€
+    FrontAddrType tradeFrontAddr = { 0 };                   ///äº¤æ˜“APIå‰ç½®åœ°å€
 
 public:
-	const int VERSION = 0;
-	const int SUBVERSION = 1;
-	const int EXTRAVERSION = 0;
-	const char* APP_TITLE = "OPTSP£º³ÌĞò»¯½»Ò× CTP ·ÂÕæ²âÊÔ";
-
-	const char* HOME_FILE = ".optsp";					///³ÌĞòÖ÷Ä¿Â¼
-	const char* CONFIG_FILE = "config.ini";				///ÅäÖÃÎÄ¼ş
-	const char* RUNNING_LOG_FILE = "running.log";		///³ÌĞòÔËĞĞÈÕÖ¾
-	const char* MATCH_LOG_FILE = "match.csv";			///³É½»ĞÅÏ¢±£´æÎÄ¼ş
-	const char* POSITION_LOG_FILE = "position.csv";		///³Ö²ÖĞÅÏ¢±£´æÎÄ¼ş
-	const char* STATE_LOG_FILE = "state.csv";			///×´Ì¬ĞÅÏ¢±£´æÎÄ¼ş
-	const char* INSTRUMENT_FILE = "instrument.csv";		///ºÏÔ¼ÁĞ±í±£´æÎÄ¼ş
-	const char* MD_CSV_FORMAT = "md-%s-tick.csv";		///Êı¾İ±£´æµÄÎÄ¼ş¸ñÊ½
-	
-public:
-	boost::filesystem::path homepath;				///Ö÷Ä¿Â¼
-	boost::filesystem::path datapath;				///Êı¾İÄ¿Â¼
-	int loglevel;									///ÈÕÖ¾¹ıÂËµÈ¼¶
+    Config();
+    void SaveConfig();
+    bool CheckConfig();
 
 public:
-	ProductNameType productName = { 0 };			///²úÆ·Ãû³Æ
-	AuthenticateCodeType authCode = { 0 };			///ÑéÖ¤±àÂë
-	BrokerIDType brokerID = { 0 };					///¾­¼Í¹«Ë¾´úÂë
-	UserIDType userID = { 0 };						///ÓÃ»§ÕËºÅ
-	InvestorIDType investorID = { 0 };				///Í¶×ÊÕßÕËºÅ
-	PasswordType password = { 0 };					///¿ÚÁî
-	FrontAddrType quoteFrontAddr = { 0 };			///ĞĞÇéAPIÇ°ÖÃµØÖ·
-	FrontAddrType tradeFrontAddr = { 0 };			///½»Ò×APIÇ°ÖÃµØÖ·
+    void SetDataPath(std::string &);
+    void SetDataPath(const char *);
+    void SetLogLevel(std::string &);
+    void SetLogLevel(const char *);
+    void SetLogLevel(int);
+    void SetProductName(std::string &);
+    void SetProductName(const char *);
+    void SetAuthCode(std::string &);
+    void SetAuthCode(const char *);
+    void SetBrokerID(std::string &);
+    void SetBrokerID(const char *);
+    void SetUserID(std::string &);
+    void SetUserID(const char *);
+    void SetInvestorID(std::string &);
+    void SetInvestorID(const char *);
+    void SetPassword(std::string &);
+    void SetPassword(const char *);
+    void SetQuoteFrontAddr(std::string &);
+    void SetQuoteFrontAddr(const char *);
+    void SetTradeFrontAddr(std::string &);
+    void SetTradeFrontAddr(const char *);
 
 public:
-	Config();
-	void SaveConfig();
-	bool CheckConfig();
+    boost::filesystem::path GetHomePath();
+    boost::filesystem::path GetDataPath();
+    int GetLogLevel();
+    std::string GetProductName();
+    std::string GetAuthCode();
+    std::string GetBrokerID();
+    std::string GetUserID();
+    std::string GetInvestorID();
+    std::string GetPassword();
+    std::string GetQuoteFrontAddr();
+    std::string GetTradeFrontAddr();
+    bool GetHomePath(char *);
+    bool GetDataPath(char *);
+    bool GetProductName(char *);
+    bool GetAuthCode(char *);
+    bool GetBrokerID(char *);
+    bool GetUserID(char *);
+    bool GetInvestorID(char *);
+    bool GetPassword(char *);
+    bool GetQuoteFrontAddr(char *);
+    bool GetTradeFrontAddr(char *);
 };
 
 #endif // !OPTSP_CTPCORE_CONFIG_H_

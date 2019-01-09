@@ -6,60 +6,60 @@
 
 
 typedef struct TickField {
-	uint64_t			TimeStamp;			///Ê±¼ä´Á, "yyyy-MM-dd hh:mm:ss.zzz"
-	double				Price;				///Ê±¼äÇĞÆ¬µÄ×îĞÂ¼Û¸ñ
-	uint64_t			Volume;				///³É½»Á¿
-	double				Turnover;			///³É½»¶î
-	uint64_t			Position;			///³Ö²ÖÁ¿
-	double				Average;			///µ±ÈÕ¾ù¼Û
-	InstrumentIDType	InstrumentID;		///ºÏÔ¼±àÂë£¬p.s. ×Ö½ÚÎ´¶ÔÆë
+    uint64_t            TimeStamp;              ///æ—¶é—´æˆ³, "yyyy-MM-dd hh:mm:ss.zzz"
+    double              Price;                  ///æ—¶é—´åˆ‡ç‰‡çš„æœ€æ–°ä»·æ ¼
+    uint64_t            Volume;                 ///æˆäº¤é‡
+    double              Turnover;               ///æˆäº¤é¢
+    uint64_t            Position;               ///æŒä»“é‡
+    double              Average;                ///å½“æ—¥å‡ä»·
+    InstrumentIDType    InstrumentID;           ///åˆçº¦ç¼–ç ï¼Œp.s. å­—èŠ‚æœªå¯¹é½
 } TickField;
 
 
 typedef struct HandicapField {
-	uint64_t	DateStamp;			///½»Ò×ÈÕ, ÈÕÆÚ´Á£º"yyyy-MM-dd 00:00:00.000"
-	double		PreClose;			///×òÊÕÅÌ
-	double		PreSettlement;		///×ò½áËã
-	uint64_t	PrePosition;		///×ò³Ö²Ö
-	double		CurrOpen;			///½ñ¿ªÅÌ
-	double		CurrHighest;		///×î¸ß¼Û
-	double		CurrLowest;			///×îµÍ¼Û
-	double		CurrClose;			///½ñÊÕÅÌ
-	double		CurrSettlement;		///½ñ½áËã
-	double		UpperLimit;			///ÕÇÍ£°å
-	double		LowerLimit;			///µøÍ£°å
-	double		PreDelta;			///×òĞéÊµ¶È
-	double		CurrDelta;			///½ñĞéÊµ¶È
-	double		BidPrice[5];		///ÉêÂò¼Û1-5
-	uint64_t	BidVolume[5];		///ÉêÂòÁ¿1-5
-	double		AskPrice[5];		///ÉêÂô¼Û1-5
-	uint64_t	AskVolume[5];		///ÉêÂôÁ¿1-5
-	TickField	Tick;				///×îĞÂµÄTickÊı¾İ
+    uint64_t        DateStamp;              ///äº¤æ˜“æ—¥, æ—¥æœŸæˆ³ï¼š"yyyy-MM-dd 00:00:00.000"
+    double          PreClose;               ///æ˜¨æ”¶ç›˜
+    double          PreSettlement;          ///æ˜¨ç»“ç®—
+    uint64_t        PrePosition;            ///æ˜¨æŒä»“
+    double          CurrOpen;               ///ä»Šå¼€ç›˜
+    double          CurrHighest;            ///æœ€é«˜ä»·
+    double          CurrLowest;             ///æœ€ä½ä»·
+    double          CurrClose;              ///ä»Šæ”¶ç›˜
+    double          CurrSettlement;         ///ä»Šç»“ç®—
+    double          UpperLimit;             ///æ¶¨åœæ¿
+    double          LowerLimit;             ///è·Œåœæ¿
+    double          PreDelta;               ///æ˜¨è™šå®åº¦
+    double          CurrDelta;              ///ä»Šè™šå®åº¦
+    double          BidPrice[5];            ///ç”³ä¹°ä»·1-5
+    uint64_t        BidVolume[5];           ///ç”³ä¹°é‡1-5
+    double          AskPrice[5];            ///ç”³å–ä»·1-5
+    uint64_t        AskVolume[5];           ///ç”³å–é‡1-5
+    TickField       Tick;                   ///æœ€æ–°çš„Tickæ•°æ®
 } HandicapField;
 
 
 typedef struct KLineField {
-	uint64_t	TimeStamp;			///Ê±¼ä´Á, "yyyy-MM-dd hh:mm:ss.zzz"
-	uint64_t	TicksCnt;			///°üº¬µÄticksÊıÁ¿
-	double		Open;				///¿ª
-	double		High;				///¸ß
-	double		Low;				///µÍ
-	double		Close;				///ÊÕ
+    uint64_t        TimeStamp;              ///æ—¶é—´æˆ³, "yyyy-MM-dd hh:mm:ss.zzz"
+    uint64_t        TicksCnt;               ///åŒ…å«çš„ticksæ•°é‡
+    double          Open;                   ///å¼€
+    double          High;                   ///é«˜
+    double          Low;                    ///ä½
+    double          Close;                  ///æ”¶
 } KLineField;
 
 
 typedef struct MAField {
-	double		MA[MAFIELD_MACNT_MAX];	///×î¶à5¸ö¾ùÏßÖ¸±ê
-	uint8_t		MACnt;					///±ê¼Çµ±Ç°ÓĞ¶àÉÙ¸ö¾ùÏßÖ¸±êÊÇÓĞĞ§µÄ£¬p.s. ×Ö½ÚÎ´¶ÔÆë
+    double          MA[MAFIELD_MACNT_MAX];      ///æœ€å¤š5ä¸ªå‡çº¿æŒ‡æ ‡
+    uint8_t         MACnt;                      ///æ ‡è®°å½“å‰æœ‰å¤šå°‘ä¸ªå‡çº¿æŒ‡æ ‡æ˜¯æœ‰æ•ˆçš„ï¼Œp.s. å­—èŠ‚æœªå¯¹é½
 } MAField;
 
 
 typedef struct MACDField {
-	double		Ema1;				///EMA1, e.g. 12
-	double		Ema2;				///EMA2, e.g. 26
-	double		Dea;				///DEA
-	double		Diff;				///DIF
-	double		Macd;				///MACD
+    double        Ema1;                 ///EMA1, e.g. 12
+    double        Ema2;                 ///EMA2, e.g. 26
+    double        Dea;                  ///DEA
+    double        Diff;                 ///DIF
+    double        Macd;                 ///MACD
 } MACDField;
 
 
