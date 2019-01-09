@@ -3,6 +3,7 @@
 #include "test_config.h"
 #include "test_callback.h"
 #include "test_platctp.h"
+#include "../include/magic.hpp"
 #include <gtest/gtest.h>
 
 /// TEST ORDER
@@ -14,6 +15,7 @@
 ///        stdemo
 ///        master
 
+#ifndef _OPTSP_CTPCORE_GTEST_BE_TESTED_
 ///lib test
 ///accepted - 2018/12/23 17:22:00
 TEST(test_arch, test_arch_case_1) {
@@ -26,6 +28,7 @@ TEST(test_arch, test_arch_case_1) {
 
 ///config test
 ///accepted - 2018/12/23 17:22:00
+///update - 2019/01/09 13:56:00
 TEST(test_config, test_config_case_1) {
     ASSERT_TRUE(test_Config());
 }
@@ -48,13 +51,14 @@ TEST(test_logger, test_logger_case_2) {
 }
 
 ///tech. callback test
-///acepted - 2018/12/23 22:44:00
+///accepted - 2018/12/23 22:44:00
 TEST(test_callback, test_callback_case_1) {
     ASSERT_EQ(1000, test_Callback(1000));
 }
+#endif
 
 ///platctp: quotespi & quoteapi test
-///
+///accepted - 2019/01/09 14:56:00
 TEST(test_platctp, test_platctp_case_1) {
     ASSERT_TRUE(test_PlatCtp());
 }

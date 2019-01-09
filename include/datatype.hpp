@@ -177,7 +177,19 @@
 #define CMDID_QUOTE        -1
 #define CMDID_TRADE        -2
 ///command label: StGroup to Plat.
-//TODO: #define CMD_STG_......      0x40000001
+#define CMD_PLAT_QUOTE_REQ_USER_LOGIN                               0x20000001
+#define CMD_PLAT_QUOTE_REQ_USER_LOGOUT                              0x20000002
+#define CMD_PLAT_QUOTE_SUBSCRIBE_MARKET_DATA                        0x20010001
+#define CMD_PLAT_TRADE_REQ_USER_LOGIN                               0x30000001
+#define CMD_PLAT_TRADE_REQ_USER_LOGOUT                              0x30000002
+#define CMD_PLAT_TRADE_REQ_AUTHENTICATE                             0x30000003
+#define CMD_PLAT_TRADE_REQ_QRY_SETTLEMENT_INFO_CONFIRM              0x30010001
+#define CMD_PLAT_TRADE_REQ_QRY_SETTLEMENT_INFO                      0x30010002
+#define CMD_PLAT_TRADE_REQ_SETTLEMENT_INFO_CONFIRM                  0x30010003
+#define CMD_PLAT_TRADE_REQ_QRY_EXCHANGE                             0x30020001
+#define CMD_PLAT_TRADE_REQ_QRY_PRODUCT                              0x30020002
+#define CMD_PLAT_TRADE_REQ_QRY_INSTRUMENT                           0x30020003
+
 ///command label: Front to StGroup
 //TODO: #define CMD_FRONT_.....     0x50000001
 ///callback label: StGroup to front
