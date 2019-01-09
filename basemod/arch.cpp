@@ -1,6 +1,7 @@
 #include "../include/arch.h"
 
 #include <iostream>
+#include <cassert>
 #include <boost/thread.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
@@ -32,6 +33,9 @@ uint64_t arch_GetDateStamp() {
 
 
 uint64_t arch_Str2TimeStamp(const char* timestr) {
+    if (strlen(timestr) < 23)
+        return 0;
+    assert(strlen(timestr) == 23);
     boost::posix_time::ptime origin_time(boost::gregorian::date(1970, 1, 1));
     boost::posix_time::ptime pt = boost::posix_time::time_from_string(timestr);
     boost::posix_time::time_duration diff = pt - origin_time;
@@ -40,6 +44,11 @@ uint64_t arch_Str2TimeStamp(const char* timestr) {
 
 
 uint64_t arch_Str2TimeStamp(const char* date, const char* time, int ms) {
+    if (strlen(date) < 8 || strlen(time) < 8)
+        return 0;
+    assert(strlen(date) == 8);
+    assert(strlen(time) == 8);
+    assert(ms < 1000 && ms >= 0);
     boost::posix_time::ptime origin_time(boost::gregorian::date(1970, 1, 1));
     boost::posix_time::ptime pt(boost::gregorian::date_from_iso_string(date), boost::posix_time::duration_from_string(time));
     boost::posix_time::time_duration diff = pt - origin_time;
