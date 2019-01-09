@@ -83,19 +83,22 @@ typedef struct CbQuoteRtnForQuoteRspField {
 } CbQuoteRtnForQuoteRspField;
 
 
-typedef union CbQuoteField {
-    CbQuoteFrontConnectedField          FrontConnected;
-    CbQuoteFrontDisconnectedField       FrontDisconnected;
-    CbQuoteRspUserLoginField            RspUserLogin;
-    CbQuoteRspUserLogoutField           RspUserLogout;
-    CbQuoteRspSubMarketDataField        RspSubMarketData;
-    CbQuoteRspUnsubMarketDataField      RspUnsubMarketData;
-    CbQuoteRspSubForQuoteRspField       RspSubForQuoteRsp;
-    CbQuoteRspErrorField                RspError;
-    CbQuoteRtnForQuoteRspField          RtnForQuoteRsp;
-    CbQuoteHeartBeatWarningField        HeartBeatWarning;
-    CbQuoteRspUnsubForQuoteRspField     RspUnsubForQuoteRsp;
-    CbQuoteRtnDepthMarketDataField      RtnDepthMarketData;
+typedef struct CbQuoteField {
+    union {
+        CbQuoteFrontConnectedField          FrontConnected;
+        CbQuoteFrontDisconnectedField       FrontDisconnected;
+        CbQuoteRspUserLoginField            RspUserLogin;
+        CbQuoteRspUserLogoutField           RspUserLogout;
+        CbQuoteRspSubMarketDataField        RspSubMarketData;
+        CbQuoteRspUnsubMarketDataField      RspUnsubMarketData;
+        CbQuoteRspSubForQuoteRspField       RspSubForQuoteRsp;
+        CbQuoteRspErrorField                RspError;
+        CbQuoteRtnForQuoteRspField          RtnForQuoteRsp;
+        CbQuoteHeartBeatWarningField        HeartBeatWarning;
+        CbQuoteRspUnsubForQuoteRspField     RspUnsubForQuoteRsp;
+        CbQuoteRtnDepthMarketDataField      RtnDepthMarketData;
+    };
+    bool IsLast;
 } CbQuoteField;
 
 #endif // !OPTSP_CTPCORE_QUOTESTRUCT_HPP_
